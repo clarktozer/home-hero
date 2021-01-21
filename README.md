@@ -1,2 +1,14 @@
 # hotel-hero
+
 An example hotel booking app
+
+Stack:
+
+-   React.js
+-   TypeScript
+-   GraphQL
+-   Node.js
+-   Apollo Client/Server
+-   TypeGraphQL
+-   TypeORM
+-   PostgreSQL
