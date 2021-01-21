@@ -1,0 +1,29 @@
+{
+    "name": "@hotelhero/server",
+    "private": true,
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc",
+        "start": "ts-node src/index.ts"
+    },
+    "dependencies": {
+        "@hotelhero/common": "1.0.0",
+        "typeorm": "0.2.30",
+        "reflect-metadata": "^0.1.10",
+        "pg": "^8.4.0"
+    },
+    "devDependencies": {
+        "@types/node": "^8.0.29",
+        "typescript": "^4.0.3",
+        "nodemon": "^2.0.5",
+        "ts-node": "^9.0.0"
+    },
+    "workspaces": {
+        "nohoist": [
+            "typeorm/**",
+            "typeorm"
+        ]
+    }
+}

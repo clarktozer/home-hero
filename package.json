@@ -1,0 +1,18 @@
+{
+    "name": "hotel-hero",
+    "private": true,
+    "devDependencies": {
+        "lerna": "^3.22.1"
+    },
+    "workspaces": {
+        "packages": [
+            "packages/*"
+        ]
+    },
+    "scripts": {
+        "bootstrap": "lerna bootstrap",
+        "build": "lerna run build",
+        "watch": "lerna run watch",
+        "clean": "lerna clean"
+    }
+}
