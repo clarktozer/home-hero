@@ -12,3 +12,11 @@ Stack:
 -   TypeGraphQL
 -   TypeORM
 -   PostgreSQL
+
+Integrations:
+
+-   Google auth, maps
+-   Microsoft auth
+-   Facebook auth
+-   Stripe
+-   Cloudinary
