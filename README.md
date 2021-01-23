@@ -18,5 +18,6 @@ Integrations:
 -   Google auth, maps
 -   Microsoft auth
 -   Facebook auth
+-   GitHub auth
 -   Stripe
 -   Cloudinary
