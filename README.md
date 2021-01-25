@@ -21,3 +21,8 @@ Integrations:
 -   GitHub auth
 -   Stripe
 -   Cloudinary
+
+Additional Front-end libraries:
+
+-   Baseui
+-   React Router
