@@ -2,14 +2,25 @@ import { useStyletron } from "baseui";
 import { AppNavBar, NavItemT, setItemActive } from "baseui/app-nav-bar";
 import { Overflow, Upload } from "baseui/icon";
 import React, { FC, useState } from "react";
-import "./App.css";
 
-export const Navigation: FC = ({ children }) => {
-    const [css, theme] = useStyletron();
+interface Props {
+    onToggleTheme: () => void;
+}
+
+export const Navigation: FC<Props> = ({ onToggleTheme }) => {
+    const [css] = useStyletron();
 
     const [mainItems, setMainItems] = useState<NavItemT[]>([
         { icon: Upload, label: "Main A" },
+        { icon: Upload, label: "Toggle Theme", info: "theme" },
     ]);
+
+    const onMainItemSelect = (item: NavItemT) => {
+        if (item.info === "theme") {
+            onToggleTheme();
+        }
+        setMainItems((prev) => setItemActive(prev, item));
+    };
 
     return (
         <div
@@ -22,9 +33,7 @@ export const Navigation: FC = ({ children }) => {
             <AppNavBar
                 title="Title"
                 mainItems={mainItems}
-                onMainItemSelect={(item) => {
-                    setMainItems((prev) => setItemActive(prev, item));
-                }}
+                onMainItemSelect={onMainItemSelect}
                 username="Umka Marshmallow"
                 usernameSubtitle="5 Stars"
                 userItems={[
