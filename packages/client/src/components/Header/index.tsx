@@ -2,12 +2,9 @@ import { useStyletron } from "baseui";
 import { AppNavBar, NavItemT, setItemActive } from "baseui/app-nav-bar";
 import { Overflow, Upload } from "baseui/icon";
 import React, { FC, useState } from "react";
+import { HeaderProps } from "./types";
 
-interface Props {
-    onToggleTheme: () => void;
-}
-
-export const Navigation: FC<Props> = ({ onToggleTheme }) => {
+export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
     const [css] = useStyletron();
 
     const [mainItems, setMainItems] = useState<NavItemT[]>([
@@ -19,6 +16,7 @@ export const Navigation: FC<Props> = ({ onToggleTheme }) => {
         if (item.info === "theme") {
             onToggleTheme();
         }
+
         setMainItems((prev) => setItemActive(prev, item));
     };
 
@@ -40,7 +38,6 @@ export const Navigation: FC<Props> = ({ onToggleTheme }) => {
                     { icon: Overflow, label: "User A" },
                     { icon: Overflow, label: "User B" },
                 ]}
-                onUserItemSelect={(item) => console.log(item)}
             />
         </div>
     );

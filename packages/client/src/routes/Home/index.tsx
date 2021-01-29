@@ -1,8 +1,8 @@
 import { useStyletron } from "baseui";
 import { Cell, Grid } from "baseui/layout-grid";
-import * as React from "react";
+import React, { FC } from "react";
 
-export const Content = () => {
+export const Home: FC = () => {
     const [css, theme] = useStyletron();
 
     return (

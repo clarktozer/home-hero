@@ -4,21 +4,22 @@ import React, { FC, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
-import { Home } from "./home";
-import { Navigation } from "./nav";
+import { Header } from "./components";
+import { Home } from "./routes";
 
 const engine = new Styletron();
 
 export const App: FC = () => {
     const [theme, setTheme] = useState<Theme>(DarkTheme);
 
-    const onToggleTheme = () =>
+    const onToggleTheme = () => {
         setTheme(theme === DarkTheme ? LightTheme : DarkTheme);
+    };
 
     return (
         <StyletronProvider value={engine}>
             <BaseProvider theme={theme}>
-                <Navigation onToggleTheme={onToggleTheme} />
+                <Header onToggleTheme={onToggleTheme} />
                 <Router>
                     <Switch>
                         <Route exact path="/">
