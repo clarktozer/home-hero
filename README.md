@@ -1,6 +1,6 @@
-# hotel-hero
+# home-hero
 
-An example hotel booking app
+An example home booking app
 
 Stack:
 
