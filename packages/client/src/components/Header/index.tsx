@@ -2,9 +2,15 @@ import { useStyletron } from "baseui";
 import { AppNavBar, NavItemT, setItemActive } from "baseui/app-nav-bar";
 import { Overflow, Upload } from "baseui/icon";
 import React, { FC, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { setViewer } from "../../state/app";
+import { useAppDispatch } from "../../state/store";
 import { HeaderProps } from "./types";
 
 export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
+    const dispatch = useAppDispatch();
+    const history = useHistory();
+    const location = useLocation();
     const [css] = useStyletron();
 
     const [mainItems, setMainItems] = useState<NavItemT[]>([
@@ -18,6 +24,14 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
         }
 
         setMainItems((prev) => setItemActive(prev, item));
+    };
+
+    const setUser = () => {
+        dispatch(
+            setViewer({
+                id: "1",
+            })
+        );
     };
 
     return (

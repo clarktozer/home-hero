@@ -5,6 +5,7 @@ An example hotel booking app
 Stack:
 
 -   React.js
+-   Redux
 -   TypeScript
 -   GraphQL
 -   Node.js
