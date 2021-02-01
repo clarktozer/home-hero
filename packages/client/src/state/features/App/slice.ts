@@ -17,4 +17,4 @@ const appSlice = createSlice({
 
 export const { setViewer } = appSlice.actions;
 
-export default appSlice.reducer;
+export const AppReducer = appSlice.reducer;

@@ -2,12 +2,14 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { BaseProvider, DarkTheme, LightTheme } from "baseui";
 import { Theme } from "baseui/theme";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { useCookie } from "react-use";
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
 import { Header } from "./components";
+import { ThemeCookie, ThemeType } from "./constants";
 import {
     Home,
     Host,
@@ -22,13 +24,24 @@ import { Store } from "./state/store";
 
 const engine = new Styletron();
 
-const stripePromise = loadStripe("");
+const stripePromise = loadStripe(
+    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY as string
+);
 
 export const App: FC = () => {
-    const [theme, setTheme] = useState<Theme>(DarkTheme);
+    const [themeCookie, updateCookie] = useCookie(ThemeCookie);
+    const [theme, setTheme] = useState<Theme>(() =>
+        themeCookie === ThemeType.Dark ? DarkTheme : LightTheme
+    );
+
+    useEffect(() => {
+        setTheme(themeCookie === ThemeType.Dark ? DarkTheme : LightTheme);
+    }, [themeCookie, setTheme]);
 
     const onToggleTheme = () => {
-        setTheme(theme === DarkTheme ? LightTheme : DarkTheme);
+        updateCookie(
+            themeCookie === ThemeType.Dark ? ThemeType.Light : ThemeType.Dark
+        );
     };
 
     return (

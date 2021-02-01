@@ -1,17 +1,20 @@
 import { useStyletron } from "baseui";
 import { AppNavBar, NavItemT, setItemActive } from "baseui/app-nav-bar";
-import { Overflow, Upload } from "baseui/icon";
+import { ArrowUp, Overflow, Upload } from "baseui/icon";
 import React, { FC, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { setViewer } from "../../state/app";
+import { setViewer } from "../../state/features/App";
 import { useAppDispatch } from "../../state/store";
+import { Affix } from "../Affix";
+import { FlexCenter } from "../FlexCenter";
+import { SearchBox } from "./components";
 import { HeaderProps } from "./types";
 
 export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
+    const [css] = useStyletron();
     const dispatch = useAppDispatch();
     const history = useHistory();
     const location = useLocation();
-    const [css] = useStyletron();
 
     const [mainItems, setMainItems] = useState<NavItemT[]>([
         { icon: Upload, label: "Main A" },
@@ -35,15 +38,14 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
     };
 
     return (
-        <div
-            className={css({
-                position: "fixed",
-                width: "100%",
-                top: 0,
-            })}
-        >
+        <Affix>
             <AppNavBar
-                title="Title"
+                title={
+                    <FlexCenter>
+                        <ArrowUp />
+                        <SearchBox />
+                    </FlexCenter>
+                }
                 mainItems={mainItems}
                 onMainItemSelect={onMainItemSelect}
                 username="Umka Marshmallow"
@@ -53,6 +55,6 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
                     { icon: Overflow, label: "User B" },
                 ]}
             />
-        </div>
+        </Affix>
     );
 };

@@ -8,7 +8,7 @@ export const Home: FC = () => {
     return (
         <div
             className={css({
-                paddingTop: "72px",
+                paddingTop: "88px",
             })}
         >
             <Grid>
