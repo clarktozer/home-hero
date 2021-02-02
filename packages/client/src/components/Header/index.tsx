@@ -1,88 +1,54 @@
-import { Alignment, Button, Intent, Navbar, Spinner } from "@blueprintjs/core";
-import { DarkTheme, useStyletron } from "baseui";
-import { NavItemT } from "baseui/app-nav-bar";
-import { ArrowUp } from "baseui/icon";
-import React, { FC, useState } from "react";
-import { CgDarkMode, CgLogOut, CgProfile } from "react-icons/cg";
-import { useHistory } from "react-router-dom";
-import { FlexCenter } from "../FlexCenter";
-import { SearchBox } from "./components";
+import {
+    Alignment,
+    Button,
+    InputGroup,
+    Menu,
+    MenuDivider,
+    MenuItem,
+    Navbar,
+} from "@blueprintjs/core";
+import { Popover2 } from "@blueprintjs/popover2";
+import React, { FC } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { HeaderProps } from "./types";
 
 const { Divider, Group, Heading } = Navbar;
 
-export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
+export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     const history = useHistory();
-    const [, theme] = useStyletron();
-    const [mainItems] = useState<NavItemT[]>([
-        {
-            label: "Host",
-            info: {
-                to: "/host",
-            },
-        },
-    ]);
-
-    const mySpinner = <Spinner intent={Intent.PRIMARY} />;
-
-    const handleLogOut = () => {
-        console.log("logout");
-    };
-
-    const userItems: NavItemT[] = [
-        {
-            icon: CgProfile,
-            label: "Profile",
-            info: () => {
-                history.push("/profile");
-            },
-        },
-        {
-            icon: CgDarkMode,
-            label: theme === DarkTheme ? "Light Theme" : "Dark Theme",
-            info: onToggleTheme,
-        },
-        {
-            icon: CgLogOut,
-            label: "Logout",
-            info: handleLogOut,
-        },
-    ];
-
-    const onMainItemSelect = (item: NavItemT) => {
-        if (item.info?.to) {
-            history.push(item.info.to);
-        }
-    };
-
-    const onUserItemSelect = (item: NavItemT) => {
-        if (item.info) {
-            item.info();
-        }
-    };
-
-    const title = (
-        <FlexCenter>
-            <ArrowUp />
-            <SearchBox />
-        </FlexCenter>
-    );
 
     return (
         <Navbar fixedToTop>
             <Group align={Alignment.LEFT}>
                 <Heading>Blueprint</Heading>
+                <InputGroup leftIcon="search" placeholder="Search..." />
             </Group>
             <Group align={Alignment.RIGHT}>
-                <Button
-                    large
-                    minimal
-                    icon="home"
-                    text="Host"
-                    onClick={() => history.push("/profile")}
-                />
+                <Link to="/host">
+                    <Button large minimal icon="home" text="Host" />
+                </Link>
                 <Divider />
                 <Button large minimal icon="user" />
+                <Button large minimal icon="log-in" text="Login" />
+                <Popover2
+                    placement="bottom-end"
+                    content={
+                        <Menu>
+                            <MenuItem icon="user" text="Profile" />
+                            <MenuItem
+                                icon={isDarkTheme ? "flash" : "moon"}
+                                text={
+                                    isDarkTheme ? "Light Theme" : "Dark Theme"
+                                }
+                                onClick={onToggleTheme}
+                            />
+                            <MenuDivider />
+                            <MenuItem icon="log-out" text="Logout" />
+                        </Menu>
+                    }
+                >
+                    <Button minimal large icon="user" text="Clark Tozer" />
+                </Popover2>
             </Group>
         </Navbar>
     );
