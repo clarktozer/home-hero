@@ -1,13 +1,15 @@
+import { Alignment, Button, Intent, Navbar, Spinner } from "@blueprintjs/core";
 import { DarkTheme, useStyletron } from "baseui";
-import { AppNavBar, NavItemT } from "baseui/app-nav-bar";
+import { NavItemT } from "baseui/app-nav-bar";
 import { ArrowUp } from "baseui/icon";
 import React, { FC, useState } from "react";
 import { CgDarkMode, CgLogOut, CgProfile } from "react-icons/cg";
 import { useHistory } from "react-router-dom";
-import { Affix } from "../Affix";
 import { FlexCenter } from "../FlexCenter";
 import { SearchBox } from "./components";
 import { HeaderProps } from "./types";
+
+const { Divider, Group, Heading } = Navbar;
 
 export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
     const history = useHistory();
@@ -20,6 +22,8 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
             },
         },
     ]);
+
+    const mySpinner = <Spinner intent={Intent.PRIMARY} />;
 
     const handleLogOut = () => {
         console.log("logout");
@@ -65,16 +69,21 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
     );
 
     return (
-        <Affix>
-            <AppNavBar
-                title={title}
-                mainItems={mainItems}
-                onMainItemSelect={onMainItemSelect}
-                username="Clark Tozer"
-                usernameSubtitle="email@email.com"
-                userItems={userItems}
-                onUserItemSelect={onUserItemSelect}
-            />
-        </Affix>
+        <Navbar fixedToTop>
+            <Group align={Alignment.LEFT}>
+                <Heading>Blueprint</Heading>
+            </Group>
+            <Group align={Alignment.RIGHT}>
+                <Button
+                    large
+                    minimal
+                    icon="home"
+                    text="Host"
+                    onClick={() => history.push("/profile")}
+                />
+                <Divider />
+                <Button large minimal icon="user" />
+            </Group>
+        </Navbar>
     );
 };
