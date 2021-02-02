@@ -1,59 +1,79 @@
-import { useStyletron } from "baseui";
-import { AppNavBar, NavItemT, setItemActive } from "baseui/app-nav-bar";
-import { ArrowUp, Overflow, Upload } from "baseui/icon";
+import { DarkTheme, useStyletron } from "baseui";
+import { AppNavBar, NavItemT } from "baseui/app-nav-bar";
+import { ArrowUp } from "baseui/icon";
 import React, { FC, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import { setViewer } from "../../state/features/App";
-import { useAppDispatch } from "../../state/store";
+import { CgDarkMode, CgLogOut, CgProfile } from "react-icons/cg";
+import { useHistory } from "react-router-dom";
 import { Affix } from "../Affix";
 import { FlexCenter } from "../FlexCenter";
 import { SearchBox } from "./components";
 import { HeaderProps } from "./types";
 
 export const Header: FC<HeaderProps> = ({ onToggleTheme }) => {
-    const [css] = useStyletron();
-    const dispatch = useAppDispatch();
     const history = useHistory();
-    const location = useLocation();
-
-    const [mainItems, setMainItems] = useState<NavItemT[]>([
-        { icon: Upload, label: "Main A" },
-        { icon: Upload, label: "Toggle Theme", info: "theme" },
+    const [, theme] = useStyletron();
+    const [mainItems] = useState<NavItemT[]>([
+        {
+            label: "Host",
+            info: {
+                to: "/host",
+            },
+        },
     ]);
 
+    const handleLogOut = () => {
+        console.log("logout");
+    };
+
+    const userItems: NavItemT[] = [
+        {
+            icon: CgProfile,
+            label: "Profile",
+            info: () => {
+                history.push("/profile");
+            },
+        },
+        {
+            icon: CgDarkMode,
+            label: theme === DarkTheme ? "Light Theme" : "Dark Theme",
+            info: onToggleTheme,
+        },
+        {
+            icon: CgLogOut,
+            label: "Logout",
+            info: handleLogOut,
+        },
+    ];
+
     const onMainItemSelect = (item: NavItemT) => {
-        if (item.info === "theme") {
-            onToggleTheme();
+        if (item.info?.to) {
+            history.push(item.info.to);
         }
-
-        setMainItems((prev) => setItemActive(prev, item));
     };
 
-    const setUser = () => {
-        dispatch(
-            setViewer({
-                id: "1",
-            })
-        );
+    const onUserItemSelect = (item: NavItemT) => {
+        if (item.info) {
+            item.info();
+        }
     };
+
+    const title = (
+        <FlexCenter>
+            <ArrowUp />
+            <SearchBox />
+        </FlexCenter>
+    );
 
     return (
         <Affix>
             <AppNavBar
-                title={
-                    <FlexCenter>
-                        <ArrowUp />
-                        <SearchBox />
-                    </FlexCenter>
-                }
+                title={title}
                 mainItems={mainItems}
                 onMainItemSelect={onMainItemSelect}
-                username="Umka Marshmallow"
-                usernameSubtitle="5 Stars"
-                userItems={[
-                    { icon: Overflow, label: "User A" },
-                    { icon: Overflow, label: "User B" },
-                ]}
+                username="Clark Tozer"
+                usernameSubtitle="email@email.com"
+                userItems={userItems}
+                onUserItemSelect={onUserItemSelect}
             />
         </Affix>
     );
