@@ -25,5 +25,5 @@ Integrations:
 
 Additional Front-end libraries:
 
--   Baseui
+-   Material UI
 -   React Router

@@ -1,5 +1,6 @@
-import classnames from "classnames";
-import React, { FC } from "react";
+import { CssBaseline } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import React, { FC, useMemo } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { useCookie } from "react-use";
@@ -16,13 +17,20 @@ export const App: FC = () => {
         updateCookie(isDarkTheme ? ThemeType.Light : ThemeType.Dark);
     };
 
+    const theme = useMemo(
+        () =>
+            createMuiTheme({
+                palette: {
+                    type: isDarkTheme ? "dark" : "light",
+                },
+            }),
+        [isDarkTheme]
+    );
+
     return (
         <Provider store={Store}>
-            <div
-                className={classnames({
-                    "bp3-dark": isDarkTheme,
-                })}
-            >
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
                 <Router>
                     <Header
                         isDarkTheme={isDarkTheme}
@@ -30,7 +38,7 @@ export const App: FC = () => {
                     />
                     <Routes />
                 </Router>
-            </div>
+            </ThemeProvider>
         </Provider>
     );
 };
