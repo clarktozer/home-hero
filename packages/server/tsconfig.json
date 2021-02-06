@@ -1,8 +1,8 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "lib": ["es5", "es6"],
-        "target": "es5",
+        "lib": ["es2018", "esnext.asynciterable"],
+        "target": "es2018",
         "module": "CommonJS",
         "rootDir": "./src",
         "outDir": "./dist",

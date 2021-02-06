@@ -1,5 +1,5 @@
 import { createConnection } from "typeorm";
-import { User } from "../entity/User";
+import { Booking, Listing, User } from "../entity";
 import { Database } from "./types";
 
 export const connectDatabase = async (): Promise<Database> => {
@@ -7,5 +7,7 @@ export const connectDatabase = async (): Promise<Database> => {
 
     return {
         users: connection.getRepository(User),
+        bookings: connection.getRepository(Booking),
+        listings: connection.getRepository(Listing),
     };
 };

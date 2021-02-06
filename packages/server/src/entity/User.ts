@@ -1,22 +1,42 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
 
-@Entity()
+@Entity("users")
 @ObjectType()
 export class User extends BaseEntity {
     @Field(() => ID)
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn("text")
+    id: string;
 
-    @Field(() => String)
-    @Column()
-    firstName: string;
+    @Field()
+    @Column("text")
+    token: string;
 
-    @Field(() => String)
-    @Column()
-    lastName: string;
+    @Field()
+    @Column("text")
+    name: string;
 
-    @Field(() => String)
-    @Column()
-    age: number;
+    @Field()
+    @Column("text")
+    avatar: string;
+
+    @Field()
+    @Column("text")
+    contact: string;
+
+    @Field({ nullable: true })
+    @Column("text", { nullable: true })
+    walletId?: string | null;
+
+    @Field()
+    @Column("integer")
+    income: number;
+
+    @Field(() => [String])
+    @Column("simple-array")
+    bookings: string[];
+
+    @Field(() => [String])
+    @Column("simple-array")
+    listings: string[];
 }
