@@ -57,6 +57,7 @@ export class Listing extends BaseEntity {
     @Column("simple-array")
     bookings: string[];
 
+    @Field(() => String)
     @Column("simple-json")
     bookingsIndex: BookingsIndex;
 

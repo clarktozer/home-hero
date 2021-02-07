@@ -4,7 +4,7 @@ import express from "express";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { connectDatabase } from "./database";
-import { Resolvers } from "./schema/resolvers";
+import { BookingResolver, ListingResolver, UserResolver } from "./resolvers";
 
 const start = async () => {
     const app = express();
@@ -13,15 +13,13 @@ const start = async () => {
     app.use(bodyParser.json({ limit: "2mb" }));
 
     const schema = await buildSchema({
-        resolvers: [Resolvers],
+        resolvers: [UserResolver, BookingResolver, ListingResolver],
     });
 
     const server = new ApolloServer({
         schema,
         context: ({ req, res }) => ({ db, req, res }),
     });
-
-    server.applyMiddleware({ app });
 
     server.applyMiddleware({
         app,
