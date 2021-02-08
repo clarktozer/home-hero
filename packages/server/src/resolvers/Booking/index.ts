@@ -1,7 +1,7 @@
 import { Query, Resolver } from "type-graphql";
 import { Booking } from "../../entity";
 
-@Resolver()
+@Resolver(Booking)
 export class BookingResolver {
     @Query(() => [Booking])
     async allTypes(): Promise<Booking[]> {

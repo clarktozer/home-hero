@@ -8,6 +8,6 @@ export const connectDatabase = async (): Promise<Database> => {
     return {
         users: connection.getRepository(User),
         bookings: connection.getRepository(Booking),
-        listings: connection.getRepository(Listing),
+        listings: connection.getRepository(Listing)
     };
 };

@@ -7,23 +7,22 @@ import { connectDatabase } from "./database";
 import { BookingResolver, ListingResolver, UserResolver } from "./resolvers";
 
 const start = async () => {
-    const app = express();
-    const db = await connectDatabase();
+    await connectDatabase();
 
+    const app = express();
     app.use(bodyParser.json({ limit: "2mb" }));
 
     const schema = await buildSchema({
-        resolvers: [UserResolver, BookingResolver, ListingResolver],
+        resolvers: [UserResolver, BookingResolver, ListingResolver]
     });
 
     const server = new ApolloServer({
-        schema,
-        context: ({ req, res }) => ({ db, req, res }),
+        schema
     });
 
     server.applyMiddleware({
         app,
-        path: "/api",
+        path: "/api"
     });
 
     app.listen(process.env.PORT, () => {

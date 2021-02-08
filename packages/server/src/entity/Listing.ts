@@ -1,10 +1,19 @@
 import { MaxLength } from "class-validator";
-import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Column, Entity, Index, PrimaryColumn } from "typeorm";
+import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    Index,
+    JoinColumn,
+    OneToOne,
+    PrimaryColumn
+} from "typeorm";
 import { BookingsIndex, ListingType } from "./types";
+import { User } from "./User";
 
 registerEnumType(ListingType, {
-    name: "ListingType",
+    name: "ListingType"
 });
 
 @Entity("listings")
@@ -30,8 +39,9 @@ export class Listing extends BaseEntity {
     image: string;
 
     @Field()
-    @Column("text")
-    host: string;
+    @OneToOne(() => User)
+    @JoinColumn()
+    host: User;
 
     @Field(() => ListingType)
     @Column({ type: "enum", enum: ListingType })
@@ -65,7 +75,7 @@ export class Listing extends BaseEntity {
     @Column("integer")
     price: number;
 
-    @Field()
+    @Field(() => Int)
     @Column("integer")
     numOfGuests: number;
 }

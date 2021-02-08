@@ -22,6 +22,7 @@ Integrations:
 -   GitHub auth
 -   Stripe
 -   Cloudinary
+-   Redis
 
 Additional Front-end libraries:
 

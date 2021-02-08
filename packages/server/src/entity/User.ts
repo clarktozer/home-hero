@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("users")
@@ -28,7 +28,7 @@ export class User extends BaseEntity {
     @Column("text", { nullable: true })
     walletId?: string | null;
 
-    @Field()
+    @Field(() => Int)
     @Column("integer")
     income: number;
 
