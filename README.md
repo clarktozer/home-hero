@@ -27,3 +27,10 @@ Additional Front-end libraries:
 
 -   Material UI
 -   React Router
+
+Maybe:
+
+-   Query complexity
+-   Redis
+-   Server side tests with Jest
+-   Authentication without 3rd party OAuth
