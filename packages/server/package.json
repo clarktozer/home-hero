@@ -1,5 +1,5 @@
 {
-    "name": "@hotelhero/server",
+    "name": "@homehero/server",
     "private": true,
     "version": "1.0.0",
     "main": "dist/index.js",
@@ -9,7 +9,7 @@
         "build": "tsc -p ./"
     },
     "dependencies": {
-        "@hotelhero/common": "1.0.0",
+        "@homehero/common": "1.0.0",
         "apollo-server-express": "^2.19.2",
         "class-validator": "^0.13.1",
         "express": "^4.17.1",
