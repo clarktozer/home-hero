@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { Booking } from "../Booking";
 import { Listing } from "../Listing";
@@ -26,7 +26,7 @@ export class User extends BaseEntity {
     @Column("text")
     contact: string;
 
-    @Field()
+    @Field(() => Int, { nullable: true })
     @Column("integer")
     income: number;
 

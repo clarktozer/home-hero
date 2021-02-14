@@ -20,11 +20,13 @@ const start = async () => {
     await seed();
 
     const app = express();
+
     app.use(bodyParser.json({ limit: "2mb" }));
 
     const schema = await buildSchema({
         resolvers: [UserResolver, BookingResolver, ListingResolver],
-        dateScalarMode: "timestamp"
+        dateScalarMode: "timestamp",
+        emitSchemaFile: true
     });
 
     const server = new ApolloServer({
@@ -44,9 +46,10 @@ const start = async () => {
                             ]
                         });
 
-                        if (complexity > 10) {
+                        if (complexity > 20) {
                             throw new ApolloError(
-                                `Sorry, too complicated query! ${complexity} is over 20 that is the max allowed complexity.`
+                                `Maximum complexity exceeded.`,
+                                "COMPLEXITY_ERROR"
                             );
                         }
                     }

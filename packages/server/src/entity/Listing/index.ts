@@ -2,6 +2,7 @@ import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
     BaseEntity,
     Column,
+    CreateDateColumn,
     Entity,
     Index,
     ManyToOne,
@@ -23,6 +24,14 @@ export class Listing extends BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn("uuid")
     id: string;
+
+    @Field()
+    @CreateDateColumn()
+    created: Date;
+
+    @Field()
+    @CreateDateColumn()
+    updated: Date;
 
     @Field()
     @Column("varchar", { length: 100 })
@@ -56,7 +65,7 @@ export class Listing extends BaseEntity {
     @Column("text")
     city: string;
 
-    @Field()
+    @Field(() => Int)
     @Column("integer")
     price: number;
 
