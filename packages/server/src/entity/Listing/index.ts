@@ -1,16 +1,16 @@
-import { MaxLength } from "class-validator";
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
     BaseEntity,
     Column,
     Entity,
     Index,
-    JoinColumn,
-    OneToOne,
-    PrimaryColumn
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn
 } from "typeorm";
-import { BookingsIndex, ListingType } from "./types";
-import { User } from "./User";
+import { Booking } from "../Booking";
+import { User } from "../User";
+import { ListingType } from "./types";
 
 registerEnumType(ListingType, {
     name: "ListingType"
@@ -21,27 +21,20 @@ registerEnumType(ListingType, {
 @ObjectType()
 export class Listing extends BaseEntity {
     @Field(() => ID)
-    @PrimaryColumn("text")
+    @PrimaryGeneratedColumn("uuid")
     id: string;
 
     @Field()
-    @MaxLength(100)
     @Column("varchar", { length: 100 })
     title: string;
 
     @Field()
-    @MaxLength(5000)
     @Column("varchar", { length: 5000 })
     description: string;
 
     @Field()
     @Column("text")
     image: string;
-
-    @Field()
-    @OneToOne(() => User)
-    @JoinColumn()
-    host: User;
 
     @Field(() => ListingType)
     @Column({ type: "enum", enum: ListingType })
@@ -63,19 +56,19 @@ export class Listing extends BaseEntity {
     @Column("text")
     city: string;
 
-    @Field(() => [String])
-    @Column("simple-array")
-    bookings: string[];
-
-    @Field(() => String)
-    @Column("simple-json")
-    bookingsIndex: BookingsIndex;
-
     @Field()
     @Column("integer")
     price: number;
 
     @Field(() => Int)
     @Column("integer")
-    numOfGuests: number;
+    guests: number;
+
+    @Field(() => User)
+    @ManyToOne(() => User, user => user.listings)
+    host: Promise<User>;
+
+    @Field(() => [Booking])
+    @OneToMany(() => Booking, booking => booking.listing)
+    bookings: Promise<Booking[]>;
 }

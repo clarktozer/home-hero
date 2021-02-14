@@ -1,10 +1,10 @@
 import { Query, Resolver } from "type-graphql";
 import { Listing } from "../../entity";
 
-@Resolver(Listing)
+@Resolver()
 export class ListingResolver {
     @Query(() => [Listing])
-    async allTypes(): Promise<Listing[]> {
+    async listings(): Promise<Listing[]> {
         return await Listing.find();
     }
 }
