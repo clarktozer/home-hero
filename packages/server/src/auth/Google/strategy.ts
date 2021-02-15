@@ -4,6 +4,7 @@ import {
     StrategyOptions,
     VerifyCallback
 } from "passport-google-oauth20";
+import { User } from "../../entity";
 
 const options: StrategyOptions = {
     clientID: process.env.GOOGLE_CLIENT_ID as string,
@@ -11,16 +12,23 @@ const options: StrategyOptions = {
     callbackURL: "/auth/google/callback"
 };
 
-const callback = (
+const callback = async (
     accessToken: string,
-    refreshToken: string,
+    _refreshToken: string,
     profile: Profile,
     done: VerifyCallback
 ) => {
-    console.log(accessToken);
-    console.log(profile);
-    console.log(refreshToken);
-    return done(undefined, profile);
+    const create = User.create({
+        id: profile.id,
+        name: profile.displayName,
+        email: profile.emails ? profile.emails[0].value : "",
+        avatar: profile.photos ? profile.photos[0].value : "",
+        token: accessToken
+    });
+
+    const user = await create.save();
+
+    return done(undefined, user);
 };
 
 export const GoogleStrategy = new Strategy(options, callback);

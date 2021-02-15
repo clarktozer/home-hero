@@ -24,7 +24,7 @@ export class UserInput {
 export class UserResolver {
     @Query(() => [User])
     async users(@Ctx() ctx: MyContext): Promise<User[]> {
-        console.log(ctx.req?.user);
+        console.log(ctx.req.user);
         return await User.find();
     }
 
@@ -37,11 +37,10 @@ export class UserResolver {
     async add(@Arg("data") data: UserInput): Promise<User> {
         const user = await User.create({
             id: v4(),
-            token: "token_************",
             name: data.name,
             avatar:
                 "https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560648533/mock/users/user-profile-1_mawp12.jpg",
-            contact: "james@tinyhouse.com",
+            email: "james@tinyhouse.com",
             income: 723796
         }).save();
 

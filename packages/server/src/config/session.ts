@@ -9,7 +9,7 @@ export const getSession = () => {
         store: new RedisStore({
             client: redis
         }),
-        secret: "secret",
+        secret: process.env.SESSION_SECRET as string,
         resave: false,
         saveUninitialized: false,
         cookie: {

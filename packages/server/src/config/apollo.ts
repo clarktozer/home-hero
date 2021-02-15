@@ -42,7 +42,9 @@ export const createApolloServer = async (app: Express) => {
                 })
             }
         ],
-        context: ({ req }) => ({ req })
+        context: ({ req }) => ({ req }),
+        introspection: process.env.NODE_ENV === "development",
+        playground: process.env.NODE_ENV === "development"
     });
 
     server.applyMiddleware({

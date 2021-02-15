@@ -12,11 +12,11 @@ export class User extends BaseEntity {
 
     @Field()
     @Column("text")
-    token: string;
+    name: string;
 
     @Field()
     @Column("text")
-    name: string;
+    token: string;
 
     @Field()
     @Column("text")
@@ -24,10 +24,10 @@ export class User extends BaseEntity {
 
     @Field()
     @Column("text")
-    contact: string;
+    email: string;
 
-    @Field(() => Int, { nullable: true })
-    @Column("integer")
+    @Field(() => Int)
+    @Column("integer", { default: 0 })
     income: number;
 
     @Field(() => [Booking])

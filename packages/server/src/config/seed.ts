@@ -4,13 +4,13 @@ import { ListingType } from "../entity/Listing/types";
 
 export const seed = async () => {
     const user = User.create({
-        id: "5d378db94e84753160e08b55",
-        token: "token_************",
-        name: "James J.",
+        id: "12345",
+        name: "James",
         avatar:
             "https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560648533/mock/users/user-profile-1_mawp12.jpg",
-        contact: "james@tinyhouse.com",
-        income: 723796
+        email: "james@tinyhouse.com",
+        income: 723796,
+        token: "1234"
     });
 
     await user.save();
