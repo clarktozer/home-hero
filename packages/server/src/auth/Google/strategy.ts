@@ -20,7 +20,7 @@ const callback = (
     console.log(accessToken);
     console.log(profile);
     console.log(refreshToken);
-    return done(undefined);
+    return done(undefined, profile);
 };
 
 export const GoogleStrategy = new Strategy(options, callback);

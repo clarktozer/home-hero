@@ -2,12 +2,11 @@ import passport from "passport";
 import { FacebookStrategy, GoogleStrategy } from "../auth";
 
 passport.serializeUser((user: any, done) => {
-    done(null, user.id);
+    done(null, user);
 });
 
-passport.deserializeUser((id, done) => {
-    console.log(id);
-    done(null, undefined);
+passport.deserializeUser((user: any, done) => {
+    done(null, user);
 });
 
 passport.use(FacebookStrategy);

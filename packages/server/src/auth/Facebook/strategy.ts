@@ -11,7 +11,7 @@ const callback: VerifyFunction = (accessToken, refreshToken, profile, done) => {
     console.log(accessToken);
     console.log(profile);
     console.log(refreshToken);
-    done(null, undefined);
+    done(null, profile);
 };
 
 export const FacebookStrategy = new Strategy(options, callback);

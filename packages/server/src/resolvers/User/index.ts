@@ -1,8 +1,19 @@
 import { MaxLength } from "class-validator";
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import {
+    Arg,
+    Ctx,
+    Field,
+    InputType,
+    Mutation,
+    Query,
+    Resolver
+} from "type-graphql";
 import { v4 } from "uuid";
 import { User } from "../../entity";
 
+interface MyContext {
+    [key: string]: any;
+}
 @InputType()
 export class UserInput {
     @Field()
@@ -12,7 +23,8 @@ export class UserInput {
 @Resolver()
 export class UserResolver {
     @Query(() => [User])
-    async users(): Promise<User[]> {
+    async users(@Ctx() ctx: MyContext): Promise<User[]> {
+        console.log(ctx.req?.user);
         return await User.find();
     }
 
