@@ -5,7 +5,7 @@ import {
     getComplexity,
     simpleEstimator
 } from "graphql-query-complexity";
-import { createSchema } from "./typegraphql";
+import { createSchema } from "./schema";
 
 export const createApolloServer = async (app: Express) => {
     const schema = await createSchema();

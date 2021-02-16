@@ -5,9 +5,11 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { authRoutes } from "./auth";
 import { seed } from "./config/seed";
-import { createApolloServer } from "./middlewares/apollo";
-import { createPassport } from "./middlewares/passport";
-import { createSession } from "./middlewares/session";
+import {
+    createApolloServer,
+    createPassport,
+    createSession
+} from "./middlewares";
 
 const start = async () => {
     await createConnection();
