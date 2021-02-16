@@ -5,14 +5,19 @@ import {
     getComplexity,
     simpleEstimator
 } from "graphql-query-complexity";
-import { buildSchema } from "type-graphql";
+import { AuthChecker, buildSchema } from "type-graphql";
 import { BookingResolver, ListingResolver, UserResolver } from "../resolvers";
+import { AppContext } from "./types";
 
 export const createApolloServer = async (app: Express) => {
+    const authChecker: AuthChecker<AppContext> = ({ context }) =>
+        context.req.user !== undefined;
+
     const schema = await buildSchema({
         resolvers: [UserResolver, BookingResolver, ListingResolver],
         dateScalarMode: "timestamp",
-        emitSchemaFile: false
+        emitSchemaFile: false,
+        authChecker
     });
 
     const server = new ApolloServer({

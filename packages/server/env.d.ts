@@ -9,3 +9,9 @@ declare namespace NodeJS {
         GOOGLE_CLIENT_SECRET: string;
     }
 }
+
+declare namespace Express {
+    interface User {
+        id: string;
+    }
+}

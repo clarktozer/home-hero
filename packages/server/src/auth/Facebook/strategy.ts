@@ -1,5 +1,5 @@
 import { Strategy, StrategyOption, VerifyFunction } from "passport-facebook";
-import { User } from "../../entity";
+import { LoginCallback } from "../callback";
 
 const options: StrategyOption = {
     clientID: process.env.FACEBOOK_CLIENT_ID as string,
@@ -13,18 +13,6 @@ const callback: VerifyFunction = async (
     _refreshToken,
     profile,
     done
-) => {
-    const create = User.create({
-        id: profile.id,
-        name: profile.displayName,
-        email: profile.emails ? profile.emails[0].value : "",
-        avatar: profile.photos ? profile.photos[0].value : "",
-        token: accessToken
-    });
-
-    const user = await create.save();
-
-    return done(undefined, user);
-};
+) => LoginCallback(accessToken, profile, done);
 
 export const FacebookStrategy = new Strategy(options, callback);

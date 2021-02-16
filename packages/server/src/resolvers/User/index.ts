@@ -41,7 +41,8 @@ export class UserResolver {
             avatar:
                 "https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560648533/mock/users/user-profile-1_mawp12.jpg",
             email: "james@tinyhouse.com",
-            income: 723796
+            income: 723796,
+            token: "12345"
         }).save();
 
         return user;
