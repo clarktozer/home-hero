@@ -9,7 +9,7 @@ import {
     Resolver
 } from "type-graphql";
 import { v4 } from "uuid";
-import { User } from "../../entity";
+import { User } from "../../entities";
 
 interface MyContext {
     [key: string]: any;

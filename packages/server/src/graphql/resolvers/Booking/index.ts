@@ -1,5 +1,5 @@
 import { Query, Resolver } from "type-graphql";
-import { Booking } from "../../entity";
+import { Booking } from "../../entities";
 
 @Resolver()
 export class BookingResolver {

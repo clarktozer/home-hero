@@ -1,6 +1,6 @@
 import { Profile } from "passport";
 import { VerifyCallback } from "passport-google-oauth20";
-import { User } from "../entity";
+import { User } from "../graphql/entities";
 
 export const LoginCallback = async (
     accessToken: string,

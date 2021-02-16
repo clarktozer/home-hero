@@ -1,5 +1,5 @@
 import { Query, Resolver } from "type-graphql";
-import { Listing } from "../../entity";
+import { Listing } from "../../entities";
 
 @Resolver()
 export class ListingResolver {

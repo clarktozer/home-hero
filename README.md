@@ -13,6 +13,7 @@ Stack:
 -   TypeGraphQL
 -   TypeORM
 -   PostgreSQL
+-   Redis
 
 Integrations:
 
@@ -30,7 +31,5 @@ Additional Front-end libraries:
 
 Maybe:
 
--   Query complexity
--   Redis
 -   Server side tests with Jest
 -   Authentication without 3rd party OAuth

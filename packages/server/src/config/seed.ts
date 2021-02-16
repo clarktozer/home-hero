@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
-import { Listing, User } from "../entity";
-import { ListingType } from "../entity/Listing/types";
+import { Listing, User } from "../graphql/entities";
+import { ListingType } from "../graphql/entities/Listing/types";
 
 export const seed = async () => {
     const user = User.create({
