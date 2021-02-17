@@ -5,7 +5,8 @@ import {
     getComplexity,
     simpleEstimator
 } from "graphql-query-complexity";
-import { createSchema } from "./schema";
+import { createSchema } from "../schema";
+import { AppContext } from "./types";
 
 export const createApolloServer = async (app: Express) => {
     const schema = await createSchema();
@@ -37,7 +38,7 @@ export const createApolloServer = async (app: Express) => {
                 })
             }
         ],
-        context: ({ req }) => ({ req }),
+        context: ({ req, res }): AppContext => ({ req, res }),
         introspection: process.env.NODE_ENV === "development",
         playground: process.env.NODE_ENV === "development"
     });
