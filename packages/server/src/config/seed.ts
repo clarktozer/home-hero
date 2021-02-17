@@ -46,6 +46,22 @@ export const seed = async () => {
     });
     await listing2.save();
 
+    const listing3 = Listing.create({
+        id: v4(),
+        title: "Example text",
+        description:
+            "Cozy, clean, and affordable studio located around midtown. Perfect for a solo traveller on a budget.",
+        image: "https://placedog.net/1200/768?random",
+        type: ListingType.Apartment,
+        address: "7009 Strawberry Street, Toronto, ON, CA",
+        country: "Canada",
+        admin: "Ontario",
+        city: "Toronto",
+        price: 15806,
+        guests: 3
+    });
+    await listing3.save();
+
     user.listings = Promise.resolve([listing1, listing2]);
     await user.save();
 };

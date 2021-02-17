@@ -6,13 +6,25 @@ import {
     Field,
     FieldResolver,
     InputType,
+    Int,
     Mutation,
+    ObjectType,
     Query,
     Resolver,
     Root
 } from "type-graphql";
+import { getRepository } from "typeorm";
 import { v4 } from "uuid";
-import { User } from "../../entities";
+import { Listing, User } from "../../entities";
+
+@ObjectType()
+class UserListingsData {
+    @Field(() => Int)
+    total: number;
+
+    @Field(() => [Listing])
+    result: Listing[];
+}
 
 interface MyContext {
     [key: string]: any;
@@ -49,6 +61,38 @@ export class UserResolver {
         }).save();
 
         return user;
+    }
+
+    @FieldResolver(() => UserListingsData)
+    async listings(
+        @Root() user: User,
+        @Arg("limit") limit: number,
+        @Arg("page") page: number
+    ): Promise<UserListingsData> {
+        try {
+            const repository = getRepository(Listing);
+            const data: UserListingsData = {
+                total: 0,
+                result: []
+            };
+
+            const [items, count] = await repository.findAndCount({
+                skip: page > 0 ? (page - 1) * limit : 0,
+                take: limit,
+                where: {
+                    host: {
+                        id: user.id
+                    }
+                }
+            });
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query user listings: ${error}`);
+        }
     }
 
     @FieldResolver()

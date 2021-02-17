@@ -30,11 +30,9 @@ export class User extends BaseEntity {
     @Column("integer", { default: 0 })
     income: number;
 
-    @Field(() => [Booking])
     @OneToMany(() => Booking, booking => booking.tenant)
     bookings: Promise<Booking[]>;
 
-    @Field(() => [Listing])
     @OneToMany(() => Listing, listing => listing.host)
     listings: Promise<Listing[]>;
 }
