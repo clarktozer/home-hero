@@ -39,7 +39,6 @@ export const createApolloServer = async (app: Express) => {
             }
         ],
         context: ({ req, res }): AppContext => ({ req, res }),
-        introspection: process.env.NODE_ENV === "development",
         playground: process.env.NODE_ENV === "development"
     });
 
