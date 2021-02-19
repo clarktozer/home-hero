@@ -1,8 +1,8 @@
 import { Profile } from "passport";
-import { VerifyCallback } from "passport-google-oauth20";
+import { VerifyCallback } from "passport-oauth2";
 import { User } from "../graphql/entities";
 
-export const LoginCallback = async (
+export const loginCallback = async (
     accessToken: string,
     profile: Profile,
     done: VerifyCallback
@@ -18,7 +18,7 @@ export const LoginCallback = async (
         };
 
         if (user) {
-            user.name = "Clark Tower";
+            user.name = userProps.name;
             user.email = userProps.email;
             user.avatar = userProps.avatar;
             user.token = userProps.token;

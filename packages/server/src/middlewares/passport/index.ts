@@ -1,9 +1,13 @@
+import { Express } from "express";
 import passport from "passport";
-import { FacebookStrategy, GoogleStrategy } from "../../auth";
+import { Strategy as FacebookStrategy } from "passport-facebook";
+import { Strategy as GitHubStrategy } from "passport-github2";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { addPassportStrategy } from "../../auth/factory";
 import { User as UserEntity } from "../../graphql/entities";
 import { User } from "./types";
 
-export const createPassport = () => {
+export const createPassport = (app: Express) => {
     passport.serializeUser<string>((user: User, done) => {
         done(null, user?.id);
     });
@@ -22,6 +26,43 @@ export const createPassport = () => {
         }
     });
 
-    passport.use(FacebookStrategy);
-    passport.use(GoogleStrategy);
+    addPassportStrategy(
+        app,
+        "github",
+        GitHubStrategy,
+        {
+            clientID: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string
+        },
+        {
+            scope: ["user:email"]
+        }
+    );
+
+    addPassportStrategy(
+        app,
+        "google",
+        GoogleStrategy,
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+        },
+        {
+            scope: ["profile", "email"]
+        }
+    );
+
+    addPassportStrategy(
+        app,
+        "facebook",
+        FacebookStrategy,
+        {
+            clientID: process.env.FACEBOOK_CLIENT_ID as string,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+            profileFields: ["id", "email", "displayName", "picture"]
+        },
+        {
+            scope: ["user:email"]
+        }
+    );
 };

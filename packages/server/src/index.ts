@@ -3,7 +3,6 @@ import express from "express";
 import passport from "passport";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import { authRoutes } from "./auth";
 import { seed } from "./config/seed";
 import {
     createApolloServer,
@@ -13,14 +12,13 @@ import {
 
 const start = async () => {
     await createConnection();
-    createPassport();
     const app = express();
 
     app.use(bodyParser.json({ limit: "2mb" }));
     app.use(createSession());
     app.use(passport.initialize());
     app.use(passport.session());
-    app.use(authRoutes);
+    createPassport(app);
 
     if (process.env.NODE_ENV === "development") {
         await seed();
