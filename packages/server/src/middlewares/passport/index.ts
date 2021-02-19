@@ -35,7 +35,7 @@ export const createPassport = (app: Express) => {
             clientSecret: process.env.GITHUB_CLIENT_SECRET as string
         },
         {
-            scope: ["user:email"]
+            scope: ["read:user"]
         }
     );
 

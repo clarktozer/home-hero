@@ -39,7 +39,7 @@ export const addPassportStrategy = (
         `/auth/${service}/callback`,
         passport.authenticate(service, {
             failureRedirect: "/login",
-            successReturnToOrRedirect: "/"
+            successReturnToOrRedirect: "/api"
         })
     );
 };

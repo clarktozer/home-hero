@@ -1,44 +1,21 @@
-import { MaxLength } from "class-validator";
 import {
     Arg,
     Authorized,
     Ctx,
-    Field,
     FieldResolver,
-    InputType,
-    Int,
-    Mutation,
-    ObjectType,
     Query,
     Resolver,
     Root
 } from "type-graphql";
 import { getRepository } from "typeorm";
-import { v4 } from "uuid";
+import { AppContext } from "../../../middlewares/apollo/types";
 import { Listing, User } from "../../entities";
+import { UserListingsData } from "./types";
 
-@ObjectType()
-class UserListingsData {
-    @Field(() => Int)
-    total: number;
-
-    @Field(() => [Listing])
-    result: Listing[];
-}
-
-interface MyContext {
-    [key: string]: any;
-}
-@InputType()
-export class UserInput {
-    @Field()
-    @MaxLength(5)
-    name: string;
-}
 @Resolver(User)
 export class UserResolver {
     @Query(() => [User])
-    async users(@Ctx() ctx: MyContext): Promise<User[]> {
+    async users(@Ctx() ctx: AppContext): Promise<User[]> {
         console.log(ctx.req.user);
         return await User.find();
     }
@@ -47,20 +24,6 @@ export class UserResolver {
     @Authorized()
     async user(@Arg("id") id: string): Promise<User | undefined> {
         return await User.findOne(id);
-    }
-
-    @Mutation(() => User)
-    async add(@Arg("data") data: UserInput): Promise<User> {
-        const user = await User.create({
-            id: v4(),
-            name: data.name,
-            avatar: "https://placedog.net/72/72?random",
-            email: "james@example.com",
-            income: 723796,
-            token: "12345"
-        }).save();
-
-        return user;
     }
 
     @FieldResolver(() => UserListingsData)
