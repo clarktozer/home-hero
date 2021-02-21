@@ -3,6 +3,7 @@ import { VerifyCallback } from "passport-oauth2";
 import { User } from "../graphql/entities";
 
 export const loginCallback = async (
+    _service: string,
     accessToken: string,
     profile: Profile,
     done: VerifyCallback

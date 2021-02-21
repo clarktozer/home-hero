@@ -29,7 +29,7 @@ export const addPassportStrategy = (
                 _refreshToken: string,
                 profile: Profile,
                 done: VerifyCallback
-            ) => loginCallback(accessToken, profile, done)
+            ) => loginCallback(service, accessToken, profile, done)
         )
     );
 

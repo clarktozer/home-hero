@@ -28,7 +28,7 @@ const start = async () => {
 
     app.listen(process.env.PORT, () => {
         console.log(
-            `Server started on http://localhost:${process.env.PORT}${server.graphqlPath}`
+            `Server started on ${process.env.PUBLIC_URL}:${process.env.PORT}${server.graphqlPath}`
         );
     });
 };

@@ -33,3 +33,4 @@ Maybe:
 
 -   Server side tests with Jest
 -   Authentication without 3rd party OAuth
+-   Allow merging of social accounts into one login

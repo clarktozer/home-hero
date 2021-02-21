@@ -1,10 +1,18 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    OneToMany,
+    PrimaryColumn,
+    Unique
+} from "typeorm";
 import { Booking } from "../Booking";
 import { Listing } from "../Listing";
 
 @Entity("users")
 @ObjectType()
+@Unique(["email"])
 export class User extends BaseEntity {
     @Field(() => ID)
     @PrimaryColumn("text")
