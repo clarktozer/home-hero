@@ -39,12 +39,17 @@ export const createApolloServer = async (app: Express) => {
             }
         ],
         context: ({ req, res }): AppContext => ({ req, res }),
-        playground: process.env.NODE_ENV === "development"
+        playground: {
+            settings: {
+                "request.credentials": "include"
+            }
+        }
     });
 
     server.applyMiddleware({
         app,
-        path: "/api"
+        path: "/api",
+        cors: false
     });
 
     return server;

@@ -10,7 +10,9 @@ Steps to run this project:
 
 ```
 PUBLIC_URL=localhost
+CLIENT_URL=http://localhost:3000
 NODE_ENV=development
+SESSION_NAME=hhsid
 SESSION_SECRET=secret
 PORT=4000
 FACEBOOK_CLIENT_ID=secret

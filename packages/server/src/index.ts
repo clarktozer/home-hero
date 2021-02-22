@@ -1,24 +1,21 @@
-import bodyParser from "body-parser";
 import express from "express";
-import passport from "passport";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { seed } from "./config/seed";
 import {
-    createApolloServer,
-    createPassport,
-    createSession
+    addCors,
+    addPassport,
+    addSession,
+    createApolloServer
 } from "./middlewares";
 
-const start = async () => {
+const run = async () => {
     await createConnection();
     const app = express();
 
-    app.use(bodyParser.json({ limit: "2mb" }));
-    app.use(createSession());
-    app.use(passport.initialize());
-    app.use(passport.session());
-    createPassport(app);
+    addCors(app);
+    addSession(app);
+    addPassport(app);
 
     if (process.env.NODE_ENV === "development") {
         await seed();
@@ -33,4 +30,4 @@ const start = async () => {
     });
 };
 
-start();
+run();

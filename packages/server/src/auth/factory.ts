@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 import passport, { AuthenticateOptions, Profile } from "passport";
 import { VerifyCallback } from "passport-oauth2";
 import { loginCallback } from "./callback";
@@ -16,8 +16,15 @@ export const addPassportStrategy = (
         ) => void
     ) => passport.Strategy,
     strategyOptions: any,
-    authOptions: AuthenticateOptions = {}
+    authOptions: AuthenticateOptions = {},
+    callbackAuthOptions: AuthenticateOptions = {
+        failureRedirect: `${process.env.CLIENT_URL}/login`,
+        successRedirect: `${process.env.CLIENT_URL}/`,
+        passReqToCallback: true
+    }
 ) => {
+    const { successRedirect, ...rest } = callbackAuthOptions;
+
     passport.use(
         new Strategy(
             {
@@ -33,13 +40,31 @@ export const addPassportStrategy = (
         )
     );
 
-    app.get(`/auth/${service}`, passport.authenticate(service, authOptions));
+    const addRedirect = (req: Request, _res: Response, next: NextFunction) => {
+        if (req.query.redirect && typeof req.query.redirect === "string") {
+            req.session.redirectTo = req.query.redirect;
+        }
+
+        next();
+    };
+
+    app.get(
+        `/auth/${service}`,
+        addRedirect,
+        passport.authenticate(service, authOptions)
+    );
+
+    const redirectCallback = (req: Request, res: Response) => {
+        res.redirect(
+            `${process.env.CLIENT_URL}${
+                req.session?.redirectTo || successRedirect || ""
+            }`
+        );
+    };
 
     app.get(
         `/auth/${service}/callback`,
-        passport.authenticate(service, {
-            failureRedirect: "/login",
-            successReturnToOrRedirect: "/api"
-        })
+        passport.authenticate(service, rest),
+        redirectCallback
     );
 };

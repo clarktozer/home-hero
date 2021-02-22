@@ -3,6 +3,7 @@ import {
     Authorized,
     Ctx,
     FieldResolver,
+    Mutation,
     Query,
     Resolver,
     Root
@@ -14,9 +15,34 @@ import { UserListingsData } from "./types";
 
 @Resolver(User)
 export class UserResolver {
+    @Query(() => User)
+    @Authorized()
+    async me(@Ctx() ctx: AppContext): Promise<User | undefined> {
+        return User.findOne(ctx.req.user!.id);
+    }
+
+    @Mutation(() => User)
+    @Authorized()
+    async updateUser(@Ctx() ctx: AppContext): Promise<User | null> {
+        try {
+            const user = await User.findOne(ctx.req.user!.id);
+
+            if (!user) {
+                return null;
+            }
+
+            user.income = 1;
+
+            await user.save();
+
+            return user;
+        } catch (error) {
+            throw new Error("Unable to find user");
+        }
+    }
+
     @Query(() => [User])
-    async users(@Ctx() ctx: AppContext): Promise<User[]> {
-        console.log(ctx.req.user);
+    async users(): Promise<User[]> {
         return await User.find();
     }
 
@@ -60,6 +86,6 @@ export class UserResolver {
 
     @FieldResolver()
     income(@Root() user: User) {
-        return user.email === "james@example.com" ? user.income : 100;
+        return user.income;
     }
 }

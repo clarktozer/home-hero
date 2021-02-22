@@ -4,17 +4,19 @@ import { Strategy as FacebookStrategy } from "passport-facebook";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { addPassportStrategy } from "../../auth/factory";
-import { User as UserEntity } from "../../graphql/entities";
-import { User } from "./types";
+import { User } from "../../graphql/entities";
 
-export const createPassport = (app: Express) => {
-    passport.serializeUser<string>((user: User, done) => {
+export const addPassport = (app: Express) => {
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    passport.serializeUser<string>((user: any, done) => {
         done(null, user?.id);
     });
 
     passport.deserializeUser<string>(async (id, done) => {
         try {
-            const user = await UserEntity.findOne(id);
+            const user = await User.findOne(id);
 
             if (user) {
                 done(null, user);

@@ -20,7 +20,12 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                     <Icon>menu</Icon>
                 </IconButton>
                 <Typography variant="h6">News</Typography>
-                <Button color="inherit">Login</Button>
+                <Button
+                    color="inherit"
+                    href="http://localhost:4000/auth/google"
+                >
+                    Login
+                </Button>
             </Toolbar>
         </AppBar>
     );
