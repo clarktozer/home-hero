@@ -38,18 +38,13 @@ export const createApolloServer = async (app: Express) => {
                 })
             }
         ],
-        context: ({ req, res }): AppContext => ({ req, res }),
-        playground: {
-            settings: {
-                "request.credentials": "include"
-            }
-        }
+        context: ({ req, res }): AppContext => ({ req, res })
     });
 
     server.applyMiddleware({
         app,
-        path: "/api",
-        cors: false
+        path: "/api"
+        // cors: false
     });
 
     return server;

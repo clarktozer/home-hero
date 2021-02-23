@@ -16,8 +16,8 @@ const run = async () => {
 
     addCors(app);
     addSession(app);
-    addPassport(app);
     addCSRF(app);
+    addPassport(app);
 
     if (process.env.NODE_ENV === "development") {
         await seed();

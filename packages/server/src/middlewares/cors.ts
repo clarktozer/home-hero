@@ -3,8 +3,7 @@ import { Express } from "express";
 
 export const addCors = (app: Express) => {
     const corsOptions: CorsOptions = {
-        origin: process.env.CLIENT_URL,
-        credentials: true
+        origin: process.env.CLIENT_URL
     };
 
     app.use(cors(corsOptions));

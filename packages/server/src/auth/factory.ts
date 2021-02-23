@@ -19,7 +19,7 @@ export const addPassportStrategy = (
     authOptions: AuthenticateOptions = {},
     callbackAuthOptions: AuthenticateOptions = {
         failureRedirect: `${process.env.CLIENT_URL}/login`,
-        successRedirect: `${process.env.CLIENT_URL}/`,
+        successRedirect: `${process.env.CLIENT_URL}`,
         passReqToCallback: true
     }
 ) => {
@@ -55,15 +55,16 @@ export const addPassportStrategy = (
     );
 
     const redirectCallback = (req: Request, res: Response) => {
-        if (!req.cookies.hhcsrf) {
-            res.cookie("hhcsrf", req.csrfToken());
+        res.cookie("hhcsrf", req.csrfToken());
+        const redirect = req.session?.redirectTo
+            ? `${process.env.CLIENT_URL}${req.session.redirectTo}`
+            : successRedirect || "";
+
+        if (req.session?.redirectTo) {
+            req.session.redirectTo = undefined;
         }
 
-        res.redirect(
-            `${process.env.CLIENT_URL}${
-                req.session?.redirectTo || successRedirect || ""
-            }`
-        );
+        res.redirect(redirect);
     };
 
     app.get(

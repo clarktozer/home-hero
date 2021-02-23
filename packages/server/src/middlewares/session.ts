@@ -6,6 +6,10 @@ import { redis } from "../config/redis";
 export const addSession = (app: Express) => {
     const RedisStore = connectRedis(session);
 
+    if (process.env.NODE_ENV === "development") {
+        redis.flushdb();
+    }
+
     app.use(
         session({
             store: new RedisStore({
