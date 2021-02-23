@@ -4,6 +4,7 @@ import { createConnection } from "typeorm";
 import { seed } from "./config/seed";
 import {
     addCors,
+    addCSRF,
     addPassport,
     addSession,
     createApolloServer
@@ -16,6 +17,7 @@ const run = async () => {
     addCors(app);
     addSession(app);
     addPassport(app);
+    addCSRF(app);
 
     if (process.env.NODE_ENV === "development") {
         await seed();

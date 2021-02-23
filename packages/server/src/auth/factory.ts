@@ -55,6 +55,10 @@ export const addPassportStrategy = (
     );
 
     const redirectCallback = (req: Request, res: Response) => {
+        if (!req.cookies.hhcsrf) {
+            res.cookie("hhcsrf", req.csrfToken());
+        }
+
         res.redirect(
             `${process.env.CLIENT_URL}${
                 req.session?.redirectTo || successRedirect || ""
