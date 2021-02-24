@@ -1,10 +1,10 @@
+import cookieParser from "cookie-parser";
 import express from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import { seed } from "./config/seed";
+import { seed } from "./config";
 import {
     addCors,
-    addCSRF,
     addPassport,
     addSession,
     createApolloServer
@@ -14,9 +14,9 @@ const run = async () => {
     await createConnection();
     const app = express();
 
+    app.use(cookieParser());
     addCors(app);
     addSession(app);
-    addCSRF(app);
     addPassport(app);
 
     if (process.env.NODE_ENV === "development") {

@@ -44,7 +44,6 @@ export const createApolloServer = async (app: Express) => {
     server.applyMiddleware({
         app,
         path: "/api"
-        // cors: false
     });
 
     return server;

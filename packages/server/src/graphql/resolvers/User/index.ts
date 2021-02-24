@@ -6,17 +6,21 @@ import {
     Mutation,
     Query,
     Resolver,
-    Root
+    Root,
+    UseMiddleware
 } from "type-graphql";
 import { getRepository } from "typeorm";
+import { CROSS_SITE_FORGERY_COOKIE } from "../../../constants";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Listing, User } from "../../entities";
+import { ValidAntiForgeryToken } from "../../middlewares";
 import { UserListingsData } from "./types";
 
 @Resolver(User)
 export class UserResolver {
     @Query(() => User)
     @Authorized()
+    @UseMiddleware(ValidAntiForgeryToken)
     async me(@Ctx() ctx: AppContext): Promise<User | undefined> {
         return User.findOne(ctx.req.user!.id);
     }
@@ -39,6 +43,22 @@ export class UserResolver {
         } catch (error) {
             throw new Error("Unable to find user");
         }
+    }
+
+    @Mutation(() => Boolean)
+    @Authorized()
+    async logout(@Ctx() ctx: AppContext): Promise<boolean> {
+        return new Promise((response, reject) => {
+            ctx.req.logout();
+            ctx.req.session.destroy(err => {
+                if (err) {
+                    return reject(false);
+                }
+
+                ctx.res.clearCookie(CROSS_SITE_FORGERY_COOKIE);
+                return response(true);
+            });
+        });
     }
 
     @Query(() => [User])

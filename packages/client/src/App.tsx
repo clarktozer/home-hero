@@ -1,17 +1,28 @@
-import { CssBaseline } from "@material-ui/core";
+import { useQuery } from "@apollo/client";
+import { CircularProgress, CssBaseline } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import React, { FC, useMemo } from "react";
-import { Provider } from "react-redux";
+import React, { FC, useEffect, useMemo } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { useCookie } from "react-use";
 import { Header } from "./components";
+import { HeaderSkeleton } from "./components/HeaderSkeleton";
 import { ThemeCookie, ThemeType } from "./constants";
+import { ME } from "./graphql/mutations";
 import { Routes } from "./routes";
-import { Store } from "./state/store";
+import { setViewer } from "./state/features";
+import { useAppDispatch } from "./state/store";
 
 export const App: FC = () => {
+    const dispatch = useAppDispatch();
+    const { loading, data } = useQuery<any>(ME);
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
+
+    useEffect(() => {
+        if (data) {
+            dispatch(setViewer(data.me));
+        }
+    }, [data, dispatch]);
 
     const onToggleTheme = () => {
         updateCookie(isDarkTheme ? ThemeType.Light : ThemeType.Dark);
@@ -21,16 +32,21 @@ export const App: FC = () => {
         () =>
             createMuiTheme({
                 palette: {
-                    type: isDarkTheme ? "dark" : "light",
-                },
+                    type: isDarkTheme ? "dark" : "light"
+                }
             }),
         [isDarkTheme]
     );
 
     return (
-        <Provider store={Store}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {loading ? (
+                <>
+                    <HeaderSkeleton />
+                    <CircularProgress />
+                </>
+            ) : (
                 <Router>
                     <Header
                         isDarkTheme={isDarkTheme}
@@ -38,7 +54,7 @@ export const App: FC = () => {
                     />
                     <Routes />
                 </Router>
-            </ThemeProvider>
-        </Provider>
+            )}
+        </ThemeProvider>
     );
 };

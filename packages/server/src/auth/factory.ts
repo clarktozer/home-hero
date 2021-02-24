@@ -1,6 +1,8 @@
+import Tokens from "csrf";
 import { Express, NextFunction, Request, Response } from "express";
 import passport, { AuthenticateOptions, Profile } from "passport";
 import { VerifyCallback } from "passport-oauth2";
+import { CROSS_SITE_FORGERY_COOKIE as ANTI_FORGERY_COOKIE } from "../constants";
 import { loginCallback } from "./callback";
 
 export const addPassportStrategy = (
@@ -55,21 +57,31 @@ export const addPassportStrategy = (
     );
 
     const redirectCallback = (req: Request, res: Response) => {
-        res.cookie("hhcsrf", req.csrfToken());
         const redirect = req.session?.redirectTo
             ? `${process.env.CLIENT_URL}${req.session.redirectTo}`
             : successRedirect || "";
 
-        if (req.session?.redirectTo) {
+        if (req.session.redirectTo) {
             req.session.redirectTo = undefined;
         }
 
         res.redirect(redirect);
     };
 
+    const addCsrf = (req: Request, res: Response, next: NextFunction) => {
+        const tokens = new Tokens();
+        const secret = tokens.secretSync();
+        const token = tokens.create(secret);
+
+        res.cookie(ANTI_FORGERY_COOKIE, token);
+        req.session.csrfSecret = secret;
+
+        next();
+    };
+
     app.get(
         `/auth/${service}/callback`,
-        passport.authenticate(service, rest),
+        [addCsrf, passport.authenticate(service, rest)],
         redirectCallback
     );
 };
