@@ -1,18 +1,7 @@
-import Tokens from "csrf";
-import { MiddlewareFn } from "type-graphql";
-import { AppContext } from "../../middlewares/apollo/types";
+import { ValidAntiForgeryToken as ValidAntiForgeryTokenMiddleware } from "type-graphql-csrf-middleware";
+import { ANTI_FORGERY_COOKIE, ANTI_FORGERY_SECRET } from "../../constants";
 
-export const ValidAntiForgeryToken: MiddlewareFn<AppContext> = (
-    { context },
-    next
-) => {
-    const tokens = new Tokens();
-    const token = context.req.cookies.hhcsrf;
-    const secret = context.req.session.csrfSecret;
-
-    if (!secret || !tokens.verify(secret, token)) {
-        throw new Error("Unauthorized");
-    }
-
-    return next();
-};
+export const ValidAntiForgeryToken = ValidAntiForgeryTokenMiddleware({
+    cookieKey: ANTI_FORGERY_COOKIE,
+    secretKey: ANTI_FORGERY_SECRET
+});

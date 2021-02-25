@@ -10,7 +10,7 @@ import {
     UseMiddleware
 } from "type-graphql";
 import { getRepository } from "typeorm";
-import { CROSS_SITE_FORGERY_COOKIE } from "../../../constants";
+import { ANTI_FORGERY_COOKIE } from "../../../constants";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
@@ -55,7 +55,7 @@ export class UserResolver {
                     return reject(false);
                 }
 
-                ctx.res.clearCookie(CROSS_SITE_FORGERY_COOKIE);
+                ctx.res.clearCookie(ANTI_FORGERY_COOKIE);
                 return response(true);
             });
         });

@@ -2,7 +2,7 @@ import Tokens from "csrf";
 import { Express, NextFunction, Request, Response } from "express";
 import passport, { AuthenticateOptions, Profile } from "passport";
 import { VerifyCallback } from "passport-oauth2";
-import { CROSS_SITE_FORGERY_COOKIE as ANTI_FORGERY_COOKIE } from "../constants";
+import { ANTI_FORGERY_COOKIE, ANTI_FORGERY_SECRET } from "../constants";
 import { loginCallback } from "./callback";
 
 export const addPassportStrategy = (
@@ -74,7 +74,7 @@ export const addPassportStrategy = (
         const token = tokens.create(secret);
 
         res.cookie(ANTI_FORGERY_COOKIE, token);
-        req.session.csrfSecret = secret;
+        req.session[ANTI_FORGERY_SECRET] = secret;
 
         next();
     };

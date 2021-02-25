@@ -4,5 +4,6 @@ declare module "express-session" {
     interface SessionData {
         redirectTo?: string;
         csrfSecret: string;
+        [key: string]: any;
     }
 }
