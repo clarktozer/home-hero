@@ -15260,10 +15260,10 @@ type-fest@^0.8.1:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
-type-graphql-csrf-middleware@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/type-graphql-csrf-middleware/-/type-graphql-csrf-middleware-0.0.2.tgz#9bd23ca7a550afd74754997ab4247d0748489d4a"
-  integrity sha512-0V7j7BaFTwZJ/EQlQYyugNIFmulizIRAXOEzuk1KVhbOuvhGzC/QtCzw+P3UU0+X9zLabeK6/bCjkeIqdl2u+A==
+type-graphql-csrf-middleware@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/type-graphql-csrf-middleware/-/type-graphql-csrf-middleware-0.0.3.tgz#af26d56123f0f170d2663deeee993f8994fb439b"
+  integrity sha512-Wy7xMDYYYWuC/x1of4GeKLRQ55QqYs+4QKPyHyB3OdStDwO2vvpy+zhaXo0RLVwSJGwZu+KYXWRqTLIkjVsuKw==
 
 type-graphql@^1.1.1:
   version "1.1.1"

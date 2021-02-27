@@ -28,7 +28,7 @@
         "pg": "^8.4.0",
         "reflect-metadata": "^0.1.10",
         "type-graphql": "^1.1.1",
-        "type-graphql-csrf-middleware": "^0.0.2",
+        "type-graphql-csrf-middleware": "^0.0.3",
         "typeorm": "0.2.30",
         "uuid": "^8.3.2"
     },
