@@ -65,7 +65,7 @@ export const addPassportStrategy = (
             req.session.redirectTo = undefined;
         }
 
-        res.redirect(redirect);
+        res.redirect(`${redirect}?success=true`);
     };
 
     const addCsrf = (req: Request, res: Response, next: NextFunction) => {
