@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { CircularProgress, CssBaseline } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { useCookie } from "react-use";
 import { Header } from "./components";
@@ -14,15 +14,15 @@ import { useAppDispatch } from "./state/store";
 
 export const App: FC = () => {
     const dispatch = useAppDispatch();
-    const { loading, data } = useQuery<any>(ME);
+    const { loading } = useQuery<any>(ME, {
+        onCompleted: data => {
+            if (data) {
+                dispatch(setViewer(data.me));
+            }
+        }
+    });
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
-
-    useEffect(() => {
-        if (data) {
-            dispatch(setViewer(data.me));
-        }
-    }, [data, dispatch]);
 
     const onToggleTheme = () => {
         updateCookie(isDarkTheme ? ThemeType.Light : ThemeType.Dark);

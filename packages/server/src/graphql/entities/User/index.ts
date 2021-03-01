@@ -1,31 +1,23 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import {
+    Column,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Unique
+} from "typeorm";
+import { BaseAccount } from "../BaseUser";
 import { Booking } from "../Booking";
 import { Listing } from "../Listing";
+import { SocialAccount } from "../SocialAccount";
 
 @Entity("users")
 @ObjectType()
-// @Unique(["email"])
-export class User extends BaseEntity {
+@Unique(["email"])
+export class User extends BaseAccount {
     @Field(() => ID)
-    @PrimaryColumn("text")
+    @PrimaryGeneratedColumn("uuid")
     id: string;
-
-    @Field()
-    @Column("text")
-    name: string;
-
-    @Field()
-    @Column("text")
-    token: string;
-
-    @Field()
-    @Column("text")
-    avatar: string;
-
-    @Field()
-    @Column("text")
-    email: string;
 
     @Field(() => Int)
     @Column("integer", { default: 0 })
@@ -36,4 +28,8 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Listing, listing => listing.host)
     listings: Promise<Listing[]>;
+
+    @Field(() => [SocialAccount])
+    @OneToMany(() => SocialAccount, account => account.user)
+    socials: Promise<SocialAccount[]>;
 }

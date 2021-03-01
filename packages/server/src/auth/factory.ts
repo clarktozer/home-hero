@@ -4,13 +4,15 @@ import passport, { AuthenticateOptions, Profile } from "passport";
 import { VerifyCallback } from "passport-oauth2";
 import { ANTI_FORGERY_COOKIE, ANTI_FORGERY_SECRET } from "../constants";
 import { loginCallback } from "./callback";
+import { StrategyType } from "./types";
 
 export const addPassportStrategy = (
     app: Express,
-    service: string,
+    type: StrategyType,
     Strategy: new (
         options: any,
         verify: (
+            req: Request,
             accessToken: string,
             refreshToken: string,
             profile: any,
@@ -18,55 +20,26 @@ export const addPassportStrategy = (
         ) => void
     ) => passport.Strategy,
     strategyOptions: any,
-    authOptions: AuthenticateOptions = {},
-    callbackAuthOptions: AuthenticateOptions = {
-        failureRedirect: `${process.env.CLIENT_URL}/login`,
-        successRedirect: `${process.env.CLIENT_URL}`,
-        passReqToCallback: true
-    }
+    authOptions: AuthenticateOptions = {}
 ) => {
-    const { successRedirect, ...rest } = callbackAuthOptions;
-
     passport.use(
         new Strategy(
             {
                 ...strategyOptions,
-                callbackURL: `/auth/${service}/callback`
+                callbackURL: `/auth/${type}/callback`,
+                passReqToCallback: true
             },
             async (
+                req: Request,
                 accessToken: string,
                 _refreshToken: string,
                 profile: Profile,
                 done: VerifyCallback
-            ) => loginCallback(service, accessToken, profile, done)
+            ) => loginCallback(req, type, accessToken, profile, done)
         )
     );
 
-    const addRedirect = (req: Request, _res: Response, next: NextFunction) => {
-        if (req.query.redirect && typeof req.query.redirect === "string") {
-            req.session.redirectTo = req.query.redirect;
-        }
-
-        next();
-    };
-
-    app.get(
-        `/auth/${service}`,
-        addRedirect,
-        passport.authenticate(service, authOptions)
-    );
-
-    const redirectCallback = (req: Request, res: Response) => {
-        const redirect = req.session?.redirectTo
-            ? `${process.env.CLIENT_URL}${req.session.redirectTo}`
-            : successRedirect || "";
-
-        if (req.session.redirectTo) {
-            req.session.redirectTo = undefined;
-        }
-
-        res.redirect(`${redirect}?success=true`);
-    };
+    app.get(`/auth/${type}`, passport.authenticate(type, authOptions));
 
     const addCsrf = (req: Request, res: Response, next: NextFunction) => {
         const tokens = new Tokens();
@@ -79,9 +52,29 @@ export const addPassportStrategy = (
         next();
     };
 
-    app.get(
-        `/auth/${service}/callback`,
-        [addCsrf, passport.authenticate(service, rest)],
+    const redirectCallback = (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            res.redirect(`${process.env.CLIENT_URL}/user/${req.user.id}`);
+        } else {
+            res.redirect(`${process.env.CLIENT_URL}/login`);
+        }
+    };
+
+    const authenticate = (req: Request, res: Response, next: NextFunction) => {
+        passport.authenticate(type, (err, user) => {
+            if (err) {
+                res.redirect(`${process.env.CLIENT_URL}/error`);
+            } else {
+                req.logIn(user, () => {
+                    next();
+                });
+            }
+        })(req, res, next);
+    };
+
+    app.get(`/auth/${type}/callback`, [
+        authenticate,
+        addCsrf,
         redirectCallback
-    );
+    ]);
 };

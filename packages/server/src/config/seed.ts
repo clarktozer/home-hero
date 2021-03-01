@@ -1,15 +1,20 @@
 import { v4 } from "uuid";
 import { Listing, User } from "../graphql/entities";
 import { ListingType } from "../graphql/entities/Listing/types";
+import { SocialAccount } from "../graphql/entities/SocialAccount";
 
 export const seed = async () => {
-    const user = User.create({
+    const social = SocialAccount.create({
         id: "12345",
         name: "James",
         avatar: "https://placedog.net/72/72?random",
         email: "james@example.com",
-        income: 723796,
         token: "1234"
+    });
+
+    const user = User.create({
+        income: 723796,
+        socials: Promise.resolve([social])
     });
 
     await user.save();

@@ -19,7 +19,7 @@ const run = async () => {
     addSession(app);
     addPassport(app);
 
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "production") {
         await seed();
     }
 

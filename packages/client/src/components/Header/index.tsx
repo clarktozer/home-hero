@@ -80,47 +80,32 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                         Home
                     </Typography>
                     <div>
-                        {viewer ? (
+                        {viewer && (
                             <ButtonBase
                                 focusRipple
                                 onClick={handleProfileMenuOpen}
                             >
                                 <Avatar alt="Remy Sharp" src={viewer.avatar} />
                             </ButtonBase>
-                        ) : (
-                            <>
-                                <Button
-                                    color="inherit"
-                                    href={`${
-                                        process.env.REACT_APP_API_ENDPOINT
-                                    }/auth/google?redirect=${encodeURIComponent(
-                                        location.pathname
-                                    )}`}
-                                >
-                                    Login Google
-                                </Button>
-                                <Button
-                                    color="inherit"
-                                    href={`${
-                                        process.env.REACT_APP_API_ENDPOINT
-                                    }/auth/github?redirect=${encodeURIComponent(
-                                        location.pathname
-                                    )}`}
-                                >
-                                    Login Github
-                                </Button>
-                                <Button
-                                    color="inherit"
-                                    href={`${
-                                        process.env.REACT_APP_API_ENDPOINT
-                                    }/auth/facebook?redirect=${encodeURIComponent(
-                                        location.pathname
-                                    )}`}
-                                >
-                                    Login Facebook
-                                </Button>
-                            </>
                         )}
+                        <Button
+                            color="inherit"
+                            href={`${process.env.REACT_APP_API_ENDPOINT}/auth/google`}
+                        >
+                            Login Google
+                        </Button>
+                        <Button
+                            color="inherit"
+                            href={`${process.env.REACT_APP_API_ENDPOINT}/auth/github`}
+                        >
+                            Login Github
+                        </Button>
+                        <Button
+                            color="inherit"
+                            href={`${process.env.REACT_APP_API_ENDPOINT}/auth/facebook`}
+                        >
+                            Login Facebook
+                        </Button>
                     </div>
                 </Toolbar>
             </AppBar>
