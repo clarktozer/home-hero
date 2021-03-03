@@ -18,7 +18,6 @@ Stack:
 Integrations:
 
 -   Google auth, maps
--   Microsoft auth
 -   Facebook auth
 -   GitHub auth
 -   Stripe
@@ -28,9 +27,3 @@ Additional Front-end libraries:
 
 -   Material UI
 -   React Router
-
-Maybe:
-
--   Server side tests with Jest
--   Authentication without 3rd party OAuth
--   Allow merging of social accounts into one login
