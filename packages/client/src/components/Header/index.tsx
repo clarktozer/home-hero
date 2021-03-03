@@ -5,25 +5,26 @@ import {
     Button,
     ButtonBase,
     IconButton,
+    InputBase,
     Menu,
     MenuItem,
     Toolbar,
-    Typography
+    Tooltip
 } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import { LOG_OUT } from "../../graphql/mutations";
 import { getViewer, setViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
-import { useStyles } from "./header.style";
+import { useStyles } from "./style";
 import { HeaderProps } from "./types";
 
 export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     const dispatch = useAppDispatch();
     const classes = useStyles();
-    const location = useLocation();
+    const history = useHistory();
     const viewer = useSelector(getViewer);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorEl);
@@ -47,6 +48,13 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
         setAnchorEl(null);
     };
 
+    const handleGoToProfile = () => {
+        if (viewer) {
+            history.push(`/user/${viewer.id}`);
+        }
+        handleMenuClose();
+    };
+
     const menuId = "primary-search-account-menu";
 
     const renderMenu = (
@@ -59,53 +67,78 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={handleGoToProfile}>Profile</MenuItem>
             <MenuItem onClick={handleLogOut}>Logout</MenuItem>
         </Menu>
     );
 
     return (
         <div>
-            <AppBar position="static">
+            <AppBar position="static" color="inherit">
                 <Toolbar>
                     <IconButton
                         className={classes.menuButton}
                         edge="start"
                         color="inherit"
-                        aria-label="menu"
+                        component={RouterLink}
+                        to="/"
                     >
-                        <Icon>menu</Icon>
+                        <Icon>hotel</Icon>
                     </IconButton>
-                    <Typography className={classes.title} variant="h6">
-                        Home
-                    </Typography>
-                    <div>
-                        {viewer && (
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <Icon>search</Icon>
+                        </div>
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput
+                            }}
+                            inputProps={{ "aria-label": "search" }}
+                        />
+                    </div>
+                    <div className={classes.grow} />
+                    <div className={classes.sectionDesktop}>
+                        <Tooltip title="Toggle light/dark theme">
+                            <IconButton color="inherit" onClick={onToggleTheme}>
+                                {isDarkTheme ? (
+                                    <Icon>brightness_high</Icon>
+                                ) : (
+                                    <Icon>brightness_4</Icon>
+                                )}
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Host">
+                            <IconButton
+                                className={classes.menuButton}
+                                color="inherit"
+                                component={RouterLink}
+                                to="/host"
+                            >
+                                <Icon>home</Icon>
+                            </IconButton>
+                        </Tooltip>
+                        {viewer ? (
                             <ButtonBase
                                 focusRipple
                                 onClick={handleProfileMenuOpen}
                             >
-                                <Avatar alt="Remy Sharp" src={viewer.avatar} />
+                                <Avatar alt={viewer.name} src={viewer.avatar} />
                             </ButtonBase>
+                        ) : (
+                            <Button
+                                size="medium"
+                                color="primary"
+                                variant="contained"
+                                component={RouterLink}
+                                to="/login"
+                                startIcon={<Icon>login</Icon>}
+                                disableElevation
+                            >
+                                Sign In
+                            </Button>
                         )}
-                        <Button
-                            color="inherit"
-                            href={`${process.env.REACT_APP_API_ENDPOINT}/auth/google`}
-                        >
-                            Login Google
-                        </Button>
-                        <Button
-                            color="inherit"
-                            href={`${process.env.REACT_APP_API_ENDPOINT}/auth/github`}
-                        >
-                            Login Github
-                        </Button>
-                        <Button
-                            color="inherit"
-                            href={`${process.env.REACT_APP_API_ENDPOINT}/auth/facebook`}
-                        >
-                            Login Facebook
-                        </Button>
                     </div>
                 </Toolbar>
             </AppBar>

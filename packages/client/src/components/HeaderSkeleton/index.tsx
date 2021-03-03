@@ -1,30 +1,20 @@
-import {
-    AppBar,
-    Icon,
-    IconButton,
-    Toolbar,
-    Typography
-} from "@material-ui/core";
+import { AppBar, Icon, IconButton, Toolbar } from "@material-ui/core";
 import React from "react";
-import { useStyles } from "../Header/header.style";
+import { useStyles } from "../Header/style";
 
 export const HeaderSkeleton = () => {
     const classes = useStyles();
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" color="inherit">
             <Toolbar>
                 <IconButton
                     className={classes.menuButton}
                     edge="start"
                     color="inherit"
-                    aria-label="menu"
                 >
-                    <Icon>menu</Icon>
+                    <Icon>hotel</Icon>
                 </IconButton>
-                <Typography className={classes.title} variant="h6">
-                    Home
-                </Typography>
             </Toolbar>
         </AppBar>
     );

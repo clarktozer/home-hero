@@ -41,20 +41,30 @@ export const App: FC = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            {loading ? (
-                <>
-                    <HeaderSkeleton />
-                    <CircularProgress />
-                </>
-            ) : (
-                <Router>
-                    <Header
-                        isDarkTheme={isDarkTheme}
-                        onToggleTheme={onToggleTheme}
-                    />
-                    <Routes />
-                </Router>
-            )}
+            <div
+                style={{
+                    position: "relative",
+                    minHeight: "100vh",
+                    display: "flex",
+                    flex: "auto",
+                    flexDirection: "column"
+                }}
+            >
+                {loading ? (
+                    <>
+                        <HeaderSkeleton />
+                        <CircularProgress />
+                    </>
+                ) : (
+                    <Router>
+                        <Header
+                            isDarkTheme={isDarkTheme}
+                            onToggleTheme={onToggleTheme}
+                        />
+                        <Routes />
+                    </Router>
+                )}
+            </div>
         </ThemeProvider>
     );
 };
