@@ -2,6 +2,7 @@ import connectRedis from "connect-redis";
 import { Express } from "express";
 import session from "express-session";
 import { redis } from "../config";
+import { SESSION_COOKIE } from "../constants";
 
 export const addSession = (app: Express) => {
     const RedisStore = connectRedis(session);
@@ -15,7 +16,7 @@ export const addSession = (app: Express) => {
             store: new RedisStore({
                 client: redis
             }),
-            name: process.env.SESSION_NAME as string,
+            name: SESSION_COOKIE,
             secret: process.env.SESSION_SECRET as string,
             resave: false,
             saveUninitialized: false,

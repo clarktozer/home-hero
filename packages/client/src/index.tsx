@@ -7,7 +7,9 @@ import {
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
 import { App } from "./App";
+import { SnackbarProvider } from "./components/SnackbarProvider";
 import reportWebVitals from "./reportWebVitals";
 import { Store } from "./state/store";
 
@@ -23,7 +25,11 @@ const client = new ApolloClient({
 ReactDOM.render(
     <ApolloProvider client={client}>
         <Provider store={Store}>
-            <App />
+            <SnackbarProvider>
+                <Router>
+                    <App />
+                </Router>
+            </SnackbarProvider>
         </Provider>
     </ApolloProvider>,
     document.getElementById("root")

@@ -10,7 +10,7 @@ import {
     UseMiddleware
 } from "type-graphql";
 import { getRepository } from "typeorm";
-import { ANTI_FORGERY_COOKIE } from "../../../constants";
+import { ANTI_FORGERY_COOKIE, SESSION_COOKIE } from "../../../constants";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
@@ -18,15 +18,18 @@ import { UserListingsData } from "./types";
 
 @Resolver(User)
 export class UserResolver {
-    @Query(() => User)
-    @Authorized()
-    @UseMiddleware(ValidAntiForgeryToken)
+    @Query(() => User, { nullable: true })
     async me(@Ctx() ctx: AppContext): Promise<User | undefined> {
-        return User.findOne(ctx.req.user!.id);
+        if (ctx.req.user) {
+            return User.findOne(ctx.req.user.id);
+        } else {
+            return undefined;
+        }
     }
 
     @Mutation(() => User)
     @Authorized()
+    @UseMiddleware(ValidAntiForgeryToken)
     async updateUser(@Ctx() ctx: AppContext): Promise<User | null> {
         try {
             const user = await User.findOne(ctx.req.user!.id);
@@ -46,16 +49,17 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
-    @Authorized()
     async logout(@Ctx() ctx: AppContext): Promise<boolean> {
         return new Promise((response, reject) => {
-            ctx.req.logout();
+            ctx.req.logOut();
             ctx.req.session.destroy(err => {
                 if (err) {
                     return reject(false);
                 }
 
                 ctx.res.clearCookie(ANTI_FORGERY_COOKIE);
+                ctx.res.clearCookie(SESSION_COOKIE);
+
                 return response(true);
             });
         });

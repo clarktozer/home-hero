@@ -1,22 +1,19 @@
-import { Button } from "@material-ui/core";
 import { FC } from "react";
+import { SocialLoginButton } from "../..";
 import { useStyles } from "./style";
 import { svg } from "./svg";
 
-export const FacebookButton: FC = ({ children }) => {
+export const FacebookLoginButton: FC = ({ children }) => {
     const classes = useStyles();
 
     return (
-        <Button
-            className={classes.root}
-            size="medium"
+        <SocialLoginButton
+            className={classes.facebookLogin}
             color="default"
-            variant="contained"
-            startIcon={svg}
-            disableElevation
+            icon={svg}
             href={`${process.env.REACT_APP_API_ENDPOINT}/auth/facebook`}
         >
             {children}
-        </Button>
+        </SocialLoginButton>
     );
 };

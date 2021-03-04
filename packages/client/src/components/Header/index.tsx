@@ -12,6 +12,7 @@ import {
     Tooltip
 } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
+import { useSnackbar } from "notistack";
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, useHistory } from "react-router-dom";
@@ -26,16 +27,20 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     const classes = useStyles();
     const history = useHistory();
     const viewer = useSelector(getViewer);
+    const { enqueueSnackbar } = useSnackbar();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorEl);
 
     const [logOut] = useMutation<any>(LOG_OUT, {
-        onCompleted: data => {
+        onCompleted: () => {
             dispatch(setViewer(null));
         }
     });
 
     const handleLogOut = () => {
+        enqueueSnackbar("You've successfully logged out!", {
+            variant: "success"
+        });
         handleMenuClose();
         logOut();
     };
@@ -67,82 +72,81 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleGoToProfile}>Profile</MenuItem>
-            <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+            <MenuItem onClick={handleGoToProfile}>
+                <Icon className={classes.menuIcon}>person</Icon>Profile
+            </MenuItem>
+            <MenuItem onClick={handleLogOut}>
+                <Icon className={classes.menuIcon}>exit_to_app</Icon>Logout
+            </MenuItem>
         </Menu>
     );
 
     return (
-        <div>
-            <AppBar position="static" color="inherit">
-                <Toolbar>
-                    <IconButton
-                        className={classes.menuButton}
-                        edge="start"
-                        color="inherit"
-                        component={RouterLink}
-                        to="/"
-                    >
-                        <Icon>hotel</Icon>
-                    </IconButton>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <Icon>search</Icon>
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput
-                            }}
-                            inputProps={{ "aria-label": "search" }}
-                        />
+        <AppBar position="sticky" color="inherit" variant="outlined">
+            <Toolbar>
+                <IconButton
+                    className={classes.menuButton}
+                    edge="start"
+                    color="inherit"
+                    component={RouterLink}
+                    to="/"
+                >
+                    <Icon>hotel</Icon>
+                </IconButton>
+                <div className={classes.search}>
+                    <div className={classes.searchIcon}>
+                        <Icon>search</Icon>
                     </div>
-                    <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <Tooltip title="Toggle light/dark theme">
-                            <IconButton color="inherit" onClick={onToggleTheme}>
-                                {isDarkTheme ? (
-                                    <Icon>brightness_high</Icon>
-                                ) : (
-                                    <Icon>brightness_4</Icon>
-                                )}
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Host">
-                            <IconButton
-                                className={classes.menuButton}
-                                color="inherit"
-                                component={RouterLink}
-                                to="/host"
-                            >
-                                <Icon>home</Icon>
-                            </IconButton>
-                        </Tooltip>
-                        {viewer ? (
-                            <ButtonBase
-                                focusRipple
-                                onClick={handleProfileMenuOpen}
-                            >
-                                <Avatar alt={viewer.name} src={viewer.avatar} />
-                            </ButtonBase>
-                        ) : (
-                            <Button
-                                size="medium"
-                                color="primary"
-                                variant="contained"
-                                component={RouterLink}
-                                to="/login"
-                                startIcon={<Icon>login</Icon>}
-                                disableElevation
-                            >
-                                Sign In
-                            </Button>
-                        )}
-                    </div>
-                </Toolbar>
-            </AppBar>
+                    <InputBase
+                        placeholder="Search…"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput
+                        }}
+                        inputProps={{ "aria-label": "search" }}
+                    />
+                </div>
+                <div className={classes.grow} />
+                <div className={classes.sectionDesktop}>
+                    <Tooltip title="Toggle light/dark theme">
+                        <IconButton color="inherit" onClick={onToggleTheme}>
+                            {isDarkTheme ? (
+                                <Icon>brightness_high</Icon>
+                            ) : (
+                                <Icon>brightness_4</Icon>
+                            )}
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Host">
+                        <IconButton
+                            className={classes.menuButton}
+                            color="inherit"
+                            component={RouterLink}
+                            to="/host"
+                        >
+                            <Icon>home</Icon>
+                        </IconButton>
+                    </Tooltip>
+                    {viewer ? (
+                        <ButtonBase focusRipple onClick={handleProfileMenuOpen}>
+                            <Avatar alt={viewer.name} src={viewer.avatar} />
+                        </ButtonBase>
+                    ) : (
+                        <Button
+                            size="medium"
+                            color="primary"
+                            variant="contained"
+                            component={RouterLink}
+                            to="/login"
+                            startIcon={<Icon>login</Icon>}
+                            disableElevation
+                        >
+                            Sign In
+                        </Button>
+                    )}
+                </div>
+            </Toolbar>
             {renderMenu}
-        </div>
+        </AppBar>
     );
 };

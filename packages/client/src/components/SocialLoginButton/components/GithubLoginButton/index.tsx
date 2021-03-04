@@ -1,22 +1,19 @@
-import { Button } from "@material-ui/core";
 import { FC } from "react";
+import { SocialLoginButton } from "../..";
 import { useStyles } from "./style";
 import { svg } from "./svg";
 
-export const GithubButton: FC = ({ children }) => {
+export const GithubLoginButton: FC = ({ children }) => {
     const classes = useStyles();
 
     return (
-        <Button
-            className={classes.root}
-            size="medium"
+        <SocialLoginButton
+            className={classes.githubLogin}
             color="default"
-            variant="contained"
-            startIcon={svg}
-            disableElevation
+            icon={svg}
             href={`${process.env.REACT_APP_API_ENDPOINT}/auth/github`}
         >
             {children}
-        </Button>
+        </SocialLoginButton>
     );
 };

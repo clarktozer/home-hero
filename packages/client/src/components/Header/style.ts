@@ -60,5 +60,8 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up("md")]: {
             display: "flex"
         }
+    },
+    menuIcon: {
+        marginRight: "10px"
     }
 }));

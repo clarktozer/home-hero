@@ -54,7 +54,7 @@ export const addPassportStrategy = (
 
     const redirectCallback = (req: Request, res: Response) => {
         if (req.isAuthenticated()) {
-            res.redirect(`${process.env.CLIENT_URL}/user/${req.user.id}`);
+            res.redirect(`${process.env.CLIENT_URL}/login?mode=redirect`);
         } else {
             res.redirect(`${process.env.CLIENT_URL}/login`);
         }

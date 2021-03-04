@@ -1,6 +1,6 @@
 export enum ThemeType {
     Dark = "dark",
-    Light = "light",
+    Light = "light"
 }
 
-export const ThemeCookie = "home-hero-theme";
+export const ThemeCookie = "hhtheme";
