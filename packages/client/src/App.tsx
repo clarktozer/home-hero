@@ -1,14 +1,14 @@
 import { useLazyQuery } from "@apollo/client";
 import { CircularProgress, CssBaseline } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useCookie, useMount } from "react-use";
 import { Header } from "./components";
 import { HeaderSkeleton } from "./components/HeaderSkeleton";
 import { ThemeCookie, ThemeType } from "./constants";
 import { ME } from "./graphql/mutations";
-import { useScript } from "./hooks";
+import { useGoogleApiScript } from "./hooks";
 import { Routes } from "./routes";
 import { setViewer } from "./state/features";
 import { useAppDispatch } from "./state/store";
@@ -18,19 +18,9 @@ export const App: FC = () => {
     const dispatch = useAppDispatch();
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
-    const status = useScript(
-        `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&callback=initMap`
-    );
-
-    useMount(() => {
-        (window as any).initMap = () => {
-            console.log("loaded maps", status);
-        };
+    const status = useGoogleApiScript({
+        key: process.env.REACT_APP_GOOGLE_API_KEY as string
     });
-
-    useEffect(() => {
-        console.log("status", status);
-    }, [status]);
 
     const [getUser, { loading }] = useLazyQuery<any>(ME, {
         onCompleted: data => {
