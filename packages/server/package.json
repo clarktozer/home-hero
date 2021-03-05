@@ -9,6 +9,7 @@
         "build": "tsc -p ./"
     },
     "dependencies": {
+        "@googlemaps/google-maps-services-js": "^3.1.16",
         "@homehero/common": "1.0.0",
         "apollo-server-express": "^2.19.2",
         "class-validator": "^0.13.1",

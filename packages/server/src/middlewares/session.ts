@@ -17,7 +17,7 @@ export const addSession = (app: Express) => {
                 client: redis
             }),
             name: SESSION_COOKIE,
-            secret: process.env.SESSION_SECRET as string,
+            secret: `${process.env.SESSION_SECRET}`,
             resave: false,
             saveUninitialized: false,
             cookie: {

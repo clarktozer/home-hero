@@ -34,8 +34,8 @@ export const addPassport = (app: Express) => {
         StrategyType.Github,
         GitHubStrategy,
         {
-            clientID: process.env.GITHUB_CLIENT_ID as string,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET as string
+            clientID: `${process.env.GITHUB_CLIENT_ID}`,
+            clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`
         },
         {
             scope: ["read:user"]
@@ -47,8 +47,8 @@ export const addPassport = (app: Express) => {
         StrategyType.Google,
         GoogleStrategy,
         {
-            clientID: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+            clientID: `${process.env.GOOGLE_CLIENT_ID}`,
+            clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`
         },
         {
             scope: ["profile", "email"]
@@ -60,8 +60,8 @@ export const addPassport = (app: Express) => {
         StrategyType.Facebook,
         FacebookStrategy,
         {
-            clientID: process.env.FACEBOOK_CLIENT_ID as string,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+            clientID: `${process.env.FACEBOOK_CLIENT_ID}`,
+            clientSecret: `${process.env.FACEBOOK_CLIENT_SECRET}`,
             profileFields: ["id", "email", "displayName", "picture"]
         },
         {
