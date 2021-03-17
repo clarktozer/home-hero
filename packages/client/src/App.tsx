@@ -8,7 +8,6 @@ import { Header } from "./components";
 import { HeaderSkeleton } from "./components/HeaderSkeleton";
 import { ThemeCookie, ThemeType } from "./constants";
 import { ME } from "./graphql/mutations";
-import { useGoogleApiScript } from "./hooks";
 import { Routes } from "./routes";
 import { setViewer } from "./state/features";
 import { useAppDispatch } from "./state/store";
@@ -18,9 +17,6 @@ export const App: FC = () => {
     const dispatch = useAppDispatch();
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
-    const status = useGoogleApiScript({
-        key: process.env.REACT_APP_GOOGLE_API_KEY as string
-    });
 
     const [getUser, { loading }] = useLazyQuery<any>(ME, {
         onCompleted: data => {

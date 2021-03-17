@@ -5,7 +5,6 @@ import {
     Button,
     ButtonBase,
     IconButton,
-    InputBase,
     Menu,
     MenuItem,
     Toolbar,
@@ -19,6 +18,7 @@ import { Link as RouterLink, useHistory } from "react-router-dom";
 import { LOG_OUT } from "../../graphql/mutations";
 import { getViewer, setViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
+import { PlacesAutocomplete } from "../PlacesAutocomplete";
 import { useStyles } from "./style";
 import { HeaderProps } from "./types";
 
@@ -93,19 +93,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                 >
                     <Icon>hotel</Icon>
                 </IconButton>
-                <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                        <Icon>search</Icon>
-                    </div>
-                    <InputBase
-                        placeholder="Search…"
-                        classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput
-                        }}
-                        inputProps={{ "aria-label": "search" }}
-                    />
-                </div>
+                <PlacesAutocomplete />
                 <div className={classes.grow} />
                 <div className={classes.sectionDesktop}>
                     <Tooltip title="Toggle light/dark theme">

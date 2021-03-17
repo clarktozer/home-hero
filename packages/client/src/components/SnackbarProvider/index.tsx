@@ -14,7 +14,7 @@ export const SnackbarProvider: FC = ({ children }) => {
         <Provider
             className={classes.root}
             anchorOrigin={anchorOrigin}
-            autoHideDuration={2000}
+            autoHideDuration={3000}
         >
             {children}
         </Provider>
