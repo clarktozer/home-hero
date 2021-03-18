@@ -1,89 +1,25 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import {
-    fade,
+    CircularProgress,
     Grid,
     Icon,
     InputBase,
-    makeStyles,
-    TextField,
     Typography
 } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { PLACES } from "../../graphql";
+import { useStyles } from "./style";
+import { PlacesAutocompleteProps, PlaceType } from "./types";
 
-export const PLACES = gql`
-    query Autocomplete($input: String!) {
-        autocomplete(input: $input) {
-            id
-            title
-            subtitle
-        }
-    }
-`;
-
-const useStyles = makeStyles(theme => ({
-    icon: {
-        color: theme.palette.text.secondary,
-        marginRight: theme.spacing(2)
-    },
-    title: {
-        fontWeight: 400
-    },
-    search: {
-        position: "relative",
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(
-            theme.palette.type === "dark"
-                ? theme.palette.common.white
-                : theme.palette.common.black,
-            0.05
-        ),
-        "&:hover": {
-            backgroundColor: fade(
-                theme.palette.type === "dark"
-                    ? theme.palette.common.white
-                    : theme.palette.common.black,
-                0.1
-            )
-        },
-        marginLeft: 0,
-        width: "100%",
-        [theme.breakpoints.up("sm")]: {
-            marginLeft: theme.spacing(1)
-        }
-    },
-    searchIcon: {
-        padding: theme.spacing(0, 2),
-        height: "100%",
-        position: "absolute",
-        pointerEvents: "none",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    inputRoot: {
-        color: "inherit"
-    },
-    inputInput: {
-        padding: theme.spacing(1, 1, 1, 0),
-        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-        transition: theme.transitions.create("width"),
-        width: "30ch"
-    }
-}));
-
-interface PlaceType {
-    id: string;
-    title: string;
-    subtitle: string;
-}
-
-export const PlacesAutocomplete = () => {
+export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
+    onSearch,
+    onValidationError
+}) => {
     const classes = useStyles();
     const [value, setValue] = useState<PlaceType | null>(null);
     const [inputValue, setInputValue] = useState("");
     const [options, setOptions] = useState<PlaceType[]>([]);
-    const [open, setOpen] = useState(true);
 
     const [getPlaces, { loading, data }] = useLazyQuery<any>(PLACES, {
         onCompleted: data => {
@@ -109,22 +45,47 @@ export const PlacesAutocomplete = () => {
 
     const onGetOptionLabel = (option: PlaceType) => option.title;
 
-    const onChange = (
+    const onValueChange = (
         _event: React.ChangeEvent<{}>,
         newValue: PlaceType | null
     ) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
+
+        if (newValue) {
+            onSearch(`${newValue.title}, ${newValue.subtitle}`);
+        }
     };
 
     const onInputChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
         setInputValue(newValue);
     };
 
+    const onKeyPress: React.KeyboardEventHandler<HTMLDivElement> = event => {
+        if (event.key === "Enter") {
+            onPlaceSearch();
+            event.preventDefault();
+        }
+    };
+
+    const onPlaceSearch = () => {
+        let trimmedValue = inputValue.trim();
+
+        if (value) {
+            trimmedValue = `${value.title}, ${value.subtitle}`;
+        }
+
+        if (trimmedValue) {
+            onSearch(trimmedValue);
+        } else {
+            onValidationError && onValidationError();
+        }
+    };
+
     const onRenderInput = (params: AutocompleteRenderInputParams) => (
         <div className={classes.search} ref={params.InputProps.ref}>
             <div className={classes.searchIcon}>
-                <Icon>search</Icon>
+                <Icon onClick={onPlaceSearch}>search</Icon>
             </div>
             <InputBase
                 inputProps={params.inputProps}
@@ -133,17 +94,10 @@ export const PlacesAutocomplete = () => {
                     root: classes.inputRoot,
                     input: classes.inputInput
                 }}
+                onKeyPress={onKeyPress}
             />
+            {loading && <CircularProgress />}
         </div>
-    );
-
-    const onRenderTextField = (params: AutocompleteRenderInputParams) => (
-        <TextField
-            {...params}
-            label="Add a location"
-            variant="standard"
-            fullWidth
-        />
     );
 
     const onGetOptionSelected = (option: PlaceType, newValue: PlaceType) =>
@@ -171,12 +125,11 @@ export const PlacesAutocomplete = () => {
             autoComplete
             filterSelectedOptions
             value={value}
-            onChange={onChange}
+            onChange={onValueChange}
             onInputChange={onInputChange}
             renderInput={onRenderInput}
             renderOption={onRenderOption}
             clearOnBlur={false}
-            open={options.length > 0}
         />
     );
 };

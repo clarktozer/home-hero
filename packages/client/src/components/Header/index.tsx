@@ -81,6 +81,16 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
         </Menu>
     );
 
+    const onSearch = (value: string) => {
+        history.push(`/listings/${value}`);
+    };
+
+    const onError = () => {
+        enqueueSnackbar("Please enter a valid search!", {
+            variant: "error"
+        });
+    };
+
     return (
         <AppBar position="sticky" color="inherit" variant="outlined">
             <Toolbar>
@@ -93,7 +103,10 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                 >
                     <Icon>hotel</Icon>
                 </IconButton>
-                <PlacesAutocomplete />
+                <PlacesAutocomplete
+                    onSearch={onSearch}
+                    onValidationError={onError}
+                />
                 <div className={classes.grow} />
                 <div className={classes.sectionDesktop}>
                     <Tooltip title="Toggle light/dark theme">
