@@ -50,5 +50,13 @@ export const useStyles = makeStyles(theme => ({
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
         transition: theme.transitions.create("width"),
         width: "30ch"
+    },
+    listBox: {
+        padding: 0
+    },
+    spinnerContainer: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
     }
 }));

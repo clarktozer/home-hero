@@ -1,11 +1,16 @@
 import { useLazyQuery } from "@apollo/client";
-import { Grid, Icon, InputBase, Typography } from "@material-ui/core";
+import {
+    CircularProgress,
+    Grid,
+    Icon,
+    InputBase,
+    Typography
+} from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 import { useSnackbar } from "notistack";
 import React, { FC, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { AUTOCOMPLETE } from "../../graphql";
-import { LoadingOption } from "./components";
 import { useStyles } from "./style";
 import { PlaceType } from "./types";
 
@@ -141,8 +146,17 @@ export const PlacesAutocomplete: FC = () => {
         setOpen(false);
     };
 
+    const loadingOption = (
+        <div className={classes.spinnerContainer}>
+            <CircularProgress size={20} />
+        </div>
+    );
+
     return (
         <Autocomplete
+            classes={{
+                listbox: classes.listBox
+            }}
             options={options}
             getOptionLabel={onGetOptionLabel}
             getOptionSelected={onGetOptionSelected}
@@ -155,7 +169,7 @@ export const PlacesAutocomplete: FC = () => {
             renderOption={onRenderOption}
             clearOnBlur={false}
             loading={loading}
-            loadingText={<LoadingOption />}
+            loadingText={loadingOption}
             onOpen={onOpen}
             onClose={onClose}
             open={isOpen && inputValue.length > 2}
