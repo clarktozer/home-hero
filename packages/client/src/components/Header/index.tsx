@@ -65,10 +65,16 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            anchorOrigin={{
+                vertical: "top",
+                horizontal: "right"
+            }}
             id={menuId}
             keepMounted
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            transformOrigin={{
+                vertical: "top",
+                horizontal: "right"
+            }}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
@@ -87,7 +93,11 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
 
     const onError = () => {
         enqueueSnackbar("Please enter a valid search!", {
-            variant: "error"
+            variant: "error",
+            anchorOrigin: {
+                vertical: "top",
+                horizontal: "center"
+            }
         });
     };
 
