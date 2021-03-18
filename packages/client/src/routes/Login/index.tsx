@@ -9,7 +9,7 @@ import {
     GithubLoginButton,
     GoogleLoginButton
 } from "../../components/SocialLoginButton/components";
-import { ME } from "../../graphql/mutations";
+import { ME } from "../../graphql/queries";
 import { setViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
 import { useStyles } from "./style";

@@ -29,7 +29,9 @@ export const useStyles = makeStyles(theme => ({
         width: "100%",
         [theme.breakpoints.up("sm")]: {
             marginLeft: theme.spacing(1)
-        }
+        },
+        display: "flex",
+        alignItems: "center"
     },
     searchIcon: {
         padding: theme.spacing(0, 2),

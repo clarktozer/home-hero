@@ -7,7 +7,7 @@ import { useCookie, useMount } from "react-use";
 import { Header } from "./components";
 import { HeaderSkeleton } from "./components/HeaderSkeleton";
 import { ThemeCookie, ThemeType } from "./constants";
-import { ME } from "./graphql/mutations";
+import { ME } from "./graphql/queries";
 import { Routes } from "./routes";
 import { setViewer } from "./state/features";
 import { useAppDispatch } from "./state/store";

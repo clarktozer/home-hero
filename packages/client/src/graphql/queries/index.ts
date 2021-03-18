@@ -11,7 +11,7 @@ export const ME = gql`
     }
 `;
 
-export const PLACES = gql`
+export const AUTOCOMPLETE = gql`
     query Autocomplete($input: String!) {
         autocomplete(input: $input) {
             id

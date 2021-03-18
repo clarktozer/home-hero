@@ -1,31 +1,36 @@
 import { useLazyQuery } from "@apollo/client";
-import {
-    CircularProgress,
-    Grid,
-    Icon,
-    InputBase,
-    Typography
-} from "@material-ui/core";
+import { Grid, Icon, InputBase, Typography } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
+import { useSnackbar } from "notistack";
 import React, { FC, useEffect, useState } from "react";
-import { PLACES } from "../../graphql";
+import { useHistory } from "react-router-dom";
+import { AUTOCOMPLETE } from "../../graphql";
+import { LoadingOption } from "./components";
 import { useStyles } from "./style";
-import { PlacesAutocompleteProps, PlaceType } from "./types";
+import { PlaceType } from "./types";
 
-export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
-    onSearch,
-    onValidationError
-}) => {
+export const PlacesAutocomplete: FC = () => {
     const classes = useStyles();
+    const history = useHistory();
+    const { enqueueSnackbar } = useSnackbar();
     const [value, setValue] = useState<PlaceType | null>(null);
     const [inputValue, setInputValue] = useState("");
     const [options, setOptions] = useState<PlaceType[]>([]);
+    const [isOpen, setOpen] = useState(false);
 
-    const [getPlaces, { loading, data }] = useLazyQuery<any>(PLACES, {
+    const [getPlaces, { loading }] = useLazyQuery<any>(AUTOCOMPLETE, {
         onCompleted: data => {
-            console.log(data);
+            let newOptions: PlaceType[] = [];
 
-            setOptions(data.autocomplete);
+            if (value) {
+                newOptions = [value];
+            }
+
+            if (data.autocomplete) {
+                newOptions = [...newOptions, ...data.autocomplete];
+            }
+
+            setOptions(newOptions);
         }
     });
 
@@ -36,12 +41,18 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
             return undefined;
         }
 
-        getPlaces({
-            variables: {
-                input: inputValue
-            }
-        });
+        if (inputValue.length > 2) {
+            getPlaces({
+                variables: {
+                    input: inputValue
+                }
+            });
+        }
     }, [value, inputValue, getPlaces]);
+
+    const onSearch = (value: string) => {
+        history.push(`/listings/${value}`);
+    };
 
     const onGetOptionLabel = (option: PlaceType) => option.title;
 
@@ -78,7 +89,13 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
         if (trimmedValue) {
             onSearch(trimmedValue);
         } else {
-            onValidationError && onValidationError();
+            enqueueSnackbar("Please enter a valid search!", {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "center"
+                }
+            });
         }
     };
 
@@ -96,7 +113,6 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
                 }}
                 onKeyPress={onKeyPress}
             />
-            {loading && <CircularProgress />}
         </div>
     );
 
@@ -117,6 +133,14 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
         </Grid>
     );
 
+    const onOpen = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
+
     return (
         <Autocomplete
             options={options}
@@ -130,6 +154,11 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
             renderInput={onRenderInput}
             renderOption={onRenderOption}
             clearOnBlur={false}
+            loading={loading}
+            loadingText={<LoadingOption />}
+            onOpen={onOpen}
+            onClose={onClose}
+            open={isOpen && inputValue.length > 2}
         />
     );
 };

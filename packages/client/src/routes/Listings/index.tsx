@@ -1,5 +1,9 @@
 import React, { FC } from "react";
+import { useParams } from "react-router-dom";
+import { MatchParams } from "./types";
 
 export const Listings: FC = () => {
-    return <div>Listings</div>;
+    const { location } = useParams<MatchParams>();
+
+    return <div>Listings {location}</div>;
 };
