@@ -7,9 +7,10 @@ import {
     Typography
 } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
+import debounce from "lodash.debounce";
 import { useSnackbar } from "notistack";
-import React, { FC, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { AUTOCOMPLETE } from "../../graphql";
 import { useStyles } from "./style";
 import { PlaceType } from "./types";
@@ -17,13 +18,14 @@ import { PlaceType } from "./types";
 export const PlacesAutocomplete: FC = () => {
     const classes = useStyles();
     const history = useHistory();
+    const location = useLocation();
     const { enqueueSnackbar } = useSnackbar();
     const [value, setValue] = useState<PlaceType | null>(null);
     const [inputValue, setInputValue] = useState("");
     const [options, setOptions] = useState<PlaceType[]>([]);
     const [isOpen, setOpen] = useState(false);
 
-    const [getPlaces, { loading }] = useLazyQuery<any>(AUTOCOMPLETE, {
+    const [getAutocomplete, { loading }] = useLazyQuery<any>(AUTOCOMPLETE, {
         onCompleted: data => {
             let newOptions: PlaceType[] = [];
 
@@ -39,6 +41,34 @@ export const PlacesAutocomplete: FC = () => {
         }
     });
 
+    const getAutocompleteRef = useRef(getAutocomplete);
+
+    const debouncedAutocomplete = useMemo(
+        () =>
+            debounce(
+                (input: string) => {
+                    getAutocompleteRef.current({
+                        variables: {
+                            input
+                        }
+                    });
+                },
+                300,
+                {
+                    leading: true
+                }
+            ),
+        []
+    );
+
+    useEffect(() => {
+        const { pathname } = location;
+
+        if (!pathname.includes("/listings")) {
+            onClear();
+        }
+    }, [location]);
+
     useEffect(() => {
         if (inputValue === "") {
             setOptions(value ? [value] : []);
@@ -47,13 +77,14 @@ export const PlacesAutocomplete: FC = () => {
         }
 
         if (inputValue.length > 2) {
-            getPlaces({
-                variables: {
-                    input: inputValue
-                }
-            });
+            debouncedAutocomplete(inputValue);
         }
-    }, [value, inputValue, getPlaces]);
+    }, [value, inputValue, debouncedAutocomplete]);
+
+    const onClear = () => {
+        setInputValue("");
+        setValue(null);
+    };
 
     const onSearch = (value: string) => {
         history.push(`/listings/${value}`);
