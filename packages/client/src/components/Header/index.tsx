@@ -29,7 +29,12 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     const viewer = useSelector(getViewer);
     const { enqueueSnackbar } = useSnackbar();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [
+        mobileMoreAnchorEl,
+        setMobileMoreAnchorEl
+    ] = useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
     const [logOut] = useMutation<any>(LOG_OUT, {
         onCompleted: () => {
@@ -60,6 +65,42 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
         handleMenuClose();
     };
 
+    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setMobileMoreAnchorEl(event.currentTarget);
+    };
+
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
+    };
+
+    const profile = viewer ? (
+        <ButtonBase focusRipple onClick={handleProfileMenuOpen}>
+            <Avatar alt={viewer.name} src={viewer.avatar} />
+        </ButtonBase>
+    ) : (
+        <Button
+            size="medium"
+            color="primary"
+            variant="contained"
+            component={RouterLink}
+            to="/login"
+            startIcon={<Icon>login</Icon>}
+            disableElevation
+        >
+            Sign In
+        </Button>
+    );
+
+    const themeButton = (
+        <IconButton color="inherit" onClick={onToggleTheme}>
+            {isDarkTheme ? (
+                <Icon>brightness_high</Icon>
+            ) : (
+                <Icon>brightness_4</Icon>
+            )}
+        </IconButton>
+    );
+
     const menuId = "primary-search-account-menu";
 
     const renderMenu = (
@@ -87,6 +128,33 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
         </Menu>
     );
 
+    const mobileMenuId = "primary-search-account-menu-mobile";
+
+    const renderMobileMenu = (
+        <Menu
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            id={mobileMenuId}
+            keepMounted
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            open={isMobileMenuOpen}
+            onClose={handleMobileMenuClose}
+        >
+            <MenuItem>{themeButton}</MenuItem>
+            <MenuItem>
+                <IconButton color="inherit" component={RouterLink} to="/host">
+                    <Icon>home</Icon>
+                </IconButton>
+            </MenuItem>
+            <MenuItem
+                className={classes.mobileAvatar}
+                onClick={handleProfileMenuOpen}
+            >
+                {profile}
+            </MenuItem>
+        </Menu>
+    );
+
     return (
         <AppBar position="sticky" color="inherit" variant="outlined">
             <Toolbar>
@@ -103,13 +171,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                 <div className={classes.grow} />
                 <div className={classes.sectionDesktop}>
                     <Tooltip title="Toggle light/dark theme">
-                        <IconButton color="inherit" onClick={onToggleTheme}>
-                            {isDarkTheme ? (
-                                <Icon>brightness_high</Icon>
-                            ) : (
-                                <Icon>brightness_4</Icon>
-                            )}
-                        </IconButton>
+                        {themeButton}
                     </Tooltip>
                     <Tooltip title="Host">
                         <IconButton
@@ -139,7 +201,19 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                         </Button>
                     )}
                 </div>
+                <div className={classes.sectionMobile}>
+                    <IconButton
+                        aria-label="show more"
+                        aria-controls={mobileMenuId}
+                        aria-haspopup="true"
+                        onClick={handleMobileMenuOpen}
+                        color="inherit"
+                    >
+                        <Icon>more_horiz</Icon>
+                    </IconButton>
+                </div>
             </Toolbar>
+            {renderMobileMenu}
             {renderMenu}
         </AppBar>
     );

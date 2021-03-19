@@ -185,6 +185,7 @@ export const PlacesAutocomplete: FC = () => {
 
     return (
         <Autocomplete
+            className={classes.placesAutocomplete}
             classes={{
                 listbox: classes.listBox
             }}
