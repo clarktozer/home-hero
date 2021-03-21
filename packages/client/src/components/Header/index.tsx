@@ -35,6 +35,8 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     ] = useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const menuId = "primary-menu";
+    const mobileMenuId = "primary-menu-mobile";
 
     const [logOut] = useMutation<any>(LOG_OUT, {
         onCompleted: () => {
@@ -73,11 +75,13 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
         setMobileMoreAnchorEl(null);
     };
 
-    const profile = viewer ? (
+    const avatar = viewer && (
         <ButtonBase focusRipple onClick={handleProfileMenuOpen}>
             <Avatar alt={viewer.name} src={viewer.avatar} />
         </ButtonBase>
-    ) : (
+    );
+
+    const desktopProfile = avatar || (
         <Button
             size="medium"
             color="primary"
@@ -91,6 +95,12 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
         </Button>
     );
 
+    const mobileProfile = avatar || (
+        <IconButton color="inherit" component={RouterLink} to="/login">
+            <Icon>login</Icon>
+        </IconButton>
+    );
+
     const themeButton = (
         <IconButton color="inherit" onClick={onToggleTheme}>
             {isDarkTheme ? (
@@ -100,8 +110,6 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
             )}
         </IconButton>
     );
-
-    const menuId = "primary-search-account-menu";
 
     const renderMenu = (
         <Menu
@@ -128,8 +136,6 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
         </Menu>
     );
 
-    const mobileMenuId = "primary-search-account-menu-mobile";
-
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
@@ -150,7 +156,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                 className={classes.mobileAvatar}
                 onClick={handleProfileMenuOpen}
             >
-                {profile}
+                {mobileProfile}
             </MenuItem>
         </Menu>
     );
@@ -183,23 +189,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                             <Icon>home</Icon>
                         </IconButton>
                     </Tooltip>
-                    {viewer ? (
-                        <ButtonBase focusRipple onClick={handleProfileMenuOpen}>
-                            <Avatar alt={viewer.name} src={viewer.avatar} />
-                        </ButtonBase>
-                    ) : (
-                        <Button
-                            size="medium"
-                            color="primary"
-                            variant="contained"
-                            component={RouterLink}
-                            to="/login"
-                            startIcon={<Icon>login</Icon>}
-                            disableElevation
-                        >
-                            Sign In
-                        </Button>
-                    )}
+                    {desktopProfile}
                 </div>
                 <div className={classes.sectionMobile}>
                     <IconButton

@@ -4,7 +4,6 @@ import {
     CardContent,
     CardHeader,
     Chip,
-    createStyles,
     Grid,
     makeStyles,
     Theme,
@@ -14,27 +13,25 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { getViewer } from "../../state/features";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            flexGrow: 1,
-            padding: 24
-        },
-        paper: {
-            padding: theme.spacing(2),
-            textAlign: "center",
-            color: theme.palette.text.secondary
-        },
-        media: {
-            height: 0,
-            paddingTop: "100px" // 16:9
-        },
-        large: {
-            width: theme.spacing(10),
-            height: theme.spacing(10)
-        }
-    })
-);
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        flexGrow: 1,
+        padding: 24
+    },
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: "center",
+        color: theme.palette.text.secondary
+    },
+    media: {
+        height: 0,
+        paddingTop: "100px" // 16:9
+    },
+    large: {
+        width: theme.spacing(10),
+        height: theme.spacing(10)
+    }
+}));
 
 export const User: FC = () => {
     const viewer = useSelector(getViewer);

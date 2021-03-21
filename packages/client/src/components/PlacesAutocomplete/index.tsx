@@ -142,7 +142,7 @@ export const PlacesAutocomplete: FC = () => {
             </div>
             <InputBase
                 inputProps={params.inputProps}
-                placeholder="Search…"
+                placeholder="Search 'Melbourne'"
                 classes={{
                     root: classes.inputRoot,
                     input: classes.inputInput
