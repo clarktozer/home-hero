@@ -17,5 +17,7 @@ export const validationSchema = yup.object({
     postCode: yup
         .string()
         .required("Please enter a post code for your listing!"),
-    price: yup.number().required("Please enter a price for your listing!")
+    price: yup.number().required("Please enter a price for your listing!"),
+    recaptcha: yup.string().required(),
+    image: yup.string().required("Please add an image for your listing!")
 });

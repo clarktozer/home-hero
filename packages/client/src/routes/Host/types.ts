@@ -8,4 +8,6 @@ export interface FormProps {
     state: string;
     postCode: string;
     price?: number;
+    recaptcha?: string;
+    image?: string;
 }

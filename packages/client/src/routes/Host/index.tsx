@@ -7,17 +7,21 @@ import {
     Typography
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import classnames from "classnames";
 import { useFormik } from "formik";
 import React, { FC, useEffect } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { FilePicker } from "./components";
 import { useStyles } from "./style";
 import { FormProps } from "./types";
 import { validationSchema } from "./validation";
 
 export const Host: FC = () => {
     const classes = useStyles();
+    const theme = useTheme();
     const {
         handleSubmit,
         values,
@@ -37,7 +41,9 @@ export const Host: FC = () => {
             city: "",
             state: "",
             postCode: "",
-            price: undefined
+            price: undefined,
+            recaptcha: "",
+            image: ""
         },
         validationSchema,
         onSubmit: values => {
@@ -67,6 +73,14 @@ export const Host: FC = () => {
         value: string
     ) => {
         setFieldValue("type", value);
+    };
+
+    const onRecaptchaChange = (token: string | null) => {
+        setFieldValue("recaptcha", token);
+    };
+
+    const onImageChange = async (image: string) => {
+        setFieldValue("image", image);
     };
 
     return (
@@ -144,6 +158,9 @@ export const Host: FC = () => {
                     }}
                     error={touched.numOfGuests && Boolean(errors.numOfGuests)}
                     helperText={touched.numOfGuests && errors.numOfGuests}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
                 <TextField
                     required
@@ -163,6 +180,9 @@ export const Host: FC = () => {
                             </span>
                         </>
                     }
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
                 <TextField
                     required
@@ -184,6 +204,9 @@ export const Host: FC = () => {
                     }
                     multiline
                     rows={2}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
                 <TextField
                     required
@@ -196,6 +219,9 @@ export const Host: FC = () => {
                     onChange={handleChange}
                     error={touched.title && Boolean(errors.title)}
                     helperText={touched.title && errors.title}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
                 <TextField
                     required
@@ -208,6 +234,9 @@ export const Host: FC = () => {
                     onChange={handleChange}
                     error={touched.city && Boolean(errors.city)}
                     helperText={touched.city && errors.city}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
                 <TextField
                     required
@@ -220,6 +249,9 @@ export const Host: FC = () => {
                     onChange={handleChange}
                     error={touched.state && Boolean(errors.state)}
                     helperText={touched.state && errors.state}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
                 <TextField
                     required
@@ -232,7 +264,32 @@ export const Host: FC = () => {
                     onChange={handleChange}
                     error={touched.postCode && Boolean(errors.postCode)}
                     helperText={touched.postCode && errors.postCode}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
+                <FormControl
+                    name="image"
+                    component="fieldset"
+                    tabIndex={-1}
+                    error={touched.image && Boolean(errors.image)}
+                >
+                    <FormLabel
+                        className={classes.formLabel}
+                        required
+                        focused={false}
+                    >
+                        Image
+                    </FormLabel>
+                    <FilePicker
+                        value={values.image}
+                        onChange={onImageChange}
+                        error={touched.image && Boolean(errors.image)}
+                    />
+                    <FormHelperText>
+                        {touched.image && errors.image}
+                    </FormHelperText>
+                </FormControl>
                 <TextField
                     required
                     fullWidth
@@ -257,7 +314,30 @@ export const Host: FC = () => {
                             </span>
                         </>
                     }
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
                 />
+                <FormControl
+                    name="recaptcha"
+                    component="fieldset"
+                    tabIndex={-1}
+                    fullWidth
+                    error={touched.recaptcha && Boolean(errors.recaptcha)}
+                >
+                    <div
+                        className={classnames({
+                            [classes.recaptchaError]:
+                                touched.recaptcha && Boolean(errors.recaptcha)
+                        })}
+                    >
+                        <ReCAPTCHA
+                            sitekey={`${process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY}`}
+                            onChange={onRecaptchaChange}
+                            theme={theme.palette.type}
+                        />
+                    </div>
+                </FormControl>
                 <Button
                     disableElevation
                     color="primary"
