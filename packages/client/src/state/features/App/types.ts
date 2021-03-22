@@ -7,4 +7,5 @@ export interface Viewer {
     name: string;
     avatar: string;
     email: string;
+    hasWallet: boolean;
 }

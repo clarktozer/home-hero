@@ -7,6 +7,7 @@ import {
     FormLabel,
     Icon,
     InputAdornment,
+    Link,
     Typography
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -18,8 +19,10 @@ import { useFormik } from "formik";
 import { useSnackbar } from "notistack";
 import React, { FC, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link as RouterLink, Redirect } from "react-router-dom";
 import { HOST_LISTING } from "../../graphql";
+import { getViewer } from "../../state/features";
 import { FilePicker } from "./components";
 import { useStyles } from "./style";
 import { FormProps } from "./types";
@@ -28,6 +31,7 @@ import { validationSchema } from "./validation";
 export const Host: FC = () => {
     const classes = useStyles();
     const theme = useTheme();
+    const viewer = useSelector(getViewer);
     const { enqueueSnackbar } = useSnackbar();
 
     const [hostListing, { loading, data }] = useMutation<any, any>(
@@ -127,6 +131,32 @@ export const Host: FC = () => {
     const onImageChange = async (image: string) => {
         setFieldValue("image", image);
     };
+
+    if (!viewer || !viewer.id || !viewer.hasWallet) {
+        return (
+            <Container className={classes.emptyHostContainer}>
+                <div className={classes.hostHeader}>
+                    <Typography variant="h5" gutterBottom>
+                        You'll have to be signed in and connected with Stripe to
+                        host a listing!
+                    </Typography>
+                    <Typography variant="body2">
+                        We only allow users who've signed in to our application
+                        and have connected with Stripe to host new listings. You
+                        can sign in at the{" "}
+                        <Link
+                            color="secondary"
+                            component={RouterLink}
+                            to="/login"
+                        >
+                            login
+                        </Link>{" "}
+                        page and connect with Stripe shortly after.
+                    </Typography>
+                </div>
+            </Container>
+        );
+    }
 
     if (loading) {
         return <CircularProgress />;

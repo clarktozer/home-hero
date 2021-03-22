@@ -69,5 +69,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
     errorBorder: {
         border: "1px solid",
         borderColor: theme.palette.error.main
+    },
+    emptyHostContainer: {
+        flex: "auto",
+        display: "flex",
+        minHeight: 0,
+        alignItems: "center",
+        justifyContent: "center",
+        maxWidth: "900px"
     }
 }));
