@@ -13,6 +13,8 @@
         "@homehero/common": "1.0.0",
         "apollo-server-express": "^2.19.2",
         "class-validator": "^0.13.1",
+        "cloudinary": "^1.25.0",
+        "compression": "^1.7.4",
         "connect-redis": "^5.1.0",
         "cookie-parser": "^1.4.5",
         "cors": "^2.8.5",
@@ -28,12 +30,14 @@
         "passport-google-oauth20": "^2.0.0",
         "pg": "^8.4.0",
         "reflect-metadata": "^0.1.10",
+        "stripe": "^8.138.0",
         "type-graphql": "^1.1.1",
         "type-graphql-csrf-middleware": "^0.0.3",
         "typeorm": "0.2.30",
         "uuid": "^8.3.2"
     },
     "devDependencies": {
+        "@types/compression": "^1.7.0",
         "@types/connect-redis": "^0.0.16",
         "@types/cookie-parser": "^1.4.2",
         "@types/cors": "^2.8.10",

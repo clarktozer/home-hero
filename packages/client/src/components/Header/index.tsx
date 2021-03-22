@@ -16,7 +16,7 @@ import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import { LOG_OUT } from "../../graphql/mutations";
-import { getViewer, setViewer } from "../../state/features";
+import { clearViewer, getViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
 import { PlacesAutocomplete } from "../PlacesAutocomplete";
 import { useStyles } from "./style";
@@ -40,14 +40,22 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
 
     const [logOut] = useMutation<any>(LOG_OUT, {
         onCompleted: () => {
-            dispatch(setViewer(null));
+            dispatch(clearViewer());
+            enqueueSnackbar("You've successfully logged out!", {
+                variant: "success"
+            });
+        },
+        onError: () => {
+            enqueueSnackbar(
+                "Sorry! We weren't able to log you out. Please try again later!",
+                {
+                    variant: "error"
+                }
+            );
         }
     });
 
     const handleLogOut = () => {
-        enqueueSnackbar("You've successfully logged out!", {
-            variant: "success"
-        });
         handleMenuClose();
         logOut();
     };
@@ -154,7 +162,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
             </MenuItem>
             <MenuItem
                 className={classes.mobileAvatar}
-                onClick={handleProfileMenuOpen}
+                onClick={viewer ? handleProfileMenuOpen : undefined}
             >
                 {mobileProfile}
             </MenuItem>

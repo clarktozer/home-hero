@@ -18,7 +18,6 @@ export const createSchema = async () => {
             ListingResolver,
             LocationResolver
         ],
-        dateScalarMode: "timestamp",
         authChecker
     });
 

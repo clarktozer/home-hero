@@ -1,26 +1,29 @@
 import { useLazyQuery } from "@apollo/client";
 import { CircularProgress, CssBaseline } from "@material-ui/core";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import React, { FC, useMemo } from "react";
+import { ThemeProvider } from "@material-ui/core/styles";
+import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
 import { useCookie, useMount } from "react-use";
 import { Header } from "./components";
+import { ErrorBanner } from "./components/ErrorBanner";
 import { HeaderSkeleton } from "./components/HeaderSkeleton";
-import { ThemeCookie, ThemeType } from "./constants";
+import { DarkTheme, LightTheme, ThemeCookie, ThemeType } from "./constants";
 import { ME } from "./graphql/queries";
 import { Routes } from "./routes";
 import { setViewer } from "./state/features";
 import { useAppDispatch } from "./state/store";
+import { useStyles } from "./style";
 
 export const App: FC = () => {
+    const classes = useStyles();
     const location = useLocation();
     const dispatch = useAppDispatch();
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
 
-    const [getUser, { loading }] = useLazyQuery<any>(ME, {
+    const [getLoggedInUser, { loading, error }] = useLazyQuery<any>(ME, {
         onCompleted: data => {
-            if (data) {
+            if (data?.me) {
                 dispatch(setViewer(data.me));
             }
         }
@@ -28,7 +31,7 @@ export const App: FC = () => {
 
     useMount(() => {
         if (location.pathname !== "/login") {
-            getUser();
+            getLoggedInUser();
         }
     });
 
@@ -36,53 +39,29 @@ export const App: FC = () => {
         updateCookie(isDarkTheme ? ThemeType.Light : ThemeType.Dark);
     };
 
-    const theme = useMemo(
-        () =>
-            createMuiTheme({
-                palette: {
-                    type: isDarkTheme ? "dark" : "light"
-                }
-            }),
-        [isDarkTheme]
+    const logInErrorBannerElement = error ? (
+        <ErrorBanner description="We weren't able to verify if you were logged in. Please try again later!" />
+    ) : null;
+
+    const appElement = loading ? (
+        <>
+            <HeaderSkeleton />
+            <div className={classes.loadingContainer}>
+                <CircularProgress />
+            </div>
+        </>
+    ) : (
+        <>
+            {logInErrorBannerElement}
+            <Header isDarkTheme={isDarkTheme} onToggleTheme={onToggleTheme} />
+            <Routes />
+        </>
     );
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={isDarkTheme ? DarkTheme : LightTheme}>
             <CssBaseline />
-            <div
-                style={{
-                    position: "relative",
-                    minHeight: "100vh",
-                    display: "flex",
-                    flex: "auto",
-                    flexDirection: "column"
-                }}
-            >
-                {loading ? (
-                    <>
-                        <HeaderSkeleton />
-                        <div
-                            style={{
-                                flex: "auto",
-                                minHeight: 0,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }}
-                        >
-                            <CircularProgress />
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <Header
-                            isDarkTheme={isDarkTheme}
-                            onToggleTheme={onToggleTheme}
-                        />
-                        <Routes />
-                    </>
-                )}
-            </div>
+            <div className={classes.appContainer}>{appElement}</div>
         </ThemeProvider>
     );
 };

@@ -11,10 +11,13 @@ const appSlice = createSlice({
     reducers: {
         setViewer(state, action: PayloadAction<Viewer | null>) {
             state.viewer = action.payload;
+        },
+        clearViewer(state) {
+            state.viewer = null;
         }
     }
 });
 
-export const { setViewer } = appSlice.actions;
+export const { setViewer, clearViewer } = appSlice.actions;
 
 export const AppReducer = appSlice.reducer;

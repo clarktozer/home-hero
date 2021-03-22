@@ -26,11 +26,11 @@ export class Listing extends BaseEntity {
     id: string;
 
     @Field()
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     created: Date;
 
     @Field()
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     updated: Date;
 
     @Field()

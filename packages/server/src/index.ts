@@ -1,3 +1,4 @@
+import compression from "compression";
 import cookieParser from "cookie-parser";
 import express from "express";
 import "reflect-metadata";
@@ -14,6 +15,12 @@ const run = async () => {
     await createConnection();
     const app = express();
 
+    app.use(
+        express.json({
+            limit: "2mb"
+        })
+    );
+    app.use(compression());
     app.use(cookieParser());
     addCors(app);
     addSession(app);

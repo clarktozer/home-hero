@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn,
     Unique
 } from "typeorm";
-import { BaseAccount } from "../BaseUser";
+import { BaseAccount } from "../BaseAccount";
 import { Booking } from "../Booking";
 import { Listing } from "../Listing";
 import { SocialAccount } from "../SocialAccount";
@@ -19,9 +19,12 @@ export class User extends BaseAccount {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Field(() => Int)
+    @Field(() => Int, { nullable: true })
     @Column("integer", { default: 0 })
     income: number;
+
+    @Column("text", { nullable: true })
+    walletId?: string;
 
     @OneToMany(() => Booking, booking => booking.tenant)
     bookings: Promise<Booking[]>;
@@ -29,7 +32,13 @@ export class User extends BaseAccount {
     @OneToMany(() => Listing, listing => listing.host)
     listings: Promise<Listing[]>;
 
-    @Field(() => [SocialAccount])
     @OneToMany(() => SocialAccount, account => account.user)
     socials: Promise<SocialAccount[]>;
+
+    authorized?: boolean;
+
+    @Field(() => Boolean)
+    hasWallet() {
+        return Boolean(this.walletId);
+    }
 }

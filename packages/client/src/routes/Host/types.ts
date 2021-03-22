@@ -1,6 +1,6 @@
 export interface FormProps {
     type: string;
-    numOfGuests?: number;
+    guests?: number;
     title: string;
     description: string;
     address: string;
@@ -8,6 +8,6 @@ export interface FormProps {
     state: string;
     postCode: string;
     price?: number;
-    recaptcha?: string;
-    image?: string;
+    recaptcha: string;
+    image: string;
 }

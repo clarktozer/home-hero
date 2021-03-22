@@ -1,9 +1,12 @@
+import { useMutation } from "@apollo/client";
 import {
+    CircularProgress,
     Container,
     FormControl,
     FormHelperText,
     FormLabel,
     Icon,
+    InputAdornment,
     Typography
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -12,8 +15,11 @@ import TextField from "@material-ui/core/TextField";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import classnames from "classnames";
 import { useFormik } from "formik";
+import { useSnackbar } from "notistack";
 import React, { FC, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { Redirect } from "react-router-dom";
+import { HOST_LISTING } from "../../graphql";
 import { FilePicker } from "./components";
 import { useStyles } from "./style";
 import { FormProps } from "./types";
@@ -22,6 +28,47 @@ import { validationSchema } from "./validation";
 export const Host: FC = () => {
     const classes = useStyles();
     const theme = useTheme();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const [hostListing, { loading, data }] = useMutation<any, any>(
+        HOST_LISTING,
+        {
+            onCompleted: () => {
+                enqueueSnackbar("You've successfully created your listing!", {
+                    variant: "success"
+                });
+            },
+            onError: () => {
+                enqueueSnackbar(
+                    "Sorry! We weren't able to create your listing. Please try again later.",
+                    {
+                        variant: "error"
+                    }
+                );
+            }
+        }
+    );
+
+    const onSubmit = (values: FormProps) => {
+        const fullAddress = `${values.address}, ${values.city}, ${values.state}, ${values.postCode}`;
+
+        const input = {
+            title: values.title,
+            description: values.description,
+            image: values.image,
+            type: values.type,
+            guests: values.guests,
+            address: fullAddress,
+            price: values.price ? values.price * 100 : 0
+        };
+
+        hostListing({
+            variables: {
+                input
+            }
+        });
+    };
+
     const {
         handleSubmit,
         values,
@@ -34,7 +81,7 @@ export const Host: FC = () => {
     } = useFormik<FormProps>({
         initialValues: {
             type: "",
-            numOfGuests: undefined,
+            guests: undefined,
             title: "",
             description: "",
             address: "",
@@ -46,9 +93,7 @@ export const Host: FC = () => {
             image: ""
         },
         validationSchema,
-        onSubmit: values => {
-            console.log(JSON.stringify(values, null, 2));
-        }
+        onSubmit
     });
 
     useEffect(() => {
@@ -83,6 +128,14 @@ export const Host: FC = () => {
         setFieldValue("image", image);
     };
 
+    if (loading) {
+        return <CircularProgress />;
+    }
+
+    if (data && data.hostListing) {
+        return <Redirect to={`/listing/${data.hostListing.id}`} />;
+    }
+
     return (
         <Container className={classes.hostContainer}>
             <form className={classes.root} noValidate onSubmit={handleSubmit}>
@@ -99,7 +152,6 @@ export const Host: FC = () => {
                     className={classes.fieldSet}
                     component="fieldset"
                     name="type"
-                    tabIndex={-1}
                     error={touched.type && Boolean(errors.type)}
                 >
                     <FormLabel
@@ -144,20 +196,20 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
-                    id="numOfGuests"
-                    name="numOfGuests"
+                    variant="standard"
+                    id="guests"
+                    name="guests"
                     label="Max # of Guests"
                     type="number"
-                    value={values.numOfGuests}
+                    value={values.guests || ""}
                     onChange={handleChange}
                     InputProps={{
                         inputProps: {
                             min: 1
                         }
                     }}
-                    error={touched.numOfGuests && Boolean(errors.numOfGuests)}
-                    helperText={touched.numOfGuests && errors.numOfGuests}
+                    error={touched.guests && Boolean(errors.guests)}
+                    helperText={touched.guests && errors.guests}
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
@@ -165,7 +217,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
+                    variant="standard"
                     id="title"
                     name="title"
                     label="Title"
@@ -183,11 +235,12 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    inputProps={{ maxLength: 45 }}
                 />
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
+                    variant="standard"
                     id="description"
                     name="description"
                     label="Description"
@@ -207,11 +260,12 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    inputProps={{ maxLength: 400 }}
                 />
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
+                    variant="standard"
                     id="address"
                     name="address"
                     label="Address"
@@ -226,7 +280,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
+                    variant="standard"
                     id="city"
                     name="city"
                     label="City"
@@ -241,7 +295,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
+                    variant="standard"
                     id="state"
                     name="state"
                     label="State"
@@ -256,7 +310,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
+                    variant="standard"
                     id="postCode"
                     name="postCode"
                     label="Post Code"
@@ -268,12 +322,7 @@ export const Host: FC = () => {
                         variant: "standard"
                     }}
                 />
-                <FormControl
-                    name="image"
-                    component="fieldset"
-                    tabIndex={-1}
-                    error={touched.image && Boolean(errors.image)}
-                >
+                <FormControl error={touched.image && Boolean(errors.image)}>
                     <FormLabel
                         className={classes.formLabel}
                         required
@@ -288,29 +337,36 @@ export const Host: FC = () => {
                     />
                     <FormHelperText>
                         {touched.image && errors.image}
+                        <span className={classes.helperText}>
+                            Images have to be under 1MB in size and of type JPG
+                            or PNG
+                        </span>
                     </FormHelperText>
                 </FormControl>
                 <TextField
                     required
                     fullWidth
-                    variant="outlined"
+                    variant="standard"
                     id="price"
                     name="price"
                     label="Price"
                     type="number"
-                    value={values.price}
+                    value={values.price || ""}
                     onChange={handleChange}
                     InputProps={{
                         inputProps: {
                             min: 1
-                        }
+                        },
+                        startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                        )
                     }}
                     error={touched.price && Boolean(errors.price)}
                     helperText={
                         <>
                             {touched.price && errors.price}
                             <span className={classes.helperText}>
-                                All prices in $USD/day
+                                All prices in $AUD/day
                             </span>
                         </>
                     }
@@ -321,7 +377,6 @@ export const Host: FC = () => {
                 <FormControl
                     name="recaptcha"
                     component="fieldset"
-                    tabIndex={-1}
                     fullWidth
                     error={touched.recaptcha && Boolean(errors.recaptcha)}
                 >
@@ -332,6 +387,7 @@ export const Host: FC = () => {
                         })}
                     >
                         <ReCAPTCHA
+                            key={theme.palette.type}
                             sitekey={`${process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY}`}
                             onChange={onRecaptchaChange}
                             theme={theme.palette.type}

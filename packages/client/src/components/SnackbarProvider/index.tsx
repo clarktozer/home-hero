@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { useStyles } from "./style";
 
 const anchorOrigin: SnackbarOrigin = {
-    horizontal: "left",
+    horizontal: "center",
     vertical: "top"
 };
 
@@ -12,9 +12,11 @@ export const SnackbarProvider: FC = ({ children }) => {
 
     return (
         <Provider
-            className={classes.root}
             anchorOrigin={anchorOrigin}
             autoHideDuration={3000}
+            classes={{
+                containerRoot: classes.root
+            }}
         >
             {children}
         </Provider>

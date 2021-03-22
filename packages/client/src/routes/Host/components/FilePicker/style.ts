@@ -20,5 +20,15 @@ export const useStyles = makeStyles((theme: Theme) => ({
     errorBorder: {
         border: "1px solid",
         borderColor: theme.palette.error.main
+    },
+    imagePickerContainer: {
+        "&:focus": {
+            outline: "none"
+        },
+        "&:focus div": {
+            outlineColor: theme.palette.primary.main,
+            outlineStyle: "solid",
+            outlineWidth: "1px"
+        }
     }
 }));

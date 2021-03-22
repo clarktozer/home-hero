@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from "type-graphql";
 import {
     BaseEntity,
     Column,
+    CreateDateColumn,
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn
@@ -15,6 +16,14 @@ export class Booking extends BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn("uuid")
     id: string;
+
+    @Field()
+    @CreateDateColumn({ type: "timestamptz" })
+    created: Date;
+
+    @Field()
+    @CreateDateColumn({ type: "timestamptz" })
+    updated: Date;
 
     @Field(() => Listing)
     @ManyToOne(() => Listing, listing => listing.bookings)

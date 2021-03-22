@@ -11,7 +11,7 @@ const parseAddress = (addressComponents: AddressComponent[]) => {
     let admin = null;
     let city = null;
 
-    addressComponents.forEach(component => {
+    for (const component of addressComponents) {
         if (component.types.includes(AddressType.country)) {
             country = component.long_name;
         }
@@ -26,7 +26,7 @@ const parseAddress = (addressComponents: AddressComponent[]) => {
         ) {
             city = component.long_name;
         }
-    });
+    }
 
     return { country, admin, city };
 };
@@ -42,7 +42,7 @@ export const Google = {
         });
 
         if (response.status < 200 || response.status > 299) {
-            throw new Error("failed to geocode address");
+            throw new Error("Failed to geocode address");
         }
 
         return parseAddress(response.data.results[0].address_components);
@@ -58,7 +58,7 @@ export const Google = {
         });
 
         if (response.status < 200 || response.status > 299) {
-            throw new Error("failed to autocomplete address");
+            throw new Error("Failed to autocomplete address");
         }
 
         return response.data;

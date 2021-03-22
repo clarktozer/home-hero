@@ -5,10 +5,17 @@ export const validationSchema = yup.object({
     numOfGuests: yup
         .number()
         .required("Please enter the max number of guests!"),
-    title: yup.string().required("Please enter a title for your listing!"),
+    title: yup
+        .string()
+        .required("Please enter a title for your listing!")
+        .max(45, "Please enter a title that is a maximum of 45 characters."),
     description: yup
         .string()
-        .required("Please enter a description for your listing!"),
+        .required("Please enter a description for your listing!")
+        .max(
+            400,
+            "Please enter a description that is a maximum of 400 characters."
+        ),
     address: yup.string().required("Please enter an address for your listing!"),
     city: yup
         .string()
