@@ -1,8 +1,18 @@
 import { ClassType, Field, InputType, Int, ObjectType } from "type-graphql";
+import { Booking, Listing } from "../entities";
+
+@InputType()
+export class PagingationArgs {
+    @Field(() => Int)
+    limit: number;
+
+    @Field(() => Int)
+    page: number;
+}
 
 export function DataResponse<T>(TClass: ClassType<T>) {
-    @ObjectType({ isAbstract: true })
-    abstract class DataResponseClass {
+    @ObjectType(`Data${TClass.name}Response`)
+    class DataResponseClass {
         @Field(() => Int)
         total: number;
 
@@ -13,11 +23,8 @@ export function DataResponse<T>(TClass: ClassType<T>) {
     return DataResponseClass;
 }
 
-@InputType()
-export class PagingationArgs {
-    @Field(() => Int)
-    limit: number;
+export const ListingDataResponse = DataResponse(Listing);
+export type ListingDataResponse = InstanceType<typeof ListingDataResponse>;
 
-    @Field(() => Int)
-    page: number;
-}
+export const BookingDataResponse = DataResponse(Booking);
+export type BookingDataResponse = InstanceType<typeof BookingDataResponse>;

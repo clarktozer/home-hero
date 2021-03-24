@@ -14,10 +14,9 @@ import { Cloudinary, Google } from "../../../api";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Booking, Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
+import { BookingDataResponse, PagingationArgs } from "../types";
 import {
     HostListingArgs,
-    ListingBookingsArgs,
-    ListingBookingsData,
     ListingsArgs,
     ListingsData,
     ListingsFilter,
@@ -153,13 +152,13 @@ export class ListingResolver {
         return host;
     }
 
-    @FieldResolver(() => ListingBookingsData, {
+    @FieldResolver(() => BookingDataResponse, {
         nullable: true
     })
     async bookings(
         @Root() listing: Listing,
-        @Arg("input") input: ListingBookingsArgs
-    ): Promise<ListingBookingsData | null> {
+        @Arg("input") input: PagingationArgs
+    ): Promise<BookingDataResponse | null> {
         try {
             if (!listing.authorized) {
                 return null;
@@ -168,7 +167,7 @@ export class ListingResolver {
             const { limit, page } = input;
             const repository = getRepository(Booking);
 
-            const data: ListingBookingsData = {
+            const data: BookingDataResponse = {
                 total: 0,
                 result: []
             };

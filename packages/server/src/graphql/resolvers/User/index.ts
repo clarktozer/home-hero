@@ -15,8 +15,11 @@ import { ANTI_FORGERY_COOKIE, SESSION_COOKIE } from "../../../constants";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Booking, Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
-import { UserListingsArgs } from "../Listing/types";
-import { UserBookingsArgs, UserBookingsData, UserListingsData } from "./types";
+import {
+    BookingDataResponse,
+    ListingDataResponse,
+    PagingationArgs
+} from "../types";
 
 @Resolver(User)
 export class UserResolver {
@@ -121,15 +124,15 @@ export class UserResolver {
         }
     }
 
-    @FieldResolver(() => UserListingsData)
+    @FieldResolver(() => ListingDataResponse)
     async listings(
         @Root() user: User,
-        @Arg("input") input: UserListingsArgs
-    ): Promise<UserListingsData> {
+        @Arg("input") input: PagingationArgs
+    ): Promise<ListingDataResponse> {
         try {
             const { limit, page } = input;
             const repository = getRepository(Listing);
-            const data: UserListingsData = {
+            const data: ListingDataResponse = {
                 total: 0,
                 result: []
             };
@@ -153,13 +156,13 @@ export class UserResolver {
         }
     }
 
-    @FieldResolver(() => UserBookingsData, {
+    @FieldResolver(() => BookingDataResponse, {
         nullable: true
     })
     async bookings(
         @Root() user: User,
-        @Arg("input") input: UserBookingsArgs
-    ): Promise<UserBookingsData | null> {
+        @Arg("input") input: PagingationArgs
+    ): Promise<BookingDataResponse | null> {
         try {
             if (!user.authorized) {
                 return null;
@@ -168,7 +171,7 @@ export class UserResolver {
             const { limit, page } = input;
             const repository = getRepository(Booking);
 
-            const data: UserBookingsData = {
+            const data: BookingDataResponse = {
                 total: 0,
                 result: []
             };

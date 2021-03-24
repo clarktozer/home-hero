@@ -6,9 +6,8 @@ import {
     ObjectType,
     registerEnumType
 } from "type-graphql";
-import { Booking, Listing } from "../../entities";
 import { ListingType } from "../../entities/Listing/types";
-import { DataResponse, PagingationArgs } from "../types";
+import { ListingDataResponse, PagingationArgs } from "../types";
 
 export enum ListingsFilter {
     PRICE_LOW_TO_HIGH = "PRICE_LOW_TO_HIGH",
@@ -61,34 +60,7 @@ export class ListingsArgs extends PagingationArgs {
 }
 
 @ObjectType()
-export class ListingsData extends DataResponse(Listing) {
+export class ListingsData extends ListingDataResponse {
     @Field(() => String, { nullable: true })
     region: string | null;
-}
-
-@ObjectType()
-export class ListingBookingsData {
-    @Field(() => Int)
-    total: number;
-
-    @Field(() => [Booking])
-    result: Booking[];
-}
-
-@InputType()
-export class ListingBookingsArgs {
-    @Field(() => Int)
-    limit: number;
-
-    @Field(() => Int)
-    page: number;
-}
-
-@InputType()
-export class UserListingsArgs {
-    @Field(() => Int)
-    limit: number;
-
-    @Field(() => Int)
-    page: number;
 }
