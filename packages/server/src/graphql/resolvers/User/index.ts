@@ -15,7 +15,8 @@ import { ANTI_FORGERY_COOKIE, SESSION_COOKIE } from "../../../constants";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Booking, Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
-import { UserBookingsData, UserListingsData } from "./types";
+import { UserListingsArgs } from "../Listing/types";
+import { UserBookingsArgs, UserBookingsData, UserListingsData } from "./types";
 
 @Resolver(User)
 export class UserResolver {
@@ -123,10 +124,10 @@ export class UserResolver {
     @FieldResolver(() => UserListingsData)
     async listings(
         @Root() user: User,
-        @Arg("limit") limit: number,
-        @Arg("page") page: number
+        @Arg("input") input: UserListingsArgs
     ): Promise<UserListingsData> {
         try {
+            const { limit, page } = input;
             const repository = getRepository(Listing);
             const data: UserListingsData = {
                 total: 0,
@@ -152,19 +153,21 @@ export class UserResolver {
         }
     }
 
-    @FieldResolver(() => UserBookingsData)
-    @UseMiddleware(ValidAntiForgeryToken)
+    @FieldResolver(() => UserBookingsData, {
+        nullable: true
+    })
     async bookings(
         @Root() user: User,
-        @Arg("limit") limit: number,
-        @Arg("page") page: number
+        @Arg("input") input: UserBookingsArgs
     ): Promise<UserBookingsData | null> {
         try {
             if (!user.authorized) {
                 return null;
             }
 
+            const { limit, page } = input;
             const repository = getRepository(Booking);
+
             const data: UserBookingsData = {
                 total: 0,
                 result: []

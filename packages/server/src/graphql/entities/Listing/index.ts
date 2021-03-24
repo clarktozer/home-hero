@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
     BaseEntity,
     Column,
@@ -7,15 +7,12 @@ import {
     Index,
     ManyToOne,
     OneToMany,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
+    RelationId
 } from "typeorm";
 import { Booking } from "../Booking";
 import { User } from "../User";
 import { ListingType } from "./types";
-
-registerEnumType(ListingType, {
-    name: "ListingType"
-});
 
 @Entity("listings")
 @Index(["country", "admin", "city"])
@@ -73,11 +70,18 @@ export class Listing extends BaseEntity {
     @Column("integer")
     guests: number;
 
+    @Column("uuid")
+    hostId: string;
+
     @Field(() => User)
     @ManyToOne(() => User, user => user.listings)
     host: Promise<User>;
 
-    @Field(() => [Booking])
+    @RelationId((listing: Listing) => listing.bookings)
+    bookingIds: string[];
+
     @OneToMany(() => Booking, booking => booking.listing)
     bookings: Promise<Booking[]>;
+
+    authorized?: boolean;
 }

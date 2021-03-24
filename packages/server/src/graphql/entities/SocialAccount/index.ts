@@ -1,12 +1,8 @@
-import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import { Column, Entity, ManyToOne, PrimaryColumn, Unique } from "typeorm";
 import { StrategyType } from "../../../auth";
 import { BaseAccount } from "../BaseAccount";
 import { User } from "../User";
-
-registerEnumType(StrategyType, {
-    name: "StrategyType"
-});
 
 @Entity("social_accounts")
 @ObjectType()

@@ -1,23 +1,104 @@
 import {
-    Args,
+    Arg,
     Authorized,
     Ctx,
+    FieldResolver,
     Mutation,
     Query,
     Resolver,
+    Root,
     UseMiddleware
 } from "type-graphql";
+import { getRepository, In } from "typeorm";
 import { Cloudinary, Google } from "../../../api";
 import { AppContext } from "../../../middlewares/apollo/types";
-import { Listing, User } from "../../entities";
+import { Booking, Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
-import { HostListingArgs } from "./types";
+import {
+    HostListingArgs,
+    ListingBookingsArgs,
+    ListingBookingsData,
+    ListingsArgs,
+    ListingsData,
+    ListingsFilter,
+    ListingsQuery
+} from "./types";
 
-@Resolver()
+@Resolver(Listing)
 export class ListingResolver {
-    @Query(() => [Listing])
-    async listings(): Promise<Listing[]> {
-        return await Listing.find();
+    @Query(() => Listing)
+    async listing(
+        @Ctx() ctx: AppContext,
+        @Arg("id") id: string
+    ): Promise<Listing> {
+        try {
+            const listing = await Listing.findOne(id);
+
+            if (!listing) {
+                throw new Error("Listing can't be found");
+            }
+
+            if (ctx.req.user && ctx.req.user.id === listing.hostId) {
+                listing.authorized = true;
+            }
+
+            return listing;
+        } catch (error) {
+            throw new Error(`Failed to query user: ${error}`);
+        }
+    }
+
+    @Query(() => ListingsData)
+    async listings(@Arg("input") input: ListingsArgs): Promise<ListingsData> {
+        try {
+            const { filter, limit, location, page } = input;
+            const query: ListingsQuery = {};
+            const data: ListingsData = {
+                region: null,
+                total: 0,
+                result: []
+            };
+
+            if (location) {
+                const { country, admin, city } = await Google.geocode(location);
+
+                if (city) {
+                    query.city = city;
+                }
+
+                if (admin) {
+                    query.admin = admin;
+                }
+
+                if (country) {
+                    query.country = country;
+                } else {
+                    throw new Error("No country found");
+                }
+
+                const cityText = city ? `${city}, ` : "";
+                const adminText = admin ? `${admin}, ` : "";
+                data.region = `${cityText}${adminText}${country}`;
+            }
+
+            const repository = getRepository(Listing);
+
+            const [items, count] = await repository.findAndCount({
+                where: query,
+                skip: page > 0 ? (page - 1) * limit : 0,
+                take: limit,
+                order: {
+                    price: filter === ListingsFilter.PRICE_LOW_TO_HIGH ? 1 : -1
+                }
+            });
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query listings: ${error}`);
+        }
     }
 
     @Mutation(() => Listing)
@@ -25,7 +106,7 @@ export class ListingResolver {
     @UseMiddleware(ValidAntiForgeryToken)
     async hostListing(
         @Ctx() ctx: AppContext,
-        @Args() input: HostListingArgs
+        @Arg("input") input: HostListingArgs
     ): Promise<Listing | null> {
         try {
             const user = await User.findOne(ctx.req.user!.id);
@@ -49,18 +130,63 @@ export class ListingResolver {
                 image: imageUrl,
                 country,
                 admin,
-                city
+                city,
+                hostId: user.id
             });
-
-            listing.host = Promise.resolve(user);
 
             await listing.save();
 
             return listing;
         } catch (error) {
-            throw new Error(
-                `Failed to create listing: ${JSON.stringify(error)}`
-            );
+            throw new Error(`Failed to create listing: ${error}`);
+        }
+    }
+
+    @FieldResolver()
+    async host(@Root() listing: Listing) {
+        const host = await User.findOne(listing.hostId);
+
+        if (!host) {
+            throw new Error("Host can't be found");
+        }
+
+        return host;
+    }
+
+    @FieldResolver(() => ListingBookingsData, {
+        nullable: true
+    })
+    async bookings(
+        @Root() listing: Listing,
+        @Arg("input") input: ListingBookingsArgs
+    ): Promise<ListingBookingsData | null> {
+        try {
+            if (!listing.authorized) {
+                return null;
+            }
+
+            const { limit, page } = input;
+            const repository = getRepository(Booking);
+
+            const data: ListingBookingsData = {
+                total: 0,
+                result: []
+            };
+
+            const [items, count] = await repository.findAndCount({
+                skip: page > 0 ? (page - 1) * limit : 0,
+                take: limit,
+                where: {
+                    listing: In(listing.bookingIds)
+                }
+            });
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query listing bookings: ${error}`);
         }
     }
 }

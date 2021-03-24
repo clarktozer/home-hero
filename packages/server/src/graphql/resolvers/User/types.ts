@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 import { Booking, Listing } from "../../entities";
 
 @ObjectType()
@@ -17,4 +17,13 @@ export class UserBookingsData {
 
     @Field(() => [Listing])
     result: Booking[];
+}
+
+@InputType()
+export class UserBookingsArgs {
+    @Field(() => Int)
+    limit: number;
+
+    @Field(() => Int)
+    page: number;
 }

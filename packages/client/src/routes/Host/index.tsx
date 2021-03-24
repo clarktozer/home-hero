@@ -132,7 +132,10 @@ export const Host: FC = () => {
         setFieldValue("image", image);
     };
 
-    if (!viewer || !viewer.id || !viewer.hasWallet) {
+    if (
+        process.env.NODE_ENV === "production" &&
+        (!viewer || !viewer.id || !viewer.hasWallet)
+    ) {
         return (
             <Container className={classes.emptyHostContainer}>
                 <div className={classes.hostHeader}>
