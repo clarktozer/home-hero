@@ -355,7 +355,12 @@ export const Host: FC = () => {
                         variant: "standard"
                     }}
                 />
-                <FormControl error={touched.image && Boolean(errors.image)}>
+                <FormControl
+                    className={classes.fieldSet}
+                    name="image"
+                    component="fieldset"
+                    error={touched.image && Boolean(errors.image)}
+                >
                     <FormLabel
                         className={classes.formLabel}
                         required
