@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CreateBookingArgs } from "./globalTypes";
+import { CreateBookingArgs } from "./global";
 
 // ====================================================
 // GraphQL mutation operation: CreateBooking
