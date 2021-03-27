@@ -2,9 +2,13 @@ import * as yup from "yup";
 
 export const validationSchema = yup.object({
     type: yup.string().required("Please select a home type!"),
-    numOfGuests: yup
+    guests: yup.number().required("Please enter the max number of guests!"),
+    maxStay: yup
         .number()
-        .required("Please enter the max number of guests!"),
+        .required("Please enter the max number of days guests can stay!"),
+    minStay: yup
+        .number()
+        .required("Please enter the min number of days guests can stay!"),
     title: yup
         .string()
         .required("Please enter a title for your listing!")

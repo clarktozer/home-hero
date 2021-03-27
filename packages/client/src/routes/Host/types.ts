@@ -10,4 +10,6 @@ export interface FormProps {
     price?: number;
     recaptcha: string;
     image: string;
+    maxStay: number;
+    minStay: number;
 }

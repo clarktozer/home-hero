@@ -1,8 +1,8 @@
-import { ClassType, Field, InputType, Int, ObjectType } from "type-graphql";
+import { ArgsType, ClassType, Field, Int, ObjectType } from "type-graphql";
 import { Booking, Listing } from "../entities";
 
-@InputType()
-export class PagingationArgs {
+@ArgsType()
+export class PaginationArgs {
     @Field(() => Int)
     limit: number;
 

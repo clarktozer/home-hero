@@ -94,7 +94,9 @@ export const Host: FC = () => {
             postCode: "",
             price: undefined,
             recaptcha: "",
-            image: ""
+            image: "",
+            maxStay: 90,
+            minStay: 2
         },
         validationSchema,
         onSubmit
@@ -126,6 +128,7 @@ export const Host: FC = () => {
 
     const onRecaptchaChange = (token: string | null) => {
         setFieldValue("recaptcha", token);
+        console.log(token);
     };
 
     const onImageChange = async (image: string) => {
@@ -229,7 +232,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     id="guests"
                     name="guests"
                     label="Max # of Guests"
@@ -250,7 +253,57 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    id="minStay"
+                    name="minStay"
+                    label="Min length of stay"
+                    type="number"
+                    value={values.minStay || ""}
+                    onChange={handleChange}
+                    InputProps={{
+                        inputProps: {
+                            min: 1
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                Nights
+                            </InputAdornment>
+                        )
+                    }}
+                    error={touched.minStay && Boolean(errors.minStay)}
+                    helperText={touched.minStay && errors.maxStay}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
+                    id="maxStay"
+                    name="maxStay"
+                    label="Max length of stay"
+                    type="number"
+                    value={values.maxStay || ""}
+                    onChange={handleChange}
+                    InputProps={{
+                        inputProps: {
+                            min: 1
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">Days</InputAdornment>
+                        )
+                    }}
+                    error={touched.maxStay && Boolean(errors.maxStay)}
+                    helperText={touched.maxStay && errors.maxStay}
+                    FormHelperTextProps={{
+                        variant: "standard"
+                    }}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
                     id="title"
                     name="title"
                     label="Title"
@@ -273,7 +326,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     id="description"
                     name="description"
                     label="Description"
@@ -298,7 +351,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     id="address"
                     name="address"
                     label="Address"
@@ -313,7 +366,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     id="city"
                     name="city"
                     label="City"
@@ -328,7 +381,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     id="state"
                     name="state"
                     label="State"
@@ -343,7 +396,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     id="postCode"
                     name="postCode"
                     label="Post Code"
@@ -384,7 +437,7 @@ export const Host: FC = () => {
                 <TextField
                     required
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     id="price"
                     name="price"
                     label="Price"

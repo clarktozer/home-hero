@@ -62,6 +62,14 @@ export class Listing extends BaseEntity {
     @Column("text")
     city: string;
 
+    @Field()
+    @Column("float")
+    lat: number;
+
+    @Field()
+    @Column("float")
+    lng: number;
+
     @Field(() => Int)
     @Column("integer")
     price: number;
@@ -69,6 +77,14 @@ export class Listing extends BaseEntity {
     @Field(() => Int)
     @Column("integer")
     guests: number;
+
+    @Field(() => Int)
+    @Column("integer")
+    minStay: number;
+
+    @Field(() => Int)
+    @Column("integer")
+    maxStay: number;
 
     @Column("uuid")
     hostId: string;

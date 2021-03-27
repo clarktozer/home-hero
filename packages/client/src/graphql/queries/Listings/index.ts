@@ -21,7 +21,7 @@ export const LISTINGS = gql`
                 image
                 address
                 price
-                numOfGuests
+                guests
             }
         }
     }

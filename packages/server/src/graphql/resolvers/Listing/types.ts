@@ -1,5 +1,6 @@
 import { MaxLength } from "class-validator";
 import {
+    ArgsType,
     Field,
     InputType,
     Int,
@@ -7,9 +8,11 @@ import {
     registerEnumType
 } from "type-graphql";
 import { ListingType } from "../../entities/Listing/types";
-import { ListingDataResponse, PagingationArgs } from "../types";
+import { ListingDataResponse, PaginationArgs } from "../types";
 
 export enum ListingsFilter {
+    TITLE_ASC = "TITLE_ASC",
+    TITLE_DESC = "TITLE_DESC",
     PRICE_LOW_TO_HIGH = "PRICE_LOW_TO_HIGH",
     PRICE_HIGH_TO_LOW = "PRICE_HIGH_TO_LOW"
 }
@@ -48,10 +51,19 @@ export class HostListingArgs {
 
     @Field(() => Int)
     guests: number;
+
+    @Field(() => Int)
+    maxStay: number;
+
+    @Field(() => Int)
+    minStay: number;
+
+    @Field()
+    recaptcha: string;
 }
 
-@InputType()
-export class ListingsArgs extends PagingationArgs {
+@ArgsType()
+export class ListingsArgs extends PaginationArgs {
     @Field(() => String, { nullable: true })
     location: string | null;
 
@@ -63,4 +75,11 @@ export class ListingsArgs extends PagingationArgs {
 export class ListingsData extends ListingDataResponse {
     @Field(() => String, { nullable: true })
     region: string | null;
+}
+
+export interface GoogleRecaptchaResponse {
+    success: boolean;
+    challenge_ts: string;
+    hostname: string;
+    error_codes?: string[];
 }

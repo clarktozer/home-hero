@@ -45,7 +45,13 @@ export const Google = {
             throw new Error("Failed to geocode address");
         }
 
-        return parseAddress(response.data.results[0].address_components);
+        const result = response.data.results[0];
+        const parsedAddress = parseAddress(result.address_components);
+
+        return {
+            ...parsedAddress,
+            ...result.geometry.location
+        };
     },
     autocomplete: async (input: string, types?: PlaceAutocompleteType) => {
         const client = new Client();

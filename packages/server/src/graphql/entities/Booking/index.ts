@@ -25,9 +25,15 @@ export class Booking extends BaseEntity {
     @CreateDateColumn({ type: "timestamptz" })
     updated: Date;
 
+    @Column("uuid")
+    listingId: string;
+
     @Field(() => Listing)
     @ManyToOne(() => Listing, listing => listing.bookings)
     listing: Promise<Listing>;
+
+    @Column("uuid")
+    tenantId: string;
 
     @Field(() => User)
     @ManyToOne(() => User, user => user.bookings)

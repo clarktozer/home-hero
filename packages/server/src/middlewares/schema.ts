@@ -18,8 +18,7 @@ export const createSchema = async () => {
             ListingResolver,
             LocationResolver
         ],
-        authChecker,
-        emitSchemaFile: true
+        authChecker
     });
 
     return schema;

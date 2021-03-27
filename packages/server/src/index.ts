@@ -1,5 +1,7 @@
 import compression from "compression";
 import cookieParser from "cookie-parser";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import express from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
@@ -10,6 +12,8 @@ import {
     addSession,
     createApolloServer
 } from "./middlewares";
+
+dayjs.extend(isSameOrAfter);
 
 const run = async () => {
     await createConnection();

@@ -1,4 +1,5 @@
 import stripe from "stripe";
+import { APPLICATION_FEE } from "../constants";
 
 const client = new stripe(`${process.env.STRIPE_CLIENT_SECRET}`, {
     apiVersion: "2020-08-27"
@@ -32,7 +33,7 @@ export const Stripe = {
                 amount,
                 currency,
                 source,
-                application_fee_amount: Math.round(amount * 0.05)
+                application_fee_amount: Math.round(amount * APPLICATION_FEE)
             },
             {
                 stripe_account: stripeAccount

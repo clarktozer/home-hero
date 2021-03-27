@@ -1,11 +1,11 @@
 import { useLazyQuery } from "@apollo/client";
 import { CircularProgress, CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { useSnackbar } from "notistack";
 import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
 import { useCookie, useMount } from "react-use";
 import { Header } from "./components";
-import { ErrorBanner } from "./components/ErrorBanner";
 import { HeaderSkeleton } from "./components/HeaderSkeleton";
 import { DarkTheme, LightTheme, ThemeCookie, ThemeType } from "./constants";
 import { ME } from "./graphql/queries";
@@ -18,14 +18,23 @@ export const App: FC = () => {
     const classes = useStyles();
     const location = useLocation();
     const dispatch = useAppDispatch();
+    const { enqueueSnackbar } = useSnackbar();
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
 
-    const [getLoggedInUser, { loading, error }] = useLazyQuery<any>(ME, {
+    const [getLoggedInUser, { loading }] = useLazyQuery<any>(ME, {
         onCompleted: data => {
             if (data?.me) {
                 dispatch(setViewer(data.me));
             }
+        },
+        onError: () => {
+            enqueueSnackbar(
+                "We weren't able to verify if you were logged in. Please try again later!",
+                {
+                    variant: "error"
+                }
+            );
         }
     });
 
@@ -39,10 +48,6 @@ export const App: FC = () => {
         updateCookie(isDarkTheme ? ThemeType.Light : ThemeType.Dark);
     };
 
-    const logInErrorBannerElement = error ? (
-        <ErrorBanner description="We weren't able to verify if you were logged in. Please try again later!" />
-    ) : null;
-
     const appElement = loading ? (
         <>
             <HeaderSkeleton />
@@ -52,7 +57,6 @@ export const App: FC = () => {
         </>
     ) : (
         <>
-            {logInErrorBannerElement}
             <Header isDarkTheme={isDarkTheme} onToggleTheme={onToggleTheme} />
             <Routes />
         </>

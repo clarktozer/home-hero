@@ -1,5 +1,7 @@
+import axios from "axios";
 import {
     Arg,
+    Args,
     Authorized,
     Ctx,
     FieldResolver,
@@ -9,13 +11,15 @@ import {
     Root,
     UseMiddleware
 } from "type-graphql";
-import { getRepository, In } from "typeorm";
+import { FindOneOptions, getRepository, In } from "typeorm";
 import { Cloudinary, Google } from "../../../api";
+import { isAuthorized } from "../../../auth";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Booking, Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
-import { BookingDataResponse, PagingationArgs } from "../types";
+import { BookingDataResponse, PaginationArgs } from "../types";
 import {
+    GoogleRecaptchaResponse,
     HostListingArgs,
     ListingsArgs,
     ListingsData,
@@ -37,7 +41,7 @@ export class ListingResolver {
                 throw new Error("Listing can't be found");
             }
 
-            if (ctx.req.user && ctx.req.user.id === listing.hostId) {
+            if (isAuthorized(ctx.req) && ctx.req.user?.id === listing.hostId) {
                 listing.authorized = true;
             }
 
@@ -48,7 +52,7 @@ export class ListingResolver {
     }
 
     @Query(() => ListingsData)
-    async listings(@Arg("input") input: ListingsArgs): Promise<ListingsData> {
+    async listings(@Args() input: ListingsArgs): Promise<ListingsData> {
         try {
             const { filter, limit, location, page } = input;
             const query: ListingsQuery = {};
@@ -77,18 +81,35 @@ export class ListingResolver {
 
                 const cityText = city ? `${city}, ` : "";
                 const adminText = admin ? `${admin}, ` : "";
+
                 data.region = `${cityText}${adminText}${country}`;
             }
 
             const repository = getRepository(Listing);
 
+            const order: FindOneOptions<Listing>["order"] = {};
+
+            if (filter) {
+                if (
+                    filter === ListingsFilter.TITLE_ASC ||
+                    filter === ListingsFilter.TITLE_DESC
+                ) {
+                    order.title = filter === ListingsFilter.TITLE_ASC ? 1 : -1;
+                }
+                if (
+                    filter === ListingsFilter.PRICE_LOW_TO_HIGH ||
+                    filter === ListingsFilter.PRICE_HIGH_TO_LOW
+                ) {
+                    order.price =
+                        filter === ListingsFilter.PRICE_LOW_TO_HIGH ? 1 : -1;
+                }
+            }
+
             const [items, count] = await repository.findAndCount({
                 where: query,
                 skip: page > 0 ? (page - 1) * limit : 0,
                 take: limit,
-                order: {
-                    price: filter === ListingsFilter.PRICE_LOW_TO_HIGH ? 1 : -1
-                }
+                order
             });
 
             data.total = count;
@@ -108,13 +129,32 @@ export class ListingResolver {
         @Arg("input") input: HostListingArgs
     ): Promise<Listing | null> {
         try {
+            const { data } = await axios.post<GoogleRecaptchaResponse>(
+                "https://www.google.com/recaptcha/api/siteverify",
+                undefined,
+                {
+                    params: {
+                        secret: `${process.env.GOOGLE_RECAPTCHA_SECRET_KEY}`,
+                        response: input.recaptcha
+                    },
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded; charset=utf-8"
+                    }
+                }
+            );
+
+            if (!data.success) {
+                throw new Error("Failed recaptcha validation");
+            }
+
             const user = await User.findOne(ctx.req.user!.id);
 
             if (!user) {
                 throw new Error("User could not be found");
             }
 
-            const { country, admin, city } = await Google.geocode(
+            const { country, admin, city, lat, lng } = await Google.geocode(
                 input.address
             );
 
@@ -130,6 +170,8 @@ export class ListingResolver {
                 country,
                 admin,
                 city,
+                lat,
+                lng,
                 hostId: user.id
             });
 
@@ -157,7 +199,7 @@ export class ListingResolver {
     })
     async bookings(
         @Root() listing: Listing,
-        @Arg("input") input: PagingationArgs
+        @Args() input: PaginationArgs
     ): Promise<BookingDataResponse | null> {
         try {
             if (!listing.authorized) {
@@ -176,7 +218,7 @@ export class ListingResolver {
                 skip: page > 0 ? (page - 1) * limit : 0,
                 take: limit,
                 where: {
-                    listing: In(listing.bookingIds)
+                    id: In(listing.bookingIds)
                 }
             });
 

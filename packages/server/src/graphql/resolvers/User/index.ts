@@ -1,5 +1,6 @@
 import {
     Arg,
+    Args,
     Authorized,
     Ctx,
     FieldResolver,
@@ -11,6 +12,7 @@ import {
 } from "type-graphql";
 import { getRepository } from "typeorm";
 import { Stripe } from "../../../api";
+import { isAuthorized } from "../../../auth";
 import { ANTI_FORGERY_COOKIE, SESSION_COOKIE } from "../../../constants";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Booking, Listing, User } from "../../entities";
@@ -18,7 +20,7 @@ import { ValidAntiForgeryToken } from "../../middlewares";
 import {
     BookingDataResponse,
     ListingDataResponse,
-    PagingationArgs
+    PaginationArgs
 } from "../types";
 
 @Resolver(User)
@@ -37,7 +39,7 @@ export class UserResolver {
                 throw new Error("User can't be found");
             }
 
-            if (ctx.req.user && ctx.req.user.id === user.id) {
+            if (isAuthorized(ctx.req) && ctx.req.user?.id === user.id) {
                 user.authorized = true;
             }
 
@@ -127,7 +129,7 @@ export class UserResolver {
     @FieldResolver(() => ListingDataResponse)
     async listings(
         @Root() user: User,
-        @Arg("input") input: PagingationArgs
+        @Args() input: PaginationArgs
     ): Promise<ListingDataResponse> {
         try {
             const { limit, page } = input;
@@ -161,7 +163,7 @@ export class UserResolver {
     })
     async bookings(
         @Root() user: User,
-        @Arg("input") input: PagingationArgs
+        @Args() input: PaginationArgs
     ): Promise<BookingDataResponse | null> {
         try {
             if (!user.authorized) {

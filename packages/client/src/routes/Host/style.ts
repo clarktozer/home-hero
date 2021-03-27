@@ -3,7 +3,7 @@ import { makeStyles, Theme } from "@material-ui/core";
 export const useStyles = makeStyles((theme: Theme) => ({
     root: {
         "& .MuiFormControl-root": {
-            marginBottom: theme.spacing(2)
+            marginBottom: theme.spacing(3)
         }
     },
     toggleButton: {

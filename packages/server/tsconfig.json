@@ -12,6 +12,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "strictPropertyInitialization": false,
+        "allowSyntheticDefaultImports": true,
         "typeRoots": ["./src/@types", "./node_modules/@types"]
     }
 }
