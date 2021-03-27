@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const LISTING = gql`
-    query Listing($id: ID!, $bookingsPage: Int!, $limit: Int!) {
+    query Listing($id: String!, $bookingsPage: Int!, $limit: Int!) {
         listing(id: $id) {
             id
             title

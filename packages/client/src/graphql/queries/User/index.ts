@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const USER = gql`
     query User(
-        $id: ID!
+        $id: String!
         $bookingsPage: Int!
         $listingsPage: Int!
         $limit: Int!
@@ -11,7 +11,7 @@ export const USER = gql`
             id
             name
             avatar
-            contact
+            email
             hasWallet
             income
             bookings(limit: $limit, page: $bookingsPage) {
