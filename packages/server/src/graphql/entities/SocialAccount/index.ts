@@ -4,7 +4,7 @@ import { StrategyType } from "../../../auth";
 import { BaseAccount } from "../BaseAccount";
 import { User } from "../User";
 
-@Entity("social_accounts")
+@Entity()
 @ObjectType()
 @Unique("UQ_NAMES", ["id", "strategy"])
 export class SocialAccount extends BaseAccount {

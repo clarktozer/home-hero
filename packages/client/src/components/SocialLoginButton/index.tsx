@@ -9,7 +9,8 @@ export const SocialLoginButton: FC<SocialLoginButtonProps> = ({
     href,
     icon,
     className = "",
-    color
+    color,
+    onClick
 }) => {
     const classes = useStyles();
 
@@ -24,6 +25,7 @@ export const SocialLoginButton: FC<SocialLoginButtonProps> = ({
             startIcon={icon}
             disableElevation
             href={href}
+            onClick={onClick}
         >
             {children}
         </Button>

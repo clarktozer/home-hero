@@ -3,4 +3,5 @@ export interface SocialLoginButtonProps {
     color?: "inherit" | "primary" | "secondary" | "default" | undefined;
     icon: React.ReactNode;
     href: string;
+    onClick?: React.MouseEventHandler<HTMLAnchorElement> | undefined;
 }

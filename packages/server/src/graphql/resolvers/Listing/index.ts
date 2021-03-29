@@ -144,14 +144,14 @@ export class ListingResolver {
                 }
             );
 
-            if (!data.success) {
+            if (process.env.NODE_ENV === "production" && !data.success) {
                 throw new Error("Failed recaptcha validation");
             }
 
             const user = await User.findOne(ctx.req.user!.id);
 
             if (!user) {
-                throw new Error("User could not be found");
+                throw new Error("User can't be found");
             }
 
             const { country, admin, city, lat, lng } = await Google.geocode(
@@ -180,6 +180,47 @@ export class ListingResolver {
             return listing;
         } catch (error) {
             throw new Error(`Failed to create listing: ${error}`);
+        }
+    }
+
+    @Mutation(() => Listing)
+    @Authorized()
+    @UseMiddleware(ValidAntiForgeryToken)
+    async favoriteListing(
+        @Ctx() ctx: AppContext,
+        @Arg("id") id: string,
+        @Arg("favorite") favorite: boolean
+    ): Promise<Listing | null> {
+        try {
+            const listing = await Listing.findOne(id);
+
+            if (!listing) {
+                throw new Error("Listing can't be found");
+            }
+
+            const user = await User.findOne(ctx.req.user!.id);
+
+            if (!user) {
+                throw new Error("User can't be found");
+            }
+
+            let favoritedBy = await listing.favoritedBy;
+
+            if (!favorite) {
+                favoritedBy = favoritedBy.filter(
+                    favUser => favUser.id !== user.id
+                );
+            } else {
+                favoritedBy.push(user);
+            }
+
+            listing.favoritedBy = Promise.resolve(favoritedBy);
+
+            await listing.save();
+
+            return listing;
+        } catch (error) {
+            throw new Error(`Failed to favorite listing: ${error}`);
         }
     }
 
@@ -228,6 +269,27 @@ export class ListingResolver {
             return data;
         } catch (error) {
             throw new Error(`Failed to query listing bookings: ${error}`);
+        }
+    }
+
+    @FieldResolver(() => Boolean, {
+        nullable: true
+    })
+    async favourited(@Ctx() ctx: AppContext, @Root() listing: Listing) {
+        if (ctx.req.user?.id) {
+            const repository = getRepository(Listing);
+
+            const count = await repository
+                .createQueryBuilder("listing")
+                .innerJoin("listing.favoritedBy", "user", "user.id = :id", {
+                    id: ctx.req.user!.id
+                })
+                .where("listing.id = :uid", { uid: listing.id })
+                .getCount();
+
+            return count > 0;
+        } else {
+            return null;
         }
     }
 }

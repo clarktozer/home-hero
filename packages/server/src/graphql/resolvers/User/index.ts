@@ -13,8 +13,14 @@ import {
 import { getRepository } from "typeorm";
 import { Stripe } from "../../../api";
 import { isAuthorized } from "../../../auth";
-import { ANTI_FORGERY_COOKIE, SESSION_COOKIE } from "../../../constants";
+import { redis } from "../../../config";
+import {
+    ANTI_FORGERY_COOKIE,
+    CONFIRM_USER_PREFIX,
+    SESSION_COOKIE
+} from "../../../constants";
 import { AppContext } from "../../../middlewares/apollo/types";
+import { createConfirmationUrl, sendEmail } from "../../../utils";
 import { Booking, Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
 import {
@@ -84,7 +90,7 @@ export class UserResolver {
             const user = await User.findOne(ctx.req.user!.id);
 
             if (!user) {
-                throw new Error("User could not be found");
+                throw new Error("User can't be found");
             }
 
             user.walletId = wallet.stripe_user_id;
@@ -126,6 +132,52 @@ export class UserResolver {
         }
     }
 
+    @Mutation(() => Boolean)
+    async confirmUser(@Arg("token") token: string): Promise<boolean> {
+        try {
+            const userId = await redis.get(`${CONFIRM_USER_PREFIX}${token}`);
+
+            if (!userId) {
+                return false;
+            }
+
+            await User.update(
+                {
+                    id: userId
+                },
+                {
+                    confirmed: true
+                }
+            );
+
+            await redis.del(token);
+
+            return true;
+        } catch (error) {
+            throw new Error(`Failed to confirm user: ${error}`);
+        }
+    }
+
+    @Mutation(() => Boolean)
+    @Authorized()
+    @UseMiddleware(ValidAntiForgeryToken)
+    async resendConfirmation(@Ctx() ctx: AppContext): Promise<boolean> {
+        try {
+            const user = await User.findOne(ctx.req.user!.id);
+
+            if (!user) {
+                return false;
+            }
+
+            const url = await createConfirmationUrl(user.id);
+            await sendEmail(user.email, url);
+
+            return true;
+        } catch (error) {
+            throw new Error(`Failed to resend confirmation email: ${error}`);
+        }
+    }
+
     @FieldResolver(() => ListingDataResponse)
     async listings(
         @Root() user: User,
@@ -155,6 +207,43 @@ export class UserResolver {
             return data;
         } catch (error) {
             throw new Error(`Failed to query user listings: ${error}`);
+        }
+    }
+
+    @FieldResolver(() => ListingDataResponse, {
+        nullable: true
+    })
+    async favorites(
+        @Root() user: User,
+        @Args() input: PaginationArgs
+    ): Promise<ListingDataResponse | null> {
+        try {
+            if (!user.authorized) {
+                return null;
+            }
+
+            const { limit, page } = input;
+            const repository = getRepository(Listing);
+            const data: ListingDataResponse = {
+                total: 0,
+                result: []
+            };
+
+            const [items, count] = await repository
+                .createQueryBuilder("listing")
+                .innerJoin("listing.favoritedBy", "user", "user.id = :id", {
+                    id: user.id
+                })
+                .take(limit)
+                .skip(page > 0 ? (page - 1) * limit : 0)
+                .getManyAndCount();
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query user favorites: ${error}`);
         }
     }
 
@@ -195,6 +284,11 @@ export class UserResolver {
         } catch (error) {
             throw new Error(`Failed to query user bookings: ${error}`);
         }
+    }
+
+    @FieldResolver()
+    confirmed(@Root() user: User) {
+        return user.authorized ? user.confirmed : null;
     }
 
     @FieldResolver()

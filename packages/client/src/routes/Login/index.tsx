@@ -1,7 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
 import { Card, CardContent, CircularProgress, Icon } from "@material-ui/core";
 import { useSnackbar } from "notistack";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useMount } from "react-use";
 import {
@@ -18,6 +18,7 @@ export const Login: FC = () => {
     const dispatch = useAppDispatch();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
+    const [loggingIn, setLoggingIn] = useState(false);
 
     const [getUser, { loading, data }] = useLazyQuery<any>(ME, {
         onCompleted: data => {
@@ -50,19 +51,28 @@ export const Login: FC = () => {
         return <Redirect to={`/user/${data.me.id}`} />;
     }
 
+    const onSocialClick = () => {
+        setLoggingIn(true);
+    };
+
     return (
         <div className={classes.loginPage}>
-            <Card className={classes.loginCard} elevation={0} square>
+            <Card className={classes.loginCard} elevation={0}>
+                {loggingIn && (
+                    <div className={classes.overlaySpinner}>
+                        <CircularProgress />
+                    </div>
+                )}
                 <CardContent>
                     <Icon color="inherit">hotel</Icon>
                     <div className={classes.loginButtons}>
-                        <GoogleLoginButton>
+                        <GoogleLoginButton onClick={onSocialClick}>
                             Sign in with Google
                         </GoogleLoginButton>
-                        <FacebookLoginButton>
+                        <FacebookLoginButton onClick={onSocialClick}>
                             Sign in with Facebook
                         </FacebookLoginButton>
-                        <GithubLoginButton>
+                        <GithubLoginButton onClick={onSocialClick}>
                             Sign in with Github
                         </GithubLoginButton>
                     </div>

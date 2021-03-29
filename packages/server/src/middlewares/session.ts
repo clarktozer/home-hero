@@ -7,10 +7,6 @@ import { SESSION_COOKIE } from "../constants";
 export const addSession = (app: Express) => {
     const RedisStore = connectRedis(session);
 
-    if (process.env.NODE_ENV === "development") {
-        redis.flushdb();
-    }
-
     app.use(
         session({
             store: new RedisStore({

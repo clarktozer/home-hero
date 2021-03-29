@@ -7,12 +7,14 @@ import {
     Resolver,
     UseMiddleware
 } from "type-graphql";
+import { Entity } from "typeorm";
 import { Stripe } from "../../../api";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Booking, Listing } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
 import { CreateBookingArgs } from "./types";
 
+@Entity()
 @Resolver(Booking)
 export class BookingResolver {
     @Mutation(() => Booking)

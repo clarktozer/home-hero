@@ -10,7 +10,7 @@ import {
 import { Listing } from "../Listing";
 import { User } from "../User";
 
-@Entity("bookings")
+@Entity()
 @ObjectType()
 export class Booking extends BaseEntity {
     @Field(() => ID)

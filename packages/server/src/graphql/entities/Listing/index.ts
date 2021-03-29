@@ -5,6 +5,8 @@ import {
     CreateDateColumn,
     Entity,
     Index,
+    JoinTable,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -14,7 +16,7 @@ import { Booking } from "../Booking";
 import { User } from "../User";
 import { ListingType } from "./types";
 
-@Entity("listings")
+@Entity()
 @Index(["country", "admin", "city"])
 @ObjectType()
 export class Listing extends BaseEntity {
@@ -85,6 +87,10 @@ export class Listing extends BaseEntity {
     @Field(() => Int)
     @Column("integer")
     maxStay: number;
+
+    @ManyToMany(() => User, user => user.favorites)
+    @JoinTable()
+    favoritedBy: Promise<User[]>;
 
     @Column("uuid")
     hostId: string;

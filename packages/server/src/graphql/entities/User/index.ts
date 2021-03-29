@@ -2,6 +2,7 @@ import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
     Column,
     Entity,
+    ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
     Unique
@@ -11,7 +12,7 @@ import { Booking } from "../Booking";
 import { Listing } from "../Listing";
 import { SocialAccount } from "../SocialAccount";
 
-@Entity("users")
+@Entity()
 @ObjectType()
 @Unique(["email"])
 export class User extends BaseAccount {
@@ -34,6 +35,13 @@ export class User extends BaseAccount {
 
     @OneToMany(() => SocialAccount, account => account.user)
     socials: Promise<SocialAccount[]>;
+
+    @ManyToMany(() => Listing, listing => listing.favoritedBy)
+    favorites: Promise<Listing[]>;
+
+    @Field(() => Boolean, { nullable: true })
+    @Column("bool", { default: false })
+    confirmed: boolean;
 
     authorized?: boolean;
 

@@ -2,6 +2,7 @@ import { Request } from "express";
 import { Profile } from "passport";
 import { VerifyCallback } from "passport-oauth2";
 import { SocialAccount, User } from "../graphql/entities";
+import { createConfirmationUrl, sendEmail } from "../utils";
 import { StrategyType } from "./types";
 
 export const loginCallback = async (
@@ -72,6 +73,9 @@ export const loginCallback = async (
                     const createSocial = SocialAccount.create(socialProps);
                     createSocial.user = Promise.resolve(newUser);
                     await createSocial.save();
+
+                    const url = await createConfirmationUrl(newUser.id);
+                    await sendEmail(userProps.email, url);
 
                     return done(undefined, newUser);
                 }
