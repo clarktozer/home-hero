@@ -224,6 +224,7 @@ export class UserResolver {
 
             const { limit, page } = input;
             const repository = getRepository(Listing);
+
             const data: ListingDataResponse = {
                 total: 0,
                 result: []

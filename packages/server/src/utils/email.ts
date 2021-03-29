@@ -1,7 +1,12 @@
-import nodemailer from "nodemailer";
+import mailgun from "mailgun-js";
 import { v4 } from "uuid";
 import { redis } from "../config";
 import { CONFIRM_USER_PREFIX } from "../constants";
+
+const mg = mailgun({
+    apiKey: `${process.env.MAILGUN_API_KEY}`,
+    domain: `${process.env.MAILGUN_DOMAIN}`
+});
 
 export const createConfirmationUrl = async (userId: string) => {
     const token = v4();
@@ -16,29 +21,25 @@ export const createConfirmationUrl = async (userId: string) => {
 };
 
 export const sendEmail = async (email: string, url: string) => {
-    const account = await nodemailer.createTestAccount();
+    try {
+        const data:
+            | mailgun.messages.SendData
+            | mailgun.messages.BatchData
+            | mailgun.messages.SendTemplateData = {
+            from: "noreply@homehero.com",
+            to: email,
+            subject: "Confirm Email Address",
+            template: "confirmation_email",
+            "h:X-Mailgun-Variables": JSON.stringify({
+                url
+            })
+        };
 
-    const transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: account.user, // generated ethereal user
-            pass: account.pass // generated ethereal password
-        }
-    });
+        const response = await mg.messages().send(data);
 
-    const mailOptions = {
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: email, // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: `<a href="${url}">${url}</a>` // html body
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-
-    console.log("Message sent: %s", info.messageId);
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        console.log("Message sent: %s", response.id);
+        console.log("Preview: %s", response.message);
+    } catch (error) {
+        console.log(error);
+    }
 };

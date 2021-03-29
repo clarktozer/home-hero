@@ -1,7 +1,7 @@
 import stripe from "stripe";
 import { APPLICATION_FEE } from "../constants";
 
-const client = new stripe(`${process.env.STRIPE_CLIENT_SECRET}`, {
+export const client = new stripe(`${process.env.STRIPE_CLIENT_SECRET}`, {
     apiVersion: "2020-08-27"
 });
 

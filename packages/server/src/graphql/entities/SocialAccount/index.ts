@@ -19,6 +19,9 @@ export class SocialAccount extends BaseAccount {
     @Column({ type: "enum", enum: StrategyType })
     strategy: StrategyType;
 
+    @Column("uuid")
+    userId: string;
+
     @Field(() => User)
     @ManyToOne(() => User, user => user.socials)
     user: Promise<User>;

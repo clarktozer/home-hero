@@ -3,9 +3,9 @@ import passport from "passport";
 import { Strategy as FacebookStrategy } from "passport-facebook";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { StrategyType } from "../../auth";
-import { addPassportStrategy } from "../../auth/factory";
-import { User } from "../../graphql/entities";
+import { StrategyType } from "../auth";
+import { addPassportStrategy } from "../auth/factory";
+import { User } from "../graphql/entities";
 
 export const addPassport = (app: Express) => {
     app.use(passport.initialize());

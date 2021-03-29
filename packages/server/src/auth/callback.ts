@@ -30,8 +30,11 @@ export const loginCallback = async (
             const user = await User.findOne(req.user.id);
 
             if (user) {
-                const createSocial = SocialAccount.create(socialProps);
-                createSocial.user = Promise.resolve(user);
+                const createSocial = SocialAccount.create({
+                    ...socialProps,
+                    userId: user.id
+                });
+
                 await createSocial.save();
 
                 return done(undefined, user);
@@ -61,8 +64,11 @@ export const loginCallback = async (
                 });
 
                 if (user) {
-                    const createSocial = SocialAccount.create(socialProps);
-                    createSocial.user = Promise.resolve(user);
+                    const createSocial = SocialAccount.create({
+                        ...socialProps,
+                        userId: user.id
+                    });
+
                     await createSocial.save();
 
                     return done(undefined, user);
@@ -70,8 +76,10 @@ export const loginCallback = async (
                     const createUser = User.create(userProps);
                     const newUser = await createUser.save();
 
-                    const createSocial = SocialAccount.create(socialProps);
-                    createSocial.user = Promise.resolve(newUser);
+                    const createSocial = SocialAccount.create({
+                        ...socialProps,
+                        userId: newUser.id
+                    });
                     await createSocial.save();
 
                     const url = await createConfirmationUrl(newUser.id);
