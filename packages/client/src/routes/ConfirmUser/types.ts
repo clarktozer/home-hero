@@ -1,3 +1,3 @@
 export interface MatchParams {
-    location?: string;
+    token: string;
 }

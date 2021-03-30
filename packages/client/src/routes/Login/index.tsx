@@ -32,9 +32,11 @@ export const Login: FC = () => {
     });
 
     useMount(() => {
-        const mode = new URL(window.location.href).searchParams.get("mode");
+        const redirect = new URL(window.location.href).searchParams.get(
+            "redirect"
+        );
 
-        if (mode) {
+        if (redirect) {
             getUser();
         }
     });
@@ -48,6 +50,14 @@ export const Login: FC = () => {
     }
 
     if (data?.me) {
+        const redirectUrl = new URL(window.location.href).searchParams.get(
+            "url"
+        );
+
+        if (redirectUrl) {
+            return <Redirect to={redirectUrl} />;
+        }
+
         return <Redirect to={`/user/${data.me.id}`} />;
     }
 

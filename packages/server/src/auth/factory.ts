@@ -2,6 +2,7 @@ import Tokens from "csrf";
 import { Express, NextFunction, Request, Response } from "express";
 import passport, { AuthenticateOptions, Profile } from "passport";
 import { VerifyCallback } from "passport-oauth2";
+import { stringify } from "qs";
 import { ANTI_FORGERY_COOKIE, ANTI_FORGERY_SECRET } from "../constants";
 import { loginCallback } from "./callback";
 import { StrategyType } from "./types";
@@ -22,6 +23,8 @@ export const addPassportStrategy = (
     strategyOptions: any,
     authOptions: AuthenticateOptions = {}
 ) => {
+    let redirectUrl: string | null = null;
+
     passport.use(
         new Strategy(
             {
@@ -39,7 +42,26 @@ export const addPassportStrategy = (
         )
     );
 
-    app.get(`/auth/${type}`, passport.authenticate(type, authOptions));
+    const addRedirect = (
+        request: Request,
+        _response: Response,
+        next: NextFunction
+    ) => {
+        if (
+            request.query.redirect &&
+            typeof request.query.redirect === "string"
+        ) {
+            redirectUrl = request.query.redirect;
+        }
+
+        next();
+    };
+
+    app.get(
+        `/auth/${type}`,
+        addRedirect,
+        passport.authenticate(type, authOptions)
+    );
 
     const addCsrf = (
         request: Request,
@@ -57,10 +79,18 @@ export const addPassportStrategy = (
     };
 
     const redirectCallback = (request: Request, response: Response) => {
+        const query: Record<string, string> = {};
+
+        if (request.isAuthenticated()) {
+            query["redirect"] = "true";
+        }
+
+        if (redirectUrl) {
+            query["url"] = redirectUrl;
+        }
+
         response.redirect(
-            `${process.env.CLIENT_URL}/login${
-                request.isAuthenticated() ? "?mode=redirect" : ""
-            }`
+            `${process.env.CLIENT_URL}/login?${stringify(query)}`
         );
     };
 
