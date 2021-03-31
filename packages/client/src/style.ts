@@ -7,12 +7,5 @@ export const useStyles = makeStyles(theme => ({
         display: "flex",
         flex: "auto",
         flexDirection: "column"
-    },
-    loadingContainer: {
-        flex: "auto",
-        minHeight: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
     }
 }));

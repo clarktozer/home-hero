@@ -1,8 +1,9 @@
 import { CircularProgress, Icon, Paper } from "@material-ui/core";
 import classnames from "classnames";
 import { useSnackbar } from "notistack";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
+import { useBoolean } from "react-use";
 import { getBase64Value } from "../../../../utils";
 import { useStyles } from "./style";
 import { FilePickerProps } from "./types";
@@ -11,7 +12,7 @@ export const FilePicker: FC<FilePickerProps> = ({ onChange, value, error }) => {
     const classes = useStyles();
     const maxSize = 1048576;
     const { enqueueSnackbar } = useSnackbar();
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useBoolean(false);
 
     const onDrop = async (acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {

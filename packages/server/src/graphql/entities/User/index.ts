@@ -5,6 +5,7 @@ import {
     ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
+    RelationId,
     Unique
 } from "typeorm";
 import { BaseAccount } from "../BaseAccount";
@@ -26,6 +27,9 @@ export class User extends BaseAccount {
 
     @Column("text", { nullable: true })
     walletId?: string;
+
+    @RelationId((user: User) => user.bookings)
+    bookingIds: string[];
 
     @OneToMany(() => Booking, booking => booking.tenant)
     bookings: Promise<Booking[]>;

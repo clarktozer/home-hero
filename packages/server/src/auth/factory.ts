@@ -82,11 +82,11 @@ export const addPassportStrategy = (
         const query: Record<string, string> = {};
 
         if (request.isAuthenticated()) {
-            query["redirect"] = "true";
+            query["success"] = "true";
         }
 
         if (redirectUrl) {
-            query["url"] = redirectUrl;
+            query["redirect"] = redirectUrl;
         }
 
         response.redirect(

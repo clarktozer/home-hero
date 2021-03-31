@@ -14,6 +14,7 @@ export const USER = gql`
             email
             hasWallet
             income
+            confirmed
             bookings(limit: $limit, page: $bookingsPage) {
                 total
                 result {

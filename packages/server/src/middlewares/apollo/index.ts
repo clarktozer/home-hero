@@ -28,7 +28,10 @@ export const createApolloServer = async (app: Express) => {
                             ]
                         });
 
-                        if (complexity > 20) {
+                        if (
+                            complexity > 20 &&
+                            process.env.NODE_ENV === "production"
+                        ) {
                             throw new ApolloError(
                                 `Maximum complexity exceeded.`,
                                 "COMPLEXITY_ERROR"

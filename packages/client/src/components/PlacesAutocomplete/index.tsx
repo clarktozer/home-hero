@@ -11,6 +11,7 @@ import debounce from "lodash.debounce";
 import { useSnackbar } from "notistack";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import { useBoolean } from "react-use";
 import { AUTOCOMPLETE } from "../../graphql";
 import { useStyles } from "./style";
 import { PlaceType } from "./types";
@@ -23,7 +24,7 @@ export const PlacesAutocomplete: FC = () => {
     const [value, setValue] = useState<PlaceType | null>(null);
     const [inputValue, setInputValue] = useState("");
     const [options, setOptions] = useState<PlaceType[]>([]);
-    const [isOpen, setOpen] = useState(false);
+    const [isOpen, setOpen] = useBoolean(false);
 
     const [getAutocomplete, { loading }] = useLazyQuery<any>(AUTOCOMPLETE, {
         onCompleted: data => {

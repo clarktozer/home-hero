@@ -13,17 +13,6 @@ export const useStyles = makeStyles(theme => ({
         textAlign: "center",
         position: "relative"
     },
-    loginButtons: {
-        display: "flex",
-        flexDirection: "column",
-        marginTop: "16px",
-        "& a": {
-            marginBottom: "16px",
-            "&:last-child": {
-                marginBottom: "0"
-            }
-        }
-    },
     overlaySpinner: {
         position: "absolute",
         width: "100%",

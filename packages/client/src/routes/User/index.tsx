@@ -1,43 +1,51 @@
+import { useQuery } from "@apollo/client";
 import {
     Avatar,
     Card,
     CardContent,
     CardHeader,
     Chip,
+    CircularProgress,
     Grid,
-    makeStyles,
-    Theme,
     Typography
 } from "@material-ui/core";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { USER } from "../../graphql";
 import { getViewer } from "../../state/features";
-
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        flexGrow: 1,
-        padding: 24
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: "center",
-        color: theme.palette.text.secondary
-    },
-    media: {
-        height: 0,
-        paddingTop: "100px" // 16:9
-    },
-    large: {
-        width: theme.spacing(10),
-        height: theme.spacing(10)
-    }
-}));
+import { useStyles } from "./style";
+import { MatchParams, PAGE_LIMIT } from "./types";
 
 export const User: FC = () => {
     const viewer = useSelector(getViewer);
     const classes = useStyles();
+    const { id } = useParams<MatchParams>();
+    const [listingsPage] = useState(1);
+    const [bookingsPage] = useState(1);
 
-    return viewer ? (
+    const { data, loading } = useQuery<any, any>(USER, {
+        variables: {
+            id,
+            bookingsPage,
+            listingsPage,
+            limit: PAGE_LIMIT
+        },
+        fetchPolicy: "cache-and-network"
+    });
+
+    if (loading) {
+        return (
+            <div>
+                <CircularProgress color="primary" size={60} />
+            </div>
+        );
+    }
+
+    const user = data ? data.user : null;
+    const viewerIsUser = viewer?.id === id;
+
+    return user ? (
         <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
@@ -46,19 +54,21 @@ export const User: FC = () => {
                             avatar={
                                 <Avatar
                                     className={classes.large}
-                                    alt={viewer.name}
-                                    src={viewer.avatar}
+                                    alt={user.name}
+                                    src={user.avatar}
                                 />
                             }
                             title={
                                 <Typography gutterBottom variant="h5">
-                                    {viewer.name}
+                                    {user.name}
                                 </Typography>
                             }
-                            subheader={viewer.email}
+                            subheader={user.email}
                         />
                         <CardContent>
-                            <Chip label="Primary clickable" color="primary" />
+                            {viewerIsUser && user.confirmed ? (
+                                <Chip label="Confirmed" color="primary" />
+                            ) : null}
                             <Typography
                                 variant="body2"
                                 color="textSecondary"

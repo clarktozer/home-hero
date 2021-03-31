@@ -10,7 +10,7 @@ import {
     Root,
     UseMiddleware
 } from "type-graphql";
-import { getRepository } from "typeorm";
+import { getRepository, In } from "typeorm";
 import { Stripe } from "../../../api";
 import { isAuthorized } from "../../../auth";
 import { redis } from "../../../config";
@@ -135,7 +135,8 @@ export class UserResolver {
     @Mutation(() => Boolean)
     async confirmUser(@Arg("token") token: string): Promise<boolean> {
         try {
-            const userId = await redis.get(`${CONFIRM_USER_PREFIX}${token}`);
+            const key = `${CONFIRM_USER_PREFIX}${token}`;
+            const userId = await redis.get(key);
 
             if (!userId) {
                 return false;
@@ -150,7 +151,7 @@ export class UserResolver {
                 }
             );
 
-            await redis.del(token);
+            await redis.del(key);
 
             return true;
         } catch (error) {
@@ -272,9 +273,7 @@ export class UserResolver {
                 skip: page > 0 ? (page - 1) * limit : 0,
                 take: limit,
                 where: {
-                    host: {
-                        id: user.id
-                    }
+                    id: In(user.bookingIds)
                 }
             });
 
