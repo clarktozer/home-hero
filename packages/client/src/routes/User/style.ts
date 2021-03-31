@@ -13,9 +13,5 @@ export const useStyles = makeStyles(theme => ({
     media: {
         height: 0,
         paddingTop: "100px" // 16:9
-    },
-    large: {
-        width: theme.spacing(10),
-        height: theme.spacing(10)
     }
 }));
