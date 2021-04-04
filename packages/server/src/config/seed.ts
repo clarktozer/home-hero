@@ -25,7 +25,7 @@ export const seed = async () => {
         description:
             "2 bed, 2 bathroom cozy apartment in the heart of downtown Toronto and only 5 min away from the CN Tower, Scotiabank Arena, and Rogers Center.",
         image: "https://placedog.net/1200/768?random",
-        type: ListingType.Apartment,
+        type: ListingType.APARTMENT,
         address: "3210 Scotchmere Dr W, Toronto, ON, CA",
         country: "Canada",
         admin: "Ontario",
@@ -41,7 +41,7 @@ export const seed = async () => {
         description:
             "Cozy, clean, and affordable studio located around midtown. Perfect for a solo traveller on a budget.",
         image: "https://placedog.net/1200/768?random",
-        type: ListingType.Apartment,
+        type: ListingType.APARTMENT,
         address: "7009 Strawberry Street, Toronto, ON, CA",
         country: "Canada",
         admin: "Ontario",
@@ -57,7 +57,7 @@ export const seed = async () => {
         description:
             "Cozy, clean, and affordable studio located around midtown. Perfect for a solo traveller on a budget.",
         image: "https://placedog.net/1200/768?random",
-        type: ListingType.Apartment,
+        type: ListingType.APARTMENT,
         address: "7009 Strawberry Street, Toronto, ON, CA",
         country: "Canada",
         admin: "Ontario",

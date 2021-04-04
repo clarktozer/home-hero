@@ -1,5 +1,7 @@
-export interface FormProps {
-    type: string;
+import { ListingType } from "../../__types/global";
+
+export interface HostListingFormValues {
+    type?: ListingType;
     guests?: number;
     title: string;
     description: string;

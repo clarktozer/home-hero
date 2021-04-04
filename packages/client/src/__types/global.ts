@@ -8,8 +8,8 @@
 //==============================================================
 
 export enum ListingType {
-  Apartment = "Apartment",
-  House = "House",
+  APARTMENT = "APARTMENT",
+  HOUSE = "HOUSE",
 }
 
 export enum ListingsFilter {

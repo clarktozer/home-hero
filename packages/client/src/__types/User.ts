@@ -55,6 +55,7 @@ export interface User_user {
   email: string;
   hasWallet: boolean;
   income: number | null;
+  confirmed: boolean | null;
   bookings: User_user_bookings | null;
   listings: User_user_listings;
 }

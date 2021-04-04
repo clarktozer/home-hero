@@ -17,15 +17,21 @@ import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import classnames from "classnames";
 import { useFormik } from "formik";
 import { useSnackbar } from "notistack";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, Redirect } from "react-router-dom";
 import { HOST_LISTING } from "../../graphql";
+import { useFocusError } from "../../hooks";
 import { getViewer } from "../../state/features";
+import { HostListingArgs, ListingType } from "../../__types/global";
+import {
+    HostListing as HostListingData,
+    HostListingVariables
+} from "../../__types/HostListing";
 import { FilePicker } from "./components";
 import { useStyles } from "./style";
-import { FormProps } from "./types";
+import { HostListingFormValues } from "./types";
 import { validationSchema } from "./validation";
 
 export const Host: FC = () => {
@@ -34,34 +40,32 @@ export const Host: FC = () => {
     const viewer = useSelector(getViewer);
     const { enqueueSnackbar } = useSnackbar();
 
-    const [hostListing, { loading, data }] = useMutation<any, any>(
-        HOST_LISTING,
-        {
-            onCompleted: () => {
-                enqueueSnackbar("You've successfully created your listing!", {
-                    variant: "success"
-                });
-            },
-            onError: () => {
-                enqueueSnackbar(
-                    "Sorry! We weren't able to create your listing. Please try again later.",
-                    {
-                        variant: "error"
-                    }
-                );
-            }
+    const [hostListing, { loading, data }] = useMutation<
+        HostListingData,
+        HostListingVariables
+    >(HOST_LISTING, {
+        onCompleted: () => {
+            enqueueSnackbar("You've successfully created your listing!", {
+                variant: "success"
+            });
+        },
+        onError: () => {
+            enqueueSnackbar(
+                "Sorry! We weren't able to create your listing. Please try again later.",
+                {
+                    variant: "error"
+                }
+            );
         }
-    );
+    });
 
-    const onSubmit = (values: FormProps) => {
+    const onSubmit = (values: HostListingFormValues) => {
         const fullAddress = `${values.address}, ${values.city}, ${values.state}, ${values.postCode}`;
 
-        const input = {
-            title: values.title,
-            description: values.description,
-            image: values.image,
-            type: values.type,
-            guests: values.guests,
+        const input: HostListingArgs = {
+            ...values,
+            type: values.type!,
+            guests: values.guests!,
             address: fullAddress,
             price: values.price ? values.price * 100 : 0
         };
@@ -82,9 +86,9 @@ export const Host: FC = () => {
         setFieldValue,
         isSubmitting,
         isValidating
-    } = useFormik<FormProps>({
+    } = useFormik<HostListingFormValues>({
         initialValues: {
-            type: "",
+            type: undefined,
             guests: undefined,
             title: "",
             description: "",
@@ -102,22 +106,7 @@ export const Host: FC = () => {
         onSubmit
     });
 
-    useEffect(() => {
-        if (isSubmitting && !isValidating && errors) {
-            const keys = Object.keys(errors);
-
-            if (keys.length > 0) {
-                const selector = `[name=${keys[0]}]`;
-                const errorElement = document.querySelector<HTMLElement>(
-                    selector
-                );
-
-                if (errorElement) {
-                    errorElement.focus();
-                }
-            }
-        }
-    }, [errors, isSubmitting, isValidating]);
+    useFocusError(errors, isSubmitting, isValidating);
 
     const onHomeTypeChange = (
         _event: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -128,7 +117,6 @@ export const Host: FC = () => {
 
     const onRecaptchaChange = (token: string | null) => {
         setFieldValue("recaptcha", token);
-        console.log(token);
     };
 
     const onImageChange = async (image: string) => {
@@ -208,7 +196,7 @@ export const Host: FC = () => {
                     >
                         <ToggleButton
                             className={classes.toggleButton}
-                            value="APARTMENT"
+                            value={ListingType.APARTMENT}
                         >
                             <Icon>apartment</Icon>
                             <span className={classes.toggleButtonLabel}>
@@ -217,7 +205,7 @@ export const Host: FC = () => {
                         </ToggleButton>
                         <ToggleButton
                             className={classes.toggleButton}
-                            value="HOUSE"
+                            value={ListingType.HOUSE}
                         >
                             <Icon>house</Icon>
                             <span className={classes.toggleButtonLabel}>

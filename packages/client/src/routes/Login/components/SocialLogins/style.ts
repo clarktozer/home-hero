@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-export const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles(theme => ({
     googleLogin: {
         border: "1px solid #b0b0b0"
     },
@@ -21,9 +21,9 @@ export const useStyles = makeStyles(() => ({
     loginButtons: {
         display: "flex",
         flexDirection: "column",
-        marginTop: "16px",
+        marginTop: theme.spacing(2),
         "& a": {
-            marginBottom: "16px",
+            marginBottom: theme.spacing(2),
             "&:last-child": {
                 marginBottom: "0"
             }

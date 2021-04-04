@@ -1,8 +1,8 @@
 import { registerEnumType } from "type-graphql";
 
 export enum ListingType {
-    Apartment = "APARTMENT",
-    House = "HOUSE"
+    APARTMENT = "APARTMENT",
+    HOUSE = "HOUSE"
 }
 
 registerEnumType(ListingType, {

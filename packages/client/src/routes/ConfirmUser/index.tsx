@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import { Card, CardContent, Icon, Typography } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
@@ -7,9 +8,15 @@ import { useBoolean, useCounter, useInterval, useMount } from "react-use";
 import { CenterSpinner } from "../../components";
 import { CONFIRM_USER } from "../../graphql";
 import { getViewer } from "../../state/features";
+import { useUtilStyles } from "../../utils";
+import {
+    ConfirmUser as ConfirmUserData,
+    ConfirmUserVariables
+} from "../../__types/ConfirmUser";
 import { MatchParams } from "./types";
 
 export const ConfirmUser: FC = () => {
+    const utilStyles = useUtilStyles();
     const viewer = useSelector(getViewer);
     const history = useHistory();
     const { token } = useParams<MatchParams>();
@@ -18,7 +25,10 @@ export const ConfirmUser: FC = () => {
     const [isRunning, toggleIsRunning] = useBoolean(false);
     const { enqueueSnackbar } = useSnackbar();
 
-    const [confirmUser, { data }] = useMutation<any, any>(CONFIRM_USER, {
+    const [confirmUser, { data, error, loading }] = useMutation<
+        ConfirmUserData,
+        ConfirmUserVariables
+    >(CONFIRM_USER, {
         onCompleted: data => {
             if (data?.confirmUser) {
                 toggleIsRunning();
@@ -58,12 +68,27 @@ export const ConfirmUser: FC = () => {
 
     if (data?.confirmUser) {
         return (
-            <div>
-                Thank you for confirming your user. Redirecting you to login in{" "}
-                {count}
+            <div className={utilStyles.centerPage}>
+                <Typography>
+                    Thank you for confirming your user. Redirecting you to login
+                    in {count}
+                </Typography>
             </div>
         );
     }
 
-    return <CenterSpinner />;
+    return !loading && error ? (
+        <div className={utilStyles.centerPage}>
+            <Card className={utilStyles.textCenter} elevation={0}>
+                <CardContent>
+                    <Icon color="inherit">error</Icon>
+                    <Typography className={utilStyles.spacingTop2}>
+                        Unable to confirm your user
+                    </Typography>
+                </CardContent>
+            </Card>
+        </div>
+    ) : (
+        <CenterSpinner />
+    );
 };

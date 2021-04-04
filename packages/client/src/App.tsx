@@ -11,6 +11,7 @@ import { Routes } from "./routes";
 import { setViewer } from "./state/features";
 import { useAppDispatch } from "./state/store";
 import { useStyles } from "./style";
+import { Me } from "./__types/Me";
 
 export const App: FC = () => {
     const classes = useStyles();
@@ -18,7 +19,7 @@ export const App: FC = () => {
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
 
-    const { loading, error } = useQuery<any>(ME, {
+    const { loading, error } = useQuery<Me>(ME, {
         onCompleted: data => {
             if (data?.me) {
                 dispatch(setViewer(data.me));

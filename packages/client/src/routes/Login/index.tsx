@@ -8,6 +8,7 @@ import { CenterSpinner } from "../../components";
 import { ME } from "../../graphql/queries";
 import { setViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
+import { Me } from "../../__types/Me";
 import { SocialLogins } from "./components";
 import { useStyles } from "./style";
 
@@ -17,7 +18,7 @@ export const Login: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [loggingIn, setLoggingIn] = useBoolean(false);
 
-    const [getLoggedInUser, { loading, data }] = useLazyQuery<any>(ME, {
+    const [getLoggedInUser, { loading, data }] = useLazyQuery<Me>(ME, {
         onCompleted: data => {
             if (data?.me) {
                 dispatch(setViewer(data.me));

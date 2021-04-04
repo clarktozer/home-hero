@@ -18,6 +18,7 @@ import { Link as RouterLink, useHistory } from "react-router-dom";
 import { LOG_OUT } from "../../graphql/mutations";
 import { clearViewer, getViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
+import { Logout } from "../../__types/Logout";
 import { PlacesAutocomplete } from "../PlacesAutocomplete";
 import { useStyles } from "./style";
 import { HeaderProps } from "./types";
@@ -38,7 +39,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     const menuId = "primary-menu";
     const mobileMenuId = "primary-menu-mobile";
 
-    const [logOut] = useMutation<any>(LOG_OUT, {
+    const [logOut] = useMutation<Logout>(LOG_OUT, {
         onCompleted: () => {
             dispatch(clearViewer());
             enqueueSnackbar("You've successfully logged out!", {

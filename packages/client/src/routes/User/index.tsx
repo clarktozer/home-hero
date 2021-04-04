@@ -4,6 +4,7 @@ import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CenterSpinner } from "../../components";
 import { USER } from "../../graphql";
+import { User as UserData, UserVariables } from "../../__types/User";
 import { UserProfile } from "./components";
 import { useStyles } from "./style";
 import { MatchParams, PAGE_LIMIT } from "./types";
@@ -14,7 +15,7 @@ export const User: FC = () => {
     const [listingsPage] = useState(1);
     const [bookingsPage] = useState(1);
 
-    const { data, loading, refetch } = useQuery<any, any>(USER, {
+    const { data, loading, refetch } = useQuery<UserData, UserVariables>(USER, {
         variables: {
             id,
             bookingsPage,

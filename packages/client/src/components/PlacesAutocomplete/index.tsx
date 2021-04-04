@@ -13,6 +13,10 @@ import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useBoolean } from "react-use";
 import { AUTOCOMPLETE } from "../../graphql";
+import {
+    Autocomplete as AutocompleteData,
+    AutocompleteVariables
+} from "../../__types/Autocomplete";
 import { useStyles } from "./style";
 import { PlaceType } from "./types";
 
@@ -26,7 +30,10 @@ export const PlacesAutocomplete: FC = () => {
     const [options, setOptions] = useState<PlaceType[]>([]);
     const [isOpen, setOpen] = useBoolean(false);
 
-    const [getAutocomplete, { loading }] = useLazyQuery<any>(AUTOCOMPLETE, {
+    const [getAutocomplete, { loading }] = useLazyQuery<
+        AutocompleteData,
+        AutocompleteVariables
+    >(AUTOCOMPLETE, {
         onCompleted: data => {
             let newOptions: PlaceType[] = [];
 
