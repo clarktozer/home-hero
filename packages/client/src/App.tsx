@@ -18,6 +18,7 @@ export const App: FC = () => {
     const dispatch = useAppDispatch();
     const [themeCookie, updateCookie] = useCookie(ThemeCookie);
     const isDarkTheme = themeCookie === ThemeType.Dark;
+    const theme = isDarkTheme ? DarkTheme : LightTheme;
 
     const { loading, error } = useQuery<Me>(ME, {
         onCompleted: data => {
@@ -31,9 +32,9 @@ export const App: FC = () => {
         updateCookie(isDarkTheme ? ThemeType.Light : ThemeType.Dark);
     };
 
-    const logInErrorBannerElement = error ? (
+    const logInErrorBannerElement = error && (
         <ErrorBanner description="We weren't able to verify if you were logged in. Please try again later!" />
-    ) : null;
+    );
 
     const appElement =
         loading && !error ? (
@@ -53,7 +54,7 @@ export const App: FC = () => {
         );
 
     return (
-        <ThemeProvider theme={isDarkTheme ? DarkTheme : LightTheme}>
+        <ThemeProvider theme={theme}>
             <CssBaseline />
             <div className={classes.appContainer}>{appElement}</div>
         </ThemeProvider>

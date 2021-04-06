@@ -30,5 +30,11 @@ export const useStyles = makeStyles(theme => ({
     mobileAvatar: {
         display: "flex",
         justifyContent: "center"
+    },
+    more: {
+        paddingRight: 0,
+        [theme.breakpoints.up("sm")]: {
+            paddingRight: "12px"
+        }
     }
 }));

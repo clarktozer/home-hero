@@ -33,7 +33,7 @@ import {
 export class UserResolver {
     @Query(() => User, { nullable: true })
     async me(@Ctx() ctx: AppContext): Promise<User | undefined> {
-        return ctx.req.user ? User.findOne(ctx.req.user.id) : undefined;
+        return ctx.req.user?.id ? User.findOne(ctx.req.user.id) : undefined;
     }
 
     @Query(() => User)

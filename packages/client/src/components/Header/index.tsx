@@ -202,6 +202,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
                 </div>
                 <div className={classes.sectionMobile}>
                     <IconButton
+                        className={classes.more}
                         aria-label="show more"
                         aria-controls={mobileMenuId}
                         aria-haspopup="true"
