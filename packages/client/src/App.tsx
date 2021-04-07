@@ -32,31 +32,26 @@ export const App: FC = () => {
         updateCookie(isDarkTheme ? ThemeType.Light : ThemeType.Dark);
     };
 
-    const logInErrorBannerElement = error && (
-        <ErrorBanner description="We weren't able to verify if you were logged in. Please try again later!" />
-    );
-
-    const appElement =
-        loading && !error ? (
-            <>
-                <HeaderSkeleton />
-                <CenterSpinner />
-            </>
-        ) : (
-            <>
-                {logInErrorBannerElement}
-                <Header
-                    isDarkTheme={isDarkTheme}
-                    onToggleTheme={onToggleTheme}
-                />
-                <Routes />
-            </>
-        );
-
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <div className={classes.appContainer}>{appElement}</div>
+            {loading && !error ? (
+                <div className={classes.appContainer}>
+                    <HeaderSkeleton />
+                    <CenterSpinner />
+                </div>
+            ) : (
+                <div className={classes.appContainer}>
+                    {error && (
+                        <ErrorBanner description="We weren't able to verify if you were logged in. Please try again later!" />
+                    )}
+                    <Header
+                        isDarkTheme={isDarkTheme}
+                        onToggleTheme={onToggleTheme}
+                    />
+                    <Routes />
+                </div>
+            )}
         </ThemeProvider>
     );
 };

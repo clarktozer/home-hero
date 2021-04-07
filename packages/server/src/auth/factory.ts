@@ -101,9 +101,7 @@ export const addPassportStrategy = (
     ) => {
         passport.authenticate(type, (error: Error, user) => {
             if (error) {
-                response.redirect(
-                    `${process.env.CLIENT_URL}/login?error=${error.message}`
-                );
+                response.redirect(`${process.env.CLIENT_URL}/login?error=true`);
             } else {
                 request.logIn(user, () => {
                     next();

@@ -1,11 +1,11 @@
 import { useLazyQuery } from "@apollo/client";
 import { Card, CardContent, CircularProgress, Icon } from "@material-ui/core";
 import { useSnackbar } from "notistack";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useBoolean, useMount } from "react-use";
-import { CenterSpinner } from "../../components";
-import { ME } from "../../graphql/queries";
+import { ErrorBanner } from "../../components";
+import { ME } from "../../graphql";
 import { setViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
 import { Me } from "../../__types/Me";
@@ -17,61 +17,59 @@ export const Login: FC = () => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
     const [loggingIn, setLoggingIn] = useBoolean(false);
+    const [error, setError] = useState<string | null>(null);
 
     const [getLoggedInUser, { loading, data }] = useLazyQuery<Me>(ME, {
         onCompleted: data => {
             if (data?.me) {
                 dispatch(setViewer(data.me));
-                enqueueSnackbar("You've successfully logged in!", {
-                    variant: "success"
-                });
             }
         }
     });
 
     useMount(() => {
-        const success = new URL(window.location.href).searchParams.get(
-            "success"
-        );
+        const url = new URL(window.location.href);
+        const success = url.searchParams.get("success");
+        const error = url.searchParams.get("error");
+        setError(error);
 
         if (success) {
+            enqueueSnackbar("You've successfully logged in!", {
+                variant: "success"
+            });
             getLoggedInUser();
         }
     });
-
-    if (loading) {
-        return <CenterSpinner />;
-    }
-
-    if (data?.me) {
-        const redirectUrl = new URL(window.location.href).searchParams.get(
-            "redirect"
-        );
-
-        if (redirectUrl) {
-            return <Redirect to={redirectUrl} />;
-        }
-
-        return <Redirect to={`/user/${data.me.id}`} />;
-    }
 
     const onSocialClick = () => {
         setLoggingIn(true);
     };
 
+    if (data?.me) {
+        const url = new URL(window.location.href);
+        const redirectUrl = url.searchParams.get("redirect");
+
+        return <Redirect to={redirectUrl || `/user/${data.me.id}`} />;
+    }
+
     return (
-        <div className={classes.loginPage}>
-            <Card className={classes.loginCard} elevation={0}>
-                {loggingIn && (
-                    <div className={classes.overlaySpinner}>
-                        <CircularProgress />
-                    </div>
-                )}
-                <CardContent>
-                    <Icon color="inherit">hotel</Icon>
-                    <SocialLogins onClick={onSocialClick} />
-                </CardContent>
-            </Card>
-        </div>
+        <>
+            {error && (
+                <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later!" />
+            )}
+            <div className={classes.loginPage}>
+                <Card className={classes.loginCard} elevation={0}>
+                    {loggingIn || loading ? (
+                        <div className={classes.overlaySpinner}>
+                            <CircularProgress />
+                        </div>
+                    ) : null}
+                    <CardContent>
+                        <Icon color="inherit">hotel</Icon>
+                        <SocialLogins onClick={onSocialClick} />
+                    </CardContent>
+                </Card>
+            </div>
+        </>
     );
 };
