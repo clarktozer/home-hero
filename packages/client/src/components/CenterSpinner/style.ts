@@ -6,6 +6,10 @@ export const useStyles = makeStyles(theme => ({
         minHeight: 0,
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        flexDirection: "column"
+    },
+    labelContainer: {
+        paddingTop: theme.spacing(3)
     }
 }));

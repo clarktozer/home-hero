@@ -3,8 +3,12 @@ import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import React, { FC } from "react";
 import { useCookie } from "react-use";
-import { CenterSpinner, ErrorBanner, Header } from "./components";
-import { HeaderSkeleton } from "./components/HeaderSkeleton";
+import {
+    CenterSpinner,
+    ErrorBanner,
+    Header,
+    HeaderSkeleton
+} from "./components";
 import { DarkTheme, LightTheme, ThemeCookie, ThemeType } from "./constants";
 import { ME } from "./graphql/queries";
 import { Routes } from "./routes";

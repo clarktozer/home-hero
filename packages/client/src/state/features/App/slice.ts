@@ -14,10 +14,15 @@ const appSlice = createSlice({
         },
         clearViewer(state) {
             state.viewer = null;
+        },
+        setViewerWallet(state, action: PayloadAction<boolean>) {
+            if (state.viewer) {
+                state.viewer.hasWallet = action.payload;
+            }
         }
     }
 });
 
-export const { setViewer, clearViewer } = appSlice.actions;
+export const { setViewer, clearViewer, setViewerWallet } = appSlice.actions;
 
 export const AppReducer = appSlice.reducer;

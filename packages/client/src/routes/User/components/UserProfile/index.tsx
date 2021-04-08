@@ -11,9 +11,11 @@ import {
 import { useSnackbar } from "notistack";
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
+import { Notification } from "../../../../components";
 import { DISCONNECT_STRIPE } from "../../../../graphql";
-import { getViewer, setViewer } from "../../../../state/features";
+import { getViewer, setViewerWallet } from "../../../../state/features";
 import { useAppDispatch } from "../../../../state/store";
+import { DisconnectStripe as DisconnectStripeData } from "../../../../__types/DisconnectStripe";
 import { useStyles } from "./style";
 import { UserProfileProps } from "./types";
 
@@ -29,34 +31,35 @@ export const UserProfile: FC<UserProfileProps> = ({
     const viewerIsUser = viewer && viewer.id === user?.id;
     const { enqueueSnackbar } = useSnackbar();
 
-    const [disconnectStripe, { loading }] = useMutation(DISCONNECT_STRIPE, {
-        onCompleted: data => {
-            if (data?.disconnectStripe) {
-                dispatch(setViewer(data?.disconnectStripe));
+    const [disconnectStripe, { loading }] = useMutation<DisconnectStripeData>(
+        DISCONNECT_STRIPE,
+        {
+            onCompleted: data => {
+                if (data?.disconnectStripe) {
+                    dispatch(setViewerWallet(data?.disconnectStripe.hasWallet));
+                    enqueueSnackbar(
+                        <Notification
+                            title="You've successfully disconnected from Stripe!"
+                            description="You'll have to reconnect with Stripe to continue
+                        to create listings."
+                        />,
+                        {
+                            variant: "success"
+                        }
+                    );
+                    handleUserRefetch();
+                }
+            },
+            onError: () => {
                 enqueueSnackbar(
-                    <>
-                        <div>You've successfully disconnected from Stripe!</div>
-                        <div>
-                            You'll have to reconnect with Stripe to continue to
-                            create listings.
-                        </div>
-                    </>,
+                    "Sorry! We weren't able to disconnect you from Stripe. Please try again later!",
                     {
-                        variant: "success"
+                        variant: "error"
                     }
                 );
-                handleUserRefetch();
             }
-        },
-        onError: () => {
-            enqueueSnackbar(
-                "Sorry! We weren't able to disconnect you from Stripe. Please try again later!",
-                {
-                    variant: "error"
-                }
-            );
         }
-    });
+    );
 
     const redirectToStripe = () => {
         window.location.href = stripeAuthUrl;
@@ -77,7 +80,7 @@ export const UserProfile: FC<UserProfileProps> = ({
                         <Typography gutterBottom variant="h5">
                             {user.name}
                             {viewerIsUser && user.confirmed ? (
-                                <Tooltip title="Activated">
+                                <Tooltip title="Activated, you can now book listings!">
                                     <Icon
                                         className={classes.confirmed}
                                         color="inherit"
