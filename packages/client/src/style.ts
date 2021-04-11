@@ -7,5 +7,9 @@ export const useStyles = makeStyles(theme => ({
         display: "flex",
         flex: "auto",
         flexDirection: "column"
+    },
+    contentContainer: {
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4)
     }
 }));

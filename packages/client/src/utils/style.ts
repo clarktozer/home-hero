@@ -13,5 +13,12 @@ export const useUtilStyles = makeStyles(theme => ({
     },
     spacingTop2: {
         marginTop: theme.spacing(2)
+    },
+    flexCenter: {
+        display: "flex",
+        alignItems: "center"
+    },
+    spacingRight1: {
+        marginRight: theme.spacing(1)
     }
 }));

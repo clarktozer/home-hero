@@ -284,7 +284,7 @@ export class ListingResolver {
             const count = await repository
                 .createQueryBuilder("listing")
                 .innerJoin("listing.favoritedBy", "user", "user.id = :id", {
-                    id: ctx.req.user!.id
+                    id: ctx.req.user.id
                 })
                 .where("listing.id = :uid", { uid: listing.id })
                 .getCount();

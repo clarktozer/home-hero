@@ -1,3 +1,3 @@
+export * from "./FeaturedListings";
+export * from "./FeaturedListingsSkeleton";
 export * from "./FeaturedRegions";
-export * from "./HomeListings";
-export * from "./HomeListingSkeleton";

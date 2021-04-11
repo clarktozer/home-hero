@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { CssBaseline } from "@material-ui/core";
+import { Container, CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import React, { FC } from "react";
 import { useCookie } from "react-use";
@@ -53,7 +53,12 @@ export const App: FC = () => {
                         isDarkTheme={isDarkTheme}
                         onToggleTheme={onToggleTheme}
                     />
-                    <Routes />
+                    <Container
+                        className={classes.contentContainer}
+                        maxWidth="xl"
+                    >
+                        <Routes />
+                    </Container>
                 </div>
             )}
         </ThemeProvider>

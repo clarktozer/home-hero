@@ -1,5 +1,5 @@
 import React, { FC } from "react";
 
-export const HomeListingSkeleton: FC = () => {
+export const FeaturedListingsSkeleton: FC = () => {
     return <div></div>;
 };
