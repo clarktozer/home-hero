@@ -1,9 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import { ListingCard } from "../../components/ListingCard";
 import { LISTINGS } from "../../graphql";
-import { ListingsFilter } from "../../__types/global";
+import { ListingsFilter, ListingType } from "../../__types/global";
 import {
     Listings as ListingsData,
     ListingsVariables
@@ -71,6 +72,68 @@ export const Home: FC = () => {
                 </Button>
             </div>
             {renderListingsSection()}
+            <Grid container spacing={4}>
+                <Grid item xs={12} sm={6} md={3}>
+                    <ListingCard
+                        data={{
+                            address: "1 Smith Drive",
+                            guests: 4,
+                            id: "1",
+                            image:
+                                "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                            price: 240,
+                            title: "Here is a thing",
+                            __typename: "Listing",
+                            type: ListingType.HOUSE
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <ListingCard
+                        data={{
+                            address: "1 Smith Drive",
+                            guests: 4,
+                            id: "1",
+                            image:
+                                "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                            price: 240,
+                            title: "Here is a thing",
+                            __typename: "Listing",
+                            type: ListingType.APARTMENT
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <ListingCard
+                        data={{
+                            address: "1 Smith Drive",
+                            guests: 4,
+                            id: "1",
+                            image:
+                                "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                            price: 240,
+                            title: "Here is a thing",
+                            __typename: "Listing",
+                            type: ListingType.APARTMENT
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <ListingCard
+                        data={{
+                            address: "1 Smith Drive",
+                            guests: 4,
+                            id: "1",
+                            image:
+                                "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                            price: 240,
+                            title: "Here is a thing",
+                            __typename: "Listing",
+                            type: ListingType.APARTMENT
+                        }}
+                    />
+                </Grid>
+            </Grid>
         </div>
     );
 };

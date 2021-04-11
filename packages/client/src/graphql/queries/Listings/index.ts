@@ -22,6 +22,7 @@ export const LISTINGS = gql`
                 address
                 price
                 guests
+                type
             }
         }
     }
