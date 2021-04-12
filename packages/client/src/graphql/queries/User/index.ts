@@ -1,12 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const USER = gql`
-    query User(
-        $id: String!
-        $bookingsPage: Int!
-        $listingsPage: Int!
-        $limit: Int!
-    ) {
+    query User($id: String!) {
         user(id: $id) {
             id
             name
@@ -15,33 +10,6 @@ export const USER = gql`
             hasWallet
             income
             confirmed
-            bookings(limit: $limit, page: $bookingsPage) {
-                total
-                result {
-                    id
-                    listing {
-                        id
-                        title
-                        image
-                        address
-                        price
-                        guests
-                    }
-                    checkIn
-                    checkOut
-                }
-            }
-            listings(limit: $limit, page: $listingsPage) {
-                total
-                result {
-                    id
-                    title
-                    image
-                    address
-                    price
-                    guests
-                }
-            }
         }
     }
 `;

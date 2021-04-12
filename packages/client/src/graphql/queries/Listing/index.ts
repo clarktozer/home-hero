@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const LISTING = gql`
-    query Listing($id: String!, $bookingsPage: Int!, $limit: Int!) {
+    query Listing($id: String!) {
         listing(id: $id) {
             id
             title
@@ -16,19 +16,6 @@ export const LISTING = gql`
             type
             address
             city
-            bookings(limit: $limit, page: $bookingsPage) {
-                total
-                result {
-                    id
-                    tenant {
-                        id
-                        name
-                        avatar
-                    }
-                    checkIn
-                    checkOut
-                }
-            }
             price
             guests
         }

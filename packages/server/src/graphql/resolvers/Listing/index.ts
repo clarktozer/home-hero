@@ -11,13 +11,13 @@ import {
     Root,
     UseMiddleware
 } from "type-graphql";
-import { FindOneOptions, getRepository, In } from "typeorm";
+import { FindOneOptions, getRepository } from "typeorm";
 import { Cloudinary, Google } from "../../../api";
 import { isAuthorized } from "../../../auth";
 import { AppContext } from "../../../middlewares/apollo/types";
-import { Booking, Listing, User } from "../../entities";
+import { Listing, User } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
-import { BookingDataResponse, PaginationArgs } from "../types";
+import { ListingDataResponse, PaginationArgs } from "../types";
 import {
     GoogleRecaptchaResponse,
     HostListingArgs,
@@ -226,6 +226,78 @@ export class ListingResolver {
         }
     }
 
+    @Query(() => ListingDataResponse)
+    async listingsForUser(
+        @Arg("userId") userId: string,
+        @Args() input: PaginationArgs
+    ): Promise<ListingDataResponse> {
+        try {
+            const { limit, page } = input;
+            const repository = getRepository(Listing);
+
+            const data: ListingDataResponse = {
+                total: 0,
+                result: []
+            };
+
+            const [items, count] = await repository.findAndCount({
+                skip: page > 0 ? (page - 1) * limit : 0,
+                take: limit,
+                where: {
+                    host: {
+                        id: userId
+                    }
+                }
+            });
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query listings for user: ${error}`);
+        }
+    }
+
+    @Query(() => ListingDataResponse, {
+        nullable: true
+    })
+    async favouriteListingsForUser(
+        @Ctx() ctx: AppContext,
+        @Arg("userId") userId: string,
+        @Args() input: PaginationArgs
+    ): Promise<ListingDataResponse | null> {
+        try {
+            if (!isAuthorized(ctx.req) || ctx.req.user?.id !== userId) {
+                return null;
+            }
+
+            const { limit, page } = input;
+            const repository = getRepository(Listing);
+
+            const data: ListingDataResponse = {
+                total: 0,
+                result: []
+            };
+
+            const [items, count] = await repository
+                .createQueryBuilder("listing")
+                .innerJoin("listing.favoritedBy", "user", "user.id = :id", {
+                    id: userId
+                })
+                .take(limit)
+                .skip(page > 0 ? (page - 1) * limit : 0)
+                .getManyAndCount();
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query favorite listings: ${error}`);
+        }
+    }
+
     @FieldResolver()
     async host(@Root() listing: Listing) {
         const host = await User.findOne(listing.hostId);
@@ -235,43 +307,6 @@ export class ListingResolver {
         }
 
         return host;
-    }
-
-    @FieldResolver(() => BookingDataResponse, {
-        nullable: true
-    })
-    async bookings(
-        @Root() listing: Listing,
-        @Args() input: PaginationArgs
-    ): Promise<BookingDataResponse | null> {
-        try {
-            if (!listing.authorized) {
-                return null;
-            }
-
-            const { limit, page } = input;
-            const repository = getRepository(Booking);
-
-            const data: BookingDataResponse = {
-                total: 0,
-                result: []
-            };
-
-            const [items, count] = await repository.findAndCount({
-                skip: page > 0 ? (page - 1) * limit : 0,
-                take: limit,
-                where: {
-                    id: In(listing.bookingIds)
-                }
-            });
-
-            data.total = count;
-            data.result = items;
-
-            return data;
-        } catch (error) {
-            throw new Error(`Failed to query listing bookings: ${error}`);
-        }
     }
 
     @FieldResolver(() => Boolean, {

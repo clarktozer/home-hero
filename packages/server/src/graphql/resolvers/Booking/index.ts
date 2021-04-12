@@ -1,17 +1,21 @@
 import dayjs from "dayjs";
 import {
     Arg,
+    Args,
     Authorized,
     Ctx,
     Mutation,
+    Query,
     Resolver,
     UseMiddleware
 } from "type-graphql";
-import { Entity } from "typeorm";
+import { Entity, getRepository } from "typeorm";
 import { Stripe } from "../../../api";
+import { isAuthorized } from "../../../auth";
 import { AppContext } from "../../../middlewares/apollo/types";
 import { Booking, Listing } from "../../entities";
 import { ValidAntiForgeryToken } from "../../middlewares";
+import { BookingDataResponse, PaginationArgs } from "../types";
 import { CreateBookingArgs } from "./types";
 
 @Entity()
@@ -90,6 +94,88 @@ export class BookingResolver {
             return booking;
         } catch (error) {
             throw new Error(`Failed to create a booking: ${error}`);
+        }
+    }
+
+    @Query(() => BookingDataResponse, {
+        nullable: true
+    })
+    async bookingsForListing(
+        @Ctx() ctx: AppContext,
+        @Arg("listingId") listingId: string,
+        @Args() input: PaginationArgs
+    ): Promise<BookingDataResponse | null> {
+        try {
+            const listing = await Listing.findOne(listingId);
+
+            if (!listing) {
+                throw new Error("Listing can't be found");
+            }
+
+            if (!isAuthorized(ctx.req) || ctx.req.user?.id !== listing.hostId) {
+                return null;
+            }
+
+            const { limit, page } = input;
+            const repository = getRepository(Booking);
+
+            const data: BookingDataResponse = {
+                total: 0,
+                result: []
+            };
+
+            const [items, count] = await repository.findAndCount({
+                skip: page > 0 ? (page - 1) * limit : 0,
+                take: limit,
+                where: {
+                    listingId
+                }
+            });
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query listing bookings: ${error}`);
+        }
+    }
+
+    @Query(() => BookingDataResponse, {
+        nullable: true
+    })
+    async bookingsForUser(
+        @Ctx() ctx: AppContext,
+        @Arg("userId") userId: string,
+        @Args() input: PaginationArgs
+    ): Promise<BookingDataResponse | null> {
+        try {
+            if (!isAuthorized(ctx.req) || ctx.req.user?.id !== userId) {
+                return null;
+            }
+
+            const { limit, page } = input;
+            const repository = getRepository(Booking);
+
+            const data: BookingDataResponse = {
+                total: 0,
+                result: []
+            };
+
+            const [items, count] = await repository.findAndCount({
+                skip: page > 0 ? (page - 1) * limit : 0,
+                take: limit,
+                where: {
+                    tenantId: userId
+                }
+            });
+
+            data.total = count;
+            data.result = items;
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to query bookings for user: ${error}`);
         }
     }
 }

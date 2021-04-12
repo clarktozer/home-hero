@@ -17,27 +17,6 @@ export interface Listing_listing_host {
   hasWallet: boolean;
 }
 
-export interface Listing_listing_bookings_result_tenant {
-  __typename: "User";
-  id: string;
-  name: string;
-  avatar: string;
-}
-
-export interface Listing_listing_bookings_result {
-  __typename: "Booking";
-  id: string;
-  tenant: Listing_listing_bookings_result_tenant;
-  checkIn: any;
-  checkOut: any;
-}
-
-export interface Listing_listing_bookings {
-  __typename: "DataBookingResponse";
-  total: number;
-  result: Listing_listing_bookings_result[];
-}
-
 export interface Listing_listing {
   __typename: "Listing";
   id: string;
@@ -48,7 +27,6 @@ export interface Listing_listing {
   type: ListingType;
   address: string;
   city: string;
-  bookings: Listing_listing_bookings | null;
   price: number;
   guests: number;
 }
@@ -59,6 +37,4 @@ export interface Listing {
 
 export interface ListingVariables {
   id: string;
-  bookingsPage: number;
-  limit: number;
 }

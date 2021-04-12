@@ -3,11 +3,30 @@ import { Grid, Typography } from "@material-ui/core";
 import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CenterSpinner } from "../../components";
-import { USER } from "../../graphql";
+import {
+    BOOKINGS_FOR_USER,
+    FAVOURITE_LISTINGS_FOR_USER,
+    LISTINGS_FOR_USER,
+    USER
+} from "../../graphql";
+import {
+    BookingsForUser as BookingsForUserData,
+    BookingsForUserVariables
+} from "../../__types/BookingsForUser";
+import {
+    FavouriteListingsForUser as FavouriteListingsForUserData,
+    FavouriteListingsForUserVariables
+} from "../../__types/FavouriteListingsForUser";
+import {
+    ListingsForUser as ListingsForUserData,
+    ListingsForUserVariables
+} from "../../__types/ListingsForUser";
 import { User as UserData, UserVariables } from "../../__types/User";
 import { UserProfile } from "./components";
 import { useStyles } from "./style";
-import { MatchParams, PAGE_LIMIT } from "./types";
+import { MatchParams } from "./types";
+
+const PAGE_LIMIT = 4;
 
 export const User: FC = () => {
     const classes = useStyles();
@@ -17,12 +36,42 @@ export const User: FC = () => {
 
     const { data, loading, refetch } = useQuery<UserData, UserVariables>(USER, {
         variables: {
-            id,
-            bookingsPage,
-            listingsPage,
-            limit: PAGE_LIMIT
+            id
         },
         fetchPolicy: "cache-and-network"
+    });
+
+    const { loading: bookingsLoading, data: bookingsData } = useQuery<
+        BookingsForUserData,
+        BookingsForUserVariables
+    >(BOOKINGS_FOR_USER, {
+        variables: {
+            bookingsPage,
+            userId: id,
+            limit: PAGE_LIMIT
+        }
+    });
+
+    const { loading: listingsLoading, data: listingsData } = useQuery<
+        ListingsForUserData,
+        ListingsForUserVariables
+    >(LISTINGS_FOR_USER, {
+        variables: {
+            listingsPage,
+            userId: id,
+            limit: PAGE_LIMIT
+        }
+    });
+
+    const { loading: favListingsLoading, data: favListingsData } = useQuery<
+        FavouriteListingsForUserData,
+        FavouriteListingsForUserVariables
+    >(FAVOURITE_LISTINGS_FOR_USER, {
+        variables: {
+            listingsPage,
+            userId: id,
+            limit: PAGE_LIMIT
+        }
     });
 
     if (loading) {
