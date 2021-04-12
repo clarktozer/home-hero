@@ -5,7 +5,7 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { LISTINGS } from "../../graphql";
 import { useUtilStyles } from "../../utils";
-import { ListingsFilter, ListingType } from "../../__types/global";
+import { ListingsFilter } from "../../__types/global";
 import {
     Listings as ListingsData,
     ListingsVariables
@@ -63,52 +63,7 @@ export const Home: FC = () => {
                 {data ? (
                     <FeaturedListings
                         loading={loading}
-                        data={[
-                            {
-                                address: "1 Smith Drive",
-                                guests: 4,
-                                id: "1",
-                                image:
-                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
-                                price: 240,
-                                title: "Here is a thing",
-                                __typename: "Listing",
-                                type: ListingType.HOUSE
-                            },
-                            {
-                                address: "1 Smith Drive",
-                                guests: 4,
-                                id: "1",
-                                image:
-                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
-                                price: 240,
-                                title: "Here is a thing",
-                                __typename: "Listing",
-                                type: ListingType.HOUSE
-                            },
-                            {
-                                address: "1 Smith Drive",
-                                guests: 4,
-                                id: "1",
-                                image:
-                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
-                                price: 240,
-                                title: "Here is a thing",
-                                __typename: "Listing",
-                                type: ListingType.HOUSE
-                            },
-                            {
-                                address: "1 Smith Drive",
-                                guests: 4,
-                                id: "1",
-                                image:
-                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
-                                price: 240,
-                                title: "Here is a thing",
-                                __typename: "Listing",
-                                type: ListingType.HOUSE
-                            }
-                        ]}
+                        data={data.listings.result}
                     />
                 ) : null}
             </div>

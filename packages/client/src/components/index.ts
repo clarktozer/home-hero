@@ -1,5 +1,6 @@
 export * from "./CenterSpinner";
 export * from "./ErrorBanner";
+export * from "./ErrorPage";
 export * from "./GridListingCardSkeletons";
 export * from "./Header";
 export * from "./HeaderSkeleton";

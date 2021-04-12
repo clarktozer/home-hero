@@ -74,6 +74,8 @@ export const PlacesAutocomplete: FC = () => {
 
         if (!pathname.includes("/listings")) {
             onClear();
+
+            return;
         }
     }, [location]);
 
@@ -156,6 +158,7 @@ export const PlacesAutocomplete: FC = () => {
                     input: classes.inputInput
                 }}
                 onKeyPress={onKeyPress}
+                value={inputValue}
             />
         </div>
     );
