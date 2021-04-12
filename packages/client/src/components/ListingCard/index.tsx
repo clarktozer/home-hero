@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import { formatListingPrice } from "../../utils";
 import { ListingType } from "../../__types/global";
 import { useStyles } from "./style";
 import { ListingCardProps } from "./types";
@@ -24,7 +25,7 @@ export const ListingCard: FC<ListingCardProps> = ({ data }) => {
 
     const subHeader = (
         <>
-            ${price}
+            {formatListingPrice(price)}
             <span>/day</span>
             <Typography>{address}</Typography>
         </>

@@ -4,22 +4,20 @@ import classnames from "classnames";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { LISTINGS } from "../../graphql";
-import { ListingsFilter } from "../../__types/global";
+import { useUtilStyles } from "../../utils";
+import { ListingsFilter, ListingType } from "../../__types/global";
 import {
     Listings as ListingsData,
     ListingsVariables
 } from "../../__types/Listings";
-import {
-    FeaturedListings,
-    FeaturedListingsSkeleton,
-    FeaturedRegions
-} from "./components";
+import { FeaturedListings, FeaturedRegions } from "./components";
 import { useStyles } from "./style";
 
 const PAGE_LIMIT = 4;
 const PAGE_NUMBER = 1;
 
 export const Home: FC = () => {
+    const utilClasses = useUtilStyles();
     const classes = useStyles();
 
     const { loading, data } = useQuery<ListingsData, ListingsVariables>(
@@ -34,25 +32,15 @@ export const Home: FC = () => {
         }
     );
 
-    const renderListingsSection = () => {
-        if (loading) {
-            return <FeaturedListingsSkeleton />;
-        }
-
-        if (data) {
-            return <FeaturedListings data={data.listings.result} />;
-        }
-
-        return null;
-    };
-
     return (
         <div>
             <Typography gutterBottom variant="h5">
                 Find a place you'll love to stay at
             </Typography>
             <FeaturedRegions />
-            <div className={classnames(classes.middle, classes.section)}>
+            <div
+                className={classnames(utilClasses.textCenter, classes.section)}
+            >
                 <Typography gutterBottom>
                     Your guide for all things rental
                 </Typography>
@@ -71,7 +59,59 @@ export const Home: FC = () => {
                     Popular listings in Australia
                 </Button>
             </div>
-            <div className={classes.section}>{renderListingsSection()}</div>
+            <div className={classes.section}>
+                {data ? (
+                    <FeaturedListings
+                        loading={loading}
+                        data={[
+                            {
+                                address: "1 Smith Drive",
+                                guests: 4,
+                                id: "1",
+                                image:
+                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                                price: 240,
+                                title: "Here is a thing",
+                                __typename: "Listing",
+                                type: ListingType.HOUSE
+                            },
+                            {
+                                address: "1 Smith Drive",
+                                guests: 4,
+                                id: "1",
+                                image:
+                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                                price: 240,
+                                title: "Here is a thing",
+                                __typename: "Listing",
+                                type: ListingType.HOUSE
+                            },
+                            {
+                                address: "1 Smith Drive",
+                                guests: 4,
+                                id: "1",
+                                image:
+                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                                price: 240,
+                                title: "Here is a thing",
+                                __typename: "Listing",
+                                type: ListingType.HOUSE
+                            },
+                            {
+                                address: "1 Smith Drive",
+                                guests: 4,
+                                id: "1",
+                                image:
+                                    "https://res.cloudinary.com/tiny-house/image/upload/v1560646430/mock/Cancun/cancun-listing-1_zihihs.jpg",
+                                price: 240,
+                                title: "Here is a thing",
+                                __typename: "Listing",
+                                type: ListingType.HOUSE
+                            }
+                        ]}
+                    />
+                ) : null}
+            </div>
         </div>
     );
 };
