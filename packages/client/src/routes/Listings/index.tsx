@@ -112,14 +112,16 @@ export const Listings: FC = () => {
                         Title: Descending
                     </MenuItem>
                 </Select>
-                <Pagination
-                    className={classes.pagination}
-                    size="large"
-                    count={data.listings.total}
-                    page={page}
-                    color="primary"
-                    onChange={onPaginationChange}
-                />
+                {data.listings.total > PAGE_LIMIT && (
+                    <Pagination
+                        className={classes.pagination}
+                        size="large"
+                        count={Math.ceil(data.listings.total / PAGE_LIMIT)}
+                        page={page}
+                        color="primary"
+                        onChange={onPaginationChange}
+                    />
+                )}
             </div>
             <Grid container spacing={4}>
                 {data.listings.result.map(item => (
