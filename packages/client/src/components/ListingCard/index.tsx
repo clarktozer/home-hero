@@ -27,7 +27,7 @@ export const ListingCard: FC<ListingCardProps> = ({ data }) => {
         <>
             {formatListingPrice(price)}
             <span>/day</span>
-            <Typography>{address}</Typography>
+            <Typography variant="body2">{address}</Typography>
         </>
     );
 

@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import {
-    CircularProgress,
     Container,
     FormControl,
     FormHelperText,
@@ -21,6 +20,7 @@ import React, { FC } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, Redirect } from "react-router-dom";
+import { CenterSpinner } from "../../components";
 import { HOST_LISTING } from "../../graphql";
 import { useFocusError } from "../../hooks";
 import { getViewer } from "../../state/features";
@@ -63,7 +63,12 @@ export const Host: FC = () => {
         const fullAddress = `${values.address}, ${values.city}, ${values.state}, ${values.postCode}`;
 
         const input: HostListingArgs = {
-            ...values,
+            description: values.description,
+            image: values.image,
+            maxStay: values.maxStay,
+            minStay: values.minStay,
+            recaptcha: values.recaptcha,
+            title: values.title,
             type: values.type!,
             guests: values.guests!,
             address: fullAddress,
@@ -153,7 +158,7 @@ export const Host: FC = () => {
     }
 
     if (loading) {
-        return <CircularProgress />;
+        return <CenterSpinner />;
     }
 
     if (data && data.hostListing) {
