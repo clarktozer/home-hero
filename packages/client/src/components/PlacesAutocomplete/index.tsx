@@ -77,6 +77,14 @@ export const PlacesAutocomplete: FC = () => {
 
             return;
         }
+
+        const pathnameSubStrings = pathname.split("/");
+
+        if (pathname.includes("/listings") && pathnameSubStrings.length === 3) {
+            setInputValue(pathnameSubStrings[2]);
+
+            return;
+        }
     }, [location]);
 
     useEffect(() => {
@@ -121,6 +129,7 @@ export const PlacesAutocomplete: FC = () => {
     const onKeyPress: React.KeyboardEventHandler<HTMLDivElement> = event => {
         if (event.key === "Enter") {
             onPlaceSearch();
+            setOpen(false);
             event.preventDefault();
         }
     };
@@ -151,14 +160,16 @@ export const PlacesAutocomplete: FC = () => {
                 <Icon onClick={onPlaceSearch}>search</Icon>
             </div>
             <InputBase
-                inputProps={params.inputProps}
+                inputProps={{
+                    ...params.inputProps,
+                    value: inputValue
+                }}
                 placeholder="Search 'Melbourne'"
                 classes={{
                     root: classes.inputRoot,
                     input: classes.inputInput
                 }}
                 onKeyPress={onKeyPress}
-                value={inputValue}
             />
         </div>
     );

@@ -129,25 +129,23 @@ export class ListingResolver {
         @Arg("input") input: HostListingArgs
     ): Promise<Listing | null> {
         try {
-            if (process.env.NODE_ENV === "production") {
-                const { data } = await axios.post<GoogleRecaptchaResponse>(
-                    "https://www.google.com/recaptcha/api/siteverify",
-                    undefined,
-                    {
-                        params: {
-                            secret: `${process.env.GOOGLE_RECAPTCHA_SECRET_KEY}`,
-                            response: input.recaptcha
-                        },
-                        headers: {
-                            "Content-Type":
-                                "application/x-www-form-urlencoded; charset=utf-8"
-                        }
+            const { data } = await axios.post<GoogleRecaptchaResponse>(
+                "https://www.google.com/recaptcha/api/siteverify",
+                undefined,
+                {
+                    params: {
+                        secret: `${process.env.GOOGLE_RECAPTCHA_SECRET_KEY}`,
+                        response: input.recaptcha
+                    },
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded; charset=utf-8"
                     }
-                );
-
-                if (!data.success) {
-                    throw new Error("Failed recaptcha validation");
                 }
+            );
+
+            if (!data.success) {
+                throw new Error("Failed recaptcha validation");
             }
 
             const user = await User.findOne(ctx.req.user!.id);

@@ -98,6 +98,7 @@ export const Listings: FC = () => {
                     value={filter}
                     onChange={onFilterChange}
                     variant="outlined"
+                    color="primary"
                 >
                     <MenuItem value={ListingsFilter.PRICE_LOW_TO_HIGH}>
                         Price: Low to High
