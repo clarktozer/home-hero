@@ -33,7 +33,7 @@ export const Home: FC = () => {
     );
 
     return (
-        <div>
+        <>
             <Typography gutterBottom variant="h5">
                 Find a place you'll love to stay at
             </Typography>
@@ -67,6 +67,6 @@ export const Home: FC = () => {
                     />
                 ) : null}
             </div>
-        </div>
+        </>
     );
 };

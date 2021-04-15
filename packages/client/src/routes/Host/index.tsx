@@ -166,7 +166,7 @@ export const Host: FC = () => {
     }
 
     return (
-        <Container className={classes.hostContainer}>
+        <div className={classes.hostContainer}>
             <form className={classes.root} noValidate onSubmit={handleSubmit}>
                 <div className={classes.hostHeader}>
                     <Typography variant="h5" gutterBottom>
@@ -487,6 +487,6 @@ export const Host: FC = () => {
                     Submit
                 </Button>
             </form>
-        </Container>
+        </div>
     );
 };

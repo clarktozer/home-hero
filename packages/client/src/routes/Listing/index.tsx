@@ -35,5 +35,5 @@ export const Listing: FC = () => {
         }
     });
 
-    return <div>Listing</div>;
+    return <>Listing</>;
 };

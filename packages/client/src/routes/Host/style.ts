@@ -35,7 +35,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "24px 100px",
+        padding: "0 100px",
         maxWidth: "900px",
         margin: "0 auto"
     },
