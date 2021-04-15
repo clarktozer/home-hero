@@ -182,6 +182,7 @@ export const Host: FC = () => {
                     component="fieldset"
                     name="type"
                     error={touched.type && Boolean(errors.type)}
+                    tabIndex={-1}
                 >
                     <FormLabel
                         className={classes.formLabel}
@@ -242,6 +243,7 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -268,6 +270,7 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -292,6 +295,7 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -315,6 +319,7 @@ export const Host: FC = () => {
                         variant: "standard"
                     }}
                     inputProps={{ maxLength: 45 }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -340,6 +345,7 @@ export const Host: FC = () => {
                         variant: "standard"
                     }}
                     inputProps={{ maxLength: 400 }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -350,11 +356,12 @@ export const Host: FC = () => {
                     label="Address"
                     value={values.address}
                     onChange={handleChange}
-                    error={touched.title && Boolean(errors.title)}
-                    helperText={touched.title && errors.title}
+                    error={touched.address && Boolean(errors.address)}
+                    helperText={touched.address && errors.address}
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -370,6 +377,7 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -385,6 +393,7 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <TextField
                     required
@@ -400,12 +409,14 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <FormControl
                     className={classes.fieldSet}
                     name="image"
                     component="fieldset"
                     error={touched.image && Boolean(errors.image)}
+                    tabIndex={-1}
                 >
                     <FormLabel
                         className={classes.formLabel}
@@ -457,12 +468,14 @@ export const Host: FC = () => {
                     FormHelperTextProps={{
                         variant: "standard"
                     }}
+                    tabIndex={-1}
                 />
                 <FormControl
                     name="recaptcha"
                     component="fieldset"
                     fullWidth
                     error={touched.recaptcha && Boolean(errors.recaptcha)}
+                    tabIndex={-1}
                 >
                     <div
                         className={classnames({
