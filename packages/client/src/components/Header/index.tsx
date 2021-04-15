@@ -171,7 +171,7 @@ export const Header: FC<HeaderProps> = ({ onToggleTheme, isDarkTheme }) => {
     );
 
     return (
-        <AppBar position="sticky" color="inherit" variant="outlined">
+        <AppBar position="sticky" color="inherit">
             <Toolbar>
                 <IconButton
                     className={classes.menuButton}

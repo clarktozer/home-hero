@@ -24,7 +24,7 @@ export const ListingCardSkeleton: FC = () => {
                         <Typography variant="body1">
                             <Skeleton animation="wave" width="20%" />
                         </Typography>
-                        <Typography variant="body1">
+                        <Typography variant="body2">
                             <Skeleton animation="wave" width="60%" />
                         </Typography>
                     </>

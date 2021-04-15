@@ -2,11 +2,20 @@ import { makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles(theme => ({
     bar: {
-        paddingBottom: theme.spacing(4)
+        paddingBottom: theme.spacing(4),
+        display: "block",
+        [theme.breakpoints.up("sm")]: {
+            display: "flex"
+        }
     },
     pagination: {
-        display: "flex",
+        display: "block",
         flex: 1,
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
+        marginTop: theme.spacing(2),
+        [theme.breakpoints.up("sm")]: {
+            display: "flex",
+            marginTop: 0
+        }
     }
 }));

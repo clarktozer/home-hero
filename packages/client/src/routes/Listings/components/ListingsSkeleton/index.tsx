@@ -13,9 +13,19 @@ export const ListingsSkeleton: FC = () => {
                 <Skeleton animation="wave" width="30%" />
             </Typography>
             <div className={classes.bar}>
-                <Skeleton animation="wave" width="10%" height="88px" />
+                <Skeleton
+                    animation="wave"
+                    variant="rect"
+                    width="178px"
+                    height="56px"
+                />
                 <div className={classes.pagination}>
-                    <Skeleton animation="wave" width="30%" height="40px" />
+                    <Skeleton
+                        animation="wave"
+                        variant="rect"
+                        width="180px"
+                        height="40px"
+                    />
                 </div>
             </div>
             <GridListingCardSkeletons amount={8} />
