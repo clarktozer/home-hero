@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { Grid, Typography } from "@material-ui/core";
 import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CenterSpinner } from "../../components";
+import { CenterSpinner, ErrorBanner, ErrorPage, Page } from "../../components";
 import {
     BOOKINGS_FOR_USER,
     FAVOURITE_LISTINGS_FOR_USER,
@@ -34,12 +34,15 @@ export const User: FC = () => {
     const [listingsPage] = useState(1);
     const [bookingsPage] = useState(1);
 
-    const { data, loading, refetch } = useQuery<UserData, UserVariables>(USER, {
-        variables: {
-            id
-        },
-        fetchPolicy: "cache-and-network"
-    });
+    const { data, loading, refetch, error } = useQuery<UserData, UserVariables>(
+        USER,
+        {
+            variables: {
+                id
+            },
+            fetchPolicy: "cache-and-network"
+        }
+    );
 
     const { loading: bookingsLoading, data: bookingsData } = useQuery<
         BookingsForUserData,
@@ -78,48 +81,59 @@ export const User: FC = () => {
         return <CenterSpinner />;
     }
 
+    if (error) {
+        return (
+            <>
+                <ErrorBanner description="This user may not exist or we've encountered an error. Please try again soon." />
+                <ErrorPage />
+            </>
+        );
+    }
+
     const handleUserRefetch = async () => {
         await refetch();
     };
 
     return data?.user ? (
-        <div className={classes.root}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={4}>
-                    <UserProfile
-                        user={data.user}
-                        handleUserRefetch={handleUserRefetch}
-                    />
+        <Page>
+            <div className={classes.root}>
+                <Grid container spacing={4}>
+                    <Grid item xs={12} md={4}>
+                        <UserProfile
+                            user={data.user}
+                            handleUserRefetch={handleUserRefetch}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                            gutterBottom
+                        >
+                            Temporibus sint fugiat ipsum iusto dignissimos qui
+                            fuga molestiae. Maiores et cum numquam possimus
+                            occaecati est adipisci. Commodi quibusdam et
+                            molestiae rerum beatae nulla minima. Ducimus dolorum
+                            temporibus tenetur. Minima nemo fugit hic totam hic
+                            quos ut praesentium. Eos ea sit cum necessitatibus.
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                            gutterBottom
+                        >
+                            Temporibus sint fugiat ipsum iusto dignissimos qui
+                            fuga molestiae. Maiores et cum numquam possimus
+                            occaecati est adipisci. Commodi quibusdam et
+                            molestiae rerum beatae nulla minima. Ducimus dolorum
+                            temporibus tenetur. Minima nemo fugit hic totam hic
+                            quos ut praesentium. Eos ea sit cum necessitatibus.
+                        </Typography>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} md={8}>
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                        gutterBottom
-                    >
-                        Temporibus sint fugiat ipsum iusto dignissimos qui fuga
-                        molestiae. Maiores et cum numquam possimus occaecati est
-                        adipisci. Commodi quibusdam et molestiae rerum beatae
-                        nulla minima. Ducimus dolorum temporibus tenetur. Minima
-                        nemo fugit hic totam hic quos ut praesentium. Eos ea sit
-                        cum necessitatibus.
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                        gutterBottom
-                    >
-                        Temporibus sint fugiat ipsum iusto dignissimos qui fuga
-                        molestiae. Maiores et cum numquam possimus occaecati est
-                        adipisci. Commodi quibusdam et molestiae rerum beatae
-                        nulla minima. Ducimus dolorum temporibus tenetur. Minima
-                        nemo fugit hic totam hic quos ut praesentium. Eos ea sit
-                        cum necessitatibus.
-                    </Typography>
-                </Grid>
-            </Grid>
-        </div>
+            </div>
+        </Page>
     ) : null;
 };

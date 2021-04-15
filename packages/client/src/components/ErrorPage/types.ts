@@ -1,4 +1,6 @@
+import React from "react";
+
 export interface ErrorPageProps {
-    message: string;
+    message?: React.ReactNode;
     icon?: string;
 }

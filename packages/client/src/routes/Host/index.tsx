@@ -20,7 +20,7 @@ import React, { FC } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, Redirect } from "react-router-dom";
-import { CenterSpinner } from "../../components";
+import { CenterSpinner, Page } from "../../components";
 import { HOST_LISTING } from "../../graphql";
 import { useFocusError } from "../../hooks";
 import { getViewer } from "../../state/features";
@@ -166,340 +166,353 @@ export const Host: FC = () => {
     }
 
     return (
-        <div className={classes.hostContainer}>
-            <form className={classes.root} noValidate onSubmit={handleSubmit}>
-                <div className={classes.hostHeader}>
-                    <Typography variant="h5" gutterBottom>
-                        Hi! Let's get started listing your place.
-                    </Typography>
-                    <Typography variant="body2">
-                        In this form, we'll collect some basic and additional
-                        information about your listing.
-                    </Typography>
-                </div>
-                <FormControl
-                    className={classes.fieldSet}
-                    component="fieldset"
-                    name="type"
-                    error={touched.type && Boolean(errors.type)}
-                    tabIndex={-1}
+        <Page>
+            <div className={classes.hostContainer}>
+                <form
+                    className={classes.root}
+                    noValidate
+                    onSubmit={handleSubmit}
                 >
-                    <FormLabel
-                        className={classes.formLabel}
-                        required
-                        focused={false}
-                    >
-                        Home Type
-                    </FormLabel>
-                    <ToggleButtonGroup
-                        value={values.type}
-                        exclusive
-                        onChange={onHomeTypeChange}
-                        className={classnames({
-                            [classes.toggleGroupError]:
-                                touched.type && Boolean(errors.type)
-                        })}
-                    >
-                        <ToggleButton
-                            className={classes.toggleButton}
-                            value={ListingType.APARTMENT}
-                        >
-                            <Icon>apartment</Icon>
-                            <span className={classes.toggleButtonLabel}>
-                                Apartment
-                            </span>
-                        </ToggleButton>
-                        <ToggleButton
-                            className={classes.toggleButton}
-                            value={ListingType.HOUSE}
-                        >
-                            <Icon>house</Icon>
-                            <span className={classes.toggleButtonLabel}>
-                                House
-                            </span>
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                    <FormHelperText>
-                        {touched.type && errors.type}
-                    </FormHelperText>
-                </FormControl>
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="guests"
-                    name="guests"
-                    label="Max # of Guests"
-                    type="number"
-                    value={values.guests || ""}
-                    onChange={handleChange}
-                    InputProps={{
-                        inputProps: {
-                            min: 1
-                        }
-                    }}
-                    error={touched.guests && Boolean(errors.guests)}
-                    helperText={touched.guests && errors.guests}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="minStay"
-                    name="minStay"
-                    label="Min length of stay"
-                    type="number"
-                    value={values.minStay || ""}
-                    onChange={handleChange}
-                    InputProps={{
-                        inputProps: {
-                            min: 1
-                        },
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                Nights
-                            </InputAdornment>
-                        )
-                    }}
-                    error={touched.minStay && Boolean(errors.minStay)}
-                    helperText={touched.minStay && errors.maxStay}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="maxStay"
-                    name="maxStay"
-                    label="Max length of stay"
-                    type="number"
-                    value={values.maxStay || ""}
-                    onChange={handleChange}
-                    InputProps={{
-                        inputProps: {
-                            min: 1
-                        },
-                        endAdornment: (
-                            <InputAdornment position="end">Days</InputAdornment>
-                        )
-                    }}
-                    error={touched.maxStay && Boolean(errors.maxStay)}
-                    helperText={touched.maxStay && errors.maxStay}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="title"
-                    name="title"
-                    label="Title"
-                    value={values.title}
-                    onChange={handleChange}
-                    error={touched.title && Boolean(errors.title)}
-                    helperText={
-                        <>
-                            {touched.title && errors.title}
-                            <span className={classes.helperText}>
-                                Max character count of 45
-                            </span>
-                        </>
-                    }
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    inputProps={{ maxLength: 45 }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="description"
-                    name="description"
-                    label="Description"
-                    value={values.description}
-                    onChange={handleChange}
-                    error={touched.description && Boolean(errors.description)}
-                    helperText={
-                        <>
-                            {touched.description && errors.description}
-                            <span className={classes.helperText}>
-                                Max character count of 400
-                            </span>
-                        </>
-                    }
-                    multiline
-                    rows={2}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    inputProps={{ maxLength: 400 }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="address"
-                    name="address"
-                    label="Address"
-                    value={values.address}
-                    onChange={handleChange}
-                    error={touched.address && Boolean(errors.address)}
-                    helperText={touched.address && errors.address}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="city"
-                    name="city"
-                    label="City"
-                    value={values.city}
-                    onChange={handleChange}
-                    error={touched.city && Boolean(errors.city)}
-                    helperText={touched.city && errors.city}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="state"
-                    name="state"
-                    label="State"
-                    value={values.state}
-                    onChange={handleChange}
-                    error={touched.state && Boolean(errors.state)}
-                    helperText={touched.state && errors.state}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="postCode"
-                    name="postCode"
-                    label="Post Code"
-                    value={values.postCode}
-                    onChange={handleChange}
-                    error={touched.postCode && Boolean(errors.postCode)}
-                    helperText={touched.postCode && errors.postCode}
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <FormControl
-                    className={classes.fieldSet}
-                    name="image"
-                    component="fieldset"
-                    error={touched.image && Boolean(errors.image)}
-                    tabIndex={-1}
-                >
-                    <FormLabel
-                        className={classes.formLabel}
-                        required
-                        focused={false}
-                    >
-                        Image
-                    </FormLabel>
-                    <FilePicker
-                        value={values.image}
-                        onChange={onImageChange}
-                        error={touched.image && Boolean(errors.image)}
-                    />
-                    <FormHelperText>
-                        {touched.image && errors.image}
-                        <span className={classes.helperText}>
-                            Images have to be under 1MB in size and of type JPG
-                            or PNG
-                        </span>
-                    </FormHelperText>
-                </FormControl>
-                <TextField
-                    required
-                    fullWidth
-                    variant="outlined"
-                    id="price"
-                    name="price"
-                    label="Price"
-                    type="number"
-                    value={values.price || ""}
-                    onChange={handleChange}
-                    InputProps={{
-                        inputProps: {
-                            min: 1
-                        },
-                        startAdornment: (
-                            <InputAdornment position="start">$</InputAdornment>
-                        )
-                    }}
-                    error={touched.price && Boolean(errors.price)}
-                    helperText={
-                        <>
-                            {touched.price && errors.price}
-                            <span className={classes.helperText}>
-                                All prices in $AUD/day
-                            </span>
-                        </>
-                    }
-                    FormHelperTextProps={{
-                        variant: "standard"
-                    }}
-                    tabIndex={-1}
-                />
-                <FormControl
-                    name="recaptcha"
-                    component="fieldset"
-                    fullWidth
-                    error={touched.recaptcha && Boolean(errors.recaptcha)}
-                    tabIndex={-1}
-                >
-                    <div
-                        className={classnames({
-                            [classes.recaptchaError]:
-                                touched.recaptcha && Boolean(errors.recaptcha)
-                        })}
-                    >
-                        <ReCAPTCHA
-                            key={theme.palette.type}
-                            sitekey={`${process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY}`}
-                            onChange={onRecaptchaChange}
-                            theme={theme.palette.type}
-                        />
+                    <div className={classes.hostHeader}>
+                        <Typography variant="h5" gutterBottom>
+                            Hi! Let's get started listing your place.
+                        </Typography>
+                        <Typography variant="body2">
+                            In this form, we'll collect some basic and
+                            additional information about your listing.
+                        </Typography>
                     </div>
-                </FormControl>
-                <Button
-                    disableElevation
-                    color="primary"
-                    variant="contained"
-                    type="submit"
-                >
-                    Submit
-                </Button>
-            </form>
-        </div>
+                    <FormControl
+                        className={classes.fieldSet}
+                        component="fieldset"
+                        name="type"
+                        error={touched.type && Boolean(errors.type)}
+                        tabIndex={-1}
+                    >
+                        <FormLabel
+                            className={classes.formLabel}
+                            required
+                            focused={false}
+                        >
+                            Home Type
+                        </FormLabel>
+                        <ToggleButtonGroup
+                            value={values.type}
+                            exclusive
+                            onChange={onHomeTypeChange}
+                            className={classnames({
+                                [classes.toggleGroupError]:
+                                    touched.type && Boolean(errors.type)
+                            })}
+                        >
+                            <ToggleButton
+                                className={classes.toggleButton}
+                                value={ListingType.APARTMENT}
+                            >
+                                <Icon>apartment</Icon>
+                                <span className={classes.toggleButtonLabel}>
+                                    Apartment
+                                </span>
+                            </ToggleButton>
+                            <ToggleButton
+                                className={classes.toggleButton}
+                                value={ListingType.HOUSE}
+                            >
+                                <Icon>house</Icon>
+                                <span className={classes.toggleButtonLabel}>
+                                    House
+                                </span>
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                        <FormHelperText>
+                            {touched.type && errors.type}
+                        </FormHelperText>
+                    </FormControl>
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="guests"
+                        name="guests"
+                        label="Max # of Guests"
+                        type="number"
+                        value={values.guests || ""}
+                        onChange={handleChange}
+                        InputProps={{
+                            inputProps: {
+                                min: 1
+                            }
+                        }}
+                        error={touched.guests && Boolean(errors.guests)}
+                        helperText={touched.guests && errors.guests}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="minStay"
+                        name="minStay"
+                        label="Min length of stay"
+                        type="number"
+                        value={values.minStay || ""}
+                        onChange={handleChange}
+                        InputProps={{
+                            inputProps: {
+                                min: 1
+                            },
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    Nights
+                                </InputAdornment>
+                            )
+                        }}
+                        error={touched.minStay && Boolean(errors.minStay)}
+                        helperText={touched.minStay && errors.maxStay}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="maxStay"
+                        name="maxStay"
+                        label="Max length of stay"
+                        type="number"
+                        value={values.maxStay || ""}
+                        onChange={handleChange}
+                        InputProps={{
+                            inputProps: {
+                                min: 1
+                            },
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    Days
+                                </InputAdornment>
+                            )
+                        }}
+                        error={touched.maxStay && Boolean(errors.maxStay)}
+                        helperText={touched.maxStay && errors.maxStay}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="title"
+                        name="title"
+                        label="Title"
+                        value={values.title}
+                        onChange={handleChange}
+                        error={touched.title && Boolean(errors.title)}
+                        helperText={
+                            <>
+                                {touched.title && errors.title}
+                                <span className={classes.helperText}>
+                                    Max character count of 45
+                                </span>
+                            </>
+                        }
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        inputProps={{ maxLength: 45 }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="description"
+                        name="description"
+                        label="Description"
+                        value={values.description}
+                        onChange={handleChange}
+                        error={
+                            touched.description && Boolean(errors.description)
+                        }
+                        helperText={
+                            <>
+                                {touched.description && errors.description}
+                                <span className={classes.helperText}>
+                                    Max character count of 400
+                                </span>
+                            </>
+                        }
+                        multiline
+                        rows={2}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        inputProps={{ maxLength: 400 }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="address"
+                        name="address"
+                        label="Address"
+                        value={values.address}
+                        onChange={handleChange}
+                        error={touched.address && Boolean(errors.address)}
+                        helperText={touched.address && errors.address}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="city"
+                        name="city"
+                        label="City"
+                        value={values.city}
+                        onChange={handleChange}
+                        error={touched.city && Boolean(errors.city)}
+                        helperText={touched.city && errors.city}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="state"
+                        name="state"
+                        label="State"
+                        value={values.state}
+                        onChange={handleChange}
+                        error={touched.state && Boolean(errors.state)}
+                        helperText={touched.state && errors.state}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="postCode"
+                        name="postCode"
+                        label="Post Code"
+                        value={values.postCode}
+                        onChange={handleChange}
+                        error={touched.postCode && Boolean(errors.postCode)}
+                        helperText={touched.postCode && errors.postCode}
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <FormControl
+                        className={classes.fieldSet}
+                        name="image"
+                        component="fieldset"
+                        error={touched.image && Boolean(errors.image)}
+                        tabIndex={-1}
+                    >
+                        <FormLabel
+                            className={classes.formLabel}
+                            required
+                            focused={false}
+                        >
+                            Image
+                        </FormLabel>
+                        <FilePicker
+                            value={values.image}
+                            onChange={onImageChange}
+                            error={touched.image && Boolean(errors.image)}
+                        />
+                        <FormHelperText>
+                            {touched.image && errors.image}
+                            <span className={classes.helperText}>
+                                Images have to be under 1MB in size and of type
+                                JPG or PNG
+                            </span>
+                        </FormHelperText>
+                    </FormControl>
+                    <TextField
+                        required
+                        fullWidth
+                        variant="outlined"
+                        id="price"
+                        name="price"
+                        label="Price"
+                        type="number"
+                        value={values.price || ""}
+                        onChange={handleChange}
+                        InputProps={{
+                            inputProps: {
+                                min: 1
+                            },
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    $
+                                </InputAdornment>
+                            )
+                        }}
+                        error={touched.price && Boolean(errors.price)}
+                        helperText={
+                            <>
+                                {touched.price && errors.price}
+                                <span className={classes.helperText}>
+                                    All prices in $AUD/day
+                                </span>
+                            </>
+                        }
+                        FormHelperTextProps={{
+                            variant: "standard"
+                        }}
+                        tabIndex={-1}
+                    />
+                    <FormControl
+                        name="recaptcha"
+                        component="fieldset"
+                        fullWidth
+                        error={touched.recaptcha && Boolean(errors.recaptcha)}
+                        tabIndex={-1}
+                    >
+                        <div
+                            className={classnames({
+                                [classes.recaptchaError]:
+                                    touched.recaptcha &&
+                                    Boolean(errors.recaptcha)
+                            })}
+                        >
+                            <ReCAPTCHA
+                                key={theme.palette.type}
+                                sitekey={`${process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY}`}
+                                onChange={onRecaptchaChange}
+                                theme={theme.palette.type}
+                            />
+                        </div>
+                    </FormControl>
+                    <Button
+                        disableElevation
+                        color="primary"
+                        variant="contained"
+                        type="submit"
+                    >
+                        Submit
+                    </Button>
+                </form>
+            </div>
+        </Page>
     );
 };

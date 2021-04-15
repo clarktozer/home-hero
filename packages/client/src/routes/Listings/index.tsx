@@ -4,7 +4,7 @@ import { Pagination } from "@material-ui/lab";
 import classnames from "classnames";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
-import { ErrorBanner, ErrorPage } from "../../components";
+import { ErrorBanner, ErrorPage, Page } from "../../components";
 import { ListingCard } from "../../components/ListingCard";
 import { LISTINGS } from "../../graphql";
 import { useUtilStyles } from "../../utils";
@@ -47,18 +47,17 @@ export const Listings: FC = () => {
     }, [location]);
 
     if (loading) {
-        return <ListingsSkeleton />;
+        return (
+            <Page>
+                <ListingsSkeleton />
+            </Page>
+        );
     }
 
     if (error) {
         return (
             <>
-                <ErrorBanner
-                    description={`
-            We either couldn't find anything matching your search or have encountered an error.
-            If you're searching for a unique location, try searching again with more common keywords.
-          `}
-                />
+                <ErrorBanner description="We either couldn't find anything matching your search or have encountered an error. If you're searching for a unique location, try searching again with more common keywords." />
                 <ErrorPage message="Uh oh, no listings have been found!" />
             </>
         );
@@ -155,9 +154,9 @@ export const Listings: FC = () => {
     );
 
     return (
-        <>
+        <Page>
             {listingsRegionElement}
             {listingsSectionElement}
-        </>
+        </Page>
     );
 };

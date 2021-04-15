@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 import React, { FC, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useBoolean, useMount } from "react-use";
-import { ErrorBanner } from "../../components";
+import { ErrorBanner, Page } from "../../components";
 import { ME } from "../../graphql";
 import { setViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
@@ -53,7 +53,7 @@ export const Login: FC = () => {
     }
 
     return (
-        <>
+        <Page>
             {error && (
                 <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later!" />
             )}
@@ -70,6 +70,6 @@ export const Login: FC = () => {
                     </CardContent>
                 </Card>
             </div>
-        </>
+        </Page>
     );
 };

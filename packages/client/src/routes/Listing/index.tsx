@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Page } from "../../components";
 import { BOOKINGS_FOR_LISTING, LISTING } from "../../graphql";
 import {
     BookingsForListing as BookingsForListingData,
@@ -35,5 +36,5 @@ export const Listing: FC = () => {
         }
     });
 
-    return <>Listing</>;
+    return <Page>Listing</Page>;
 };

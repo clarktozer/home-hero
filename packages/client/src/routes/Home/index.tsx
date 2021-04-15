@@ -3,6 +3,7 @@ import { Button, Typography } from "@material-ui/core";
 import classnames from "classnames";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import { Page } from "../../components";
 import { LISTINGS } from "../../graphql";
 import { useUtilStyles } from "../../utils";
 import { ListingsFilter } from "../../__types/global";
@@ -33,7 +34,7 @@ export const Home: FC = () => {
     );
 
     return (
-        <>
+        <Page>
             <Typography gutterBottom variant="h5">
                 Find a place you'll love to stay at
             </Typography>
@@ -67,6 +68,6 @@ export const Home: FC = () => {
                     />
                 ) : null}
             </div>
-        </>
+        </Page>
     );
 };

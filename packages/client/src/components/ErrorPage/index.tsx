@@ -3,7 +3,10 @@ import React, { FC } from "react";
 import { useUtilStyles } from "../../utils";
 import { ErrorPageProps } from "./types";
 
-export const ErrorPage: FC<ErrorPageProps> = ({ message, icon = "error" }) => {
+export const ErrorPage: FC<ErrorPageProps> = ({
+    message = "Uh oh, something went wrong!",
+    icon = "error"
+}) => {
     const utilStyles = useUtilStyles();
 
     return (
