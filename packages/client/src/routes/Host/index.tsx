@@ -20,7 +20,8 @@ import React, { FC } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, Redirect } from "react-router-dom";
-import { CenterSpinner, Page } from "../../components";
+import { useBoolean } from "react-use";
+import { CenterSpinner, ConfirmDialog, Page } from "../../components";
 import { HOST_LISTING } from "../../graphql";
 import { useFocusError } from "../../hooks";
 import { getViewer } from "../../state/features";
@@ -38,6 +39,7 @@ export const Host: FC = () => {
     const classes = useStyles();
     const theme = useTheme();
     const viewer = useSelector(getViewer);
+    const [isOpen, setOpen] = useBoolean(false);
     const { enqueueSnackbar } = useSnackbar();
 
     const [hostListing, { loading, data }] = useMutation<
@@ -83,14 +85,19 @@ export const Host: FC = () => {
     };
 
     const {
-        handleSubmit,
         values,
         touched,
         errors,
         handleChange,
         setFieldValue,
         isSubmitting,
-        isValidating
+        isValidating,
+        submitForm,
+        validateForm,
+        setErrors,
+        handleSubmit,
+        setTouched,
+        isValid
     } = useFormik<HostListingFormValues>({
         initialValues: {
             type: undefined,
@@ -126,6 +133,19 @@ export const Host: FC = () => {
 
     const onImageChange = async (image: string) => {
         setFieldValue("image", image);
+    };
+
+    const onDialogClose = () => {
+        setOpen(false);
+    };
+
+    const onDialogOpen = async () => {
+        setOpen(true);
+    };
+
+    const onConfirmSubmit = () => {
+        submitForm();
+        onDialogClose();
     };
 
     if (
@@ -168,11 +188,7 @@ export const Host: FC = () => {
     return (
         <Page>
             <div className={classes.hostContainer}>
-                <form
-                    className={classes.root}
-                    noValidate
-                    onSubmit={handleSubmit}
-                >
+                <form className={classes.root} noValidate>
                     <div className={classes.hostHeader}>
                         <Typography variant="h5" gutterBottom>
                             Hi! Let's get started listing your place.
@@ -484,7 +500,6 @@ export const Host: FC = () => {
                     <FormControl
                         name="recaptcha"
                         component="fieldset"
-                        fullWidth
                         error={touched.recaptcha && Boolean(errors.recaptcha)}
                         tabIndex={-1}
                     >
@@ -503,16 +518,24 @@ export const Host: FC = () => {
                             />
                         </div>
                     </FormControl>
-                    <Button
-                        disableElevation
-                        color="primary"
-                        variant="contained"
-                        type="submit"
-                    >
-                        Submit
-                    </Button>
+                    <div>
+                        <Button
+                            disableElevation
+                            color="primary"
+                            variant="contained"
+                            onClick={onDialogOpen}
+                        >
+                            Submit
+                        </Button>
+                    </div>
                 </form>
             </div>
+            <ConfirmDialog
+                title="Are you sure you want to host this listing?"
+                isOpen={isOpen}
+                onClose={onDialogClose}
+                onConfirm={onConfirmSubmit}
+            />
         </Page>
     );
 };
