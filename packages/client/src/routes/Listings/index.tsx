@@ -155,9 +155,9 @@ export const Listings: FC = () => {
     );
 
     return (
-        <div>
+        <>
             {listingsRegionElement}
             {listingsSectionElement}
-        </div>
+        </>
     );
 };

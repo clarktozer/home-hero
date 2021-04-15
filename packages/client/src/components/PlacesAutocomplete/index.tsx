@@ -192,7 +192,9 @@ export const PlacesAutocomplete: FC = () => {
     );
 
     const onOpen = () => {
-        setOpen(true);
+        if (inputValue.length) {
+            setOpen(true);
+        }
     };
 
     const onClose = () => {
