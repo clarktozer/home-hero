@@ -93,10 +93,7 @@ export const Host: FC = () => {
         isSubmitting,
         isValidating,
         submitForm,
-        validateForm,
-        setErrors,
         handleSubmit,
-        setTouched,
         isValid
     } = useFormik<HostListingFormValues>({
         initialValues: {
@@ -115,7 +112,8 @@ export const Host: FC = () => {
             minStay: 2
         },
         validationSchema,
-        onSubmit
+        onSubmit,
+        isInitialValid: false
     });
 
     useFocusError(errors, isSubmitting, isValidating);
@@ -144,8 +142,8 @@ export const Host: FC = () => {
     };
 
     const onConfirmSubmit = () => {
-        submitForm();
         onDialogClose();
+        submitForm();
     };
 
     if (
@@ -178,7 +176,7 @@ export const Host: FC = () => {
     }
 
     if (loading) {
-        return <CenterSpinner />;
+        return <CenterSpinner label="We're creating your listing now!" />;
     }
 
     if (data && data.hostListing) {
@@ -188,7 +186,11 @@ export const Host: FC = () => {
     return (
         <Page>
             <div className={classes.hostContainer}>
-                <form className={classes.root} noValidate>
+                <form
+                    className={classes.root}
+                    noValidate
+                    onSubmit={handleSubmit}
+                >
                     <div className={classes.hostHeader}>
                         <Typography variant="h5" gutterBottom>
                             Hi! Let's get started listing your place.
@@ -523,7 +525,9 @@ export const Host: FC = () => {
                             disableElevation
                             color="primary"
                             variant="contained"
-                            onClick={onDialogOpen}
+                            {...(!isValid
+                                ? { type: "submit" }
+                                : { onClick: onDialogOpen })}
                         >
                             Submit
                         </Button>
