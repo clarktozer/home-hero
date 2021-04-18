@@ -14,7 +14,12 @@ import {
 import { useSnackbar } from "notistack";
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { Notification, OverlaySpinner } from "../../../../components";
+import { useBoolean } from "react-use";
+import {
+    ConfirmDialog,
+    Notification,
+    OverlaySpinner
+} from "../../../../components";
 import { StripeAuthUrl } from "../../../../constants";
 import { DISCONNECT_STRIPE } from "../../../../graphql";
 import { getViewer, setViewerWallet } from "../../../../state/features";
@@ -34,6 +39,7 @@ export const UserProfile: FC<UserProfileProps> = ({
     const dispatch = useAppDispatch();
     const viewerIsUser = viewer && viewer.id === user?.id;
     const { enqueueSnackbar } = useSnackbar();
+    const [isOpen, setOpen] = useBoolean(false);
 
     const [disconnectStripe, { loading }] = useMutation<DisconnectStripeData>(
         DISCONNECT_STRIPE,
@@ -69,7 +75,18 @@ export const UserProfile: FC<UserProfileProps> = ({
         window.location.href = StripeAuthUrl;
     };
 
-    const onDisconnectStripe = () => disconnectStripe();
+    const onConfirmDisconnect = () => {
+        setOpen(false);
+        disconnectStripe();
+    };
+
+    const onOpen = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
 
     const additionalDetails = user.hasWallet ? (
         <>
@@ -81,7 +98,7 @@ export const UserProfile: FC<UserProfileProps> = ({
                 variant="contained"
                 color="primary"
                 disableElevation
-                onClick={onDisconnectStripe}
+                onClick={onOpen}
                 className={utilClasses.spacingTop1}
             >
                 Disconnect Stripe
@@ -163,6 +180,12 @@ export const UserProfile: FC<UserProfileProps> = ({
                 />
                 {additionalDetailsSection}
             </Card>
+            <ConfirmDialog
+                title="Are you sure you want to disconnect from Stripe?"
+                isOpen={isOpen}
+                onClose={onClose}
+                onConfirm={onConfirmDisconnect}
+            />
         </div>
     );
 };
