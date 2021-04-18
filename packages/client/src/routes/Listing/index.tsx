@@ -17,7 +17,7 @@ const PAGE_LIMIT = 3;
 
 export const Listing: FC = () => {
     const { id } = useParams<MatchParams>();
-    const [bookingsPage, setBookingsPage] = useState(1);
+    const [page, setPage] = useState(1);
 
     const { loading, data } = useQuery<ListingData, ListingVariables>(LISTING, {
         variables: {
@@ -31,7 +31,7 @@ export const Listing: FC = () => {
     >(BOOKINGS_FOR_LISTING, {
         variables: {
             listingId: id,
-            bookingsPage,
+            page,
             limit: PAGE_LIMIT
         }
     });

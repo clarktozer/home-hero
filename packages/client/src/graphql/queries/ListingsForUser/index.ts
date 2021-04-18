@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const LISTINGS_FOR_USER = gql`
-    query ListingsForUser($userId: String!, $listingsPage: Int!, $limit: Int!) {
-        listingsForUser(userId: $userId, limit: $limit, page: $listingsPage) {
+    query ListingsForUser($userId: String!, $page: Int!, $limit: Int!) {
+        listingsForUser(userId: $userId, limit: $limit, page: $page) {
             total
             result {
                 id

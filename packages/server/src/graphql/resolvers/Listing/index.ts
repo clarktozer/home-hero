@@ -242,9 +242,7 @@ export class ListingResolver {
                 skip: page > 0 ? (page - 1) * limit : 0,
                 take: limit,
                 where: {
-                    host: {
-                        id: userId
-                    }
+                    hostId: userId
                 }
             });
 

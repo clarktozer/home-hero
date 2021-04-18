@@ -3,14 +3,10 @@ import { gql } from "@apollo/client";
 export const FAVOURITE_LISTINGS_FOR_USER = gql`
     query FavouriteListingsForUser(
         $userId: String!
-        $listingsPage: Int!
+        $page: Int!
         $limit: Int!
     ) {
-        favouriteListingsForUser(
-            userId: $userId
-            limit: $limit
-            page: $listingsPage
-        ) {
+        favouriteListingsForUser(userId: $userId, limit: $limit, page: $page) {
             total
             result {
                 id

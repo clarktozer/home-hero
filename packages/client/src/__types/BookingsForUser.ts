@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { ListingType } from "./global";
+
 // ====================================================
 // GraphQL query operation: BookingsForUser
 // ====================================================
@@ -15,6 +17,7 @@ export interface BookingsForUser_bookingsForUser_result_listing {
   address: string;
   price: number;
   guests: number;
+  type: ListingType;
 }
 
 export interface BookingsForUser_bookingsForUser_result {
@@ -37,6 +40,6 @@ export interface BookingsForUser {
 
 export interface BookingsForUserVariables {
   userId: string;
-  bookingsPage: number;
+  page: number;
   limit: number;
 }

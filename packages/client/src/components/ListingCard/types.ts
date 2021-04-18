@@ -1,5 +1,13 @@
-import { Listings_listings_result } from "../../__types/Listings";
+import { ListingType } from "../../__types/global";
 
 export interface ListingCardProps {
-    data: Listings_listings_result;
+    data: {
+        id: string;
+        title: string;
+        image: string;
+        address: string;
+        price: number;
+        guests: number;
+        type: ListingType;
+    };
 }

@@ -32,6 +32,6 @@ export interface FavouriteListingsForUser {
 
 export interface FavouriteListingsForUserVariables {
   userId: string;
-  listingsPage: number;
+  page: number;
   limit: number;
 }

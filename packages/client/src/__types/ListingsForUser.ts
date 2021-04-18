@@ -32,6 +32,6 @@ export interface ListingsForUser {
 
 export interface ListingsForUserVariables {
   userId: string;
-  listingsPage: number;
+  page: number;
   limit: number;
 }

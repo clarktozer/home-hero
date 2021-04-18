@@ -6,6 +6,7 @@ export * from "./GridListingCardSkeletons";
 export * from "./Header";
 export * from "./HeaderSkeleton";
 export * from "./ListingCardSkeleton";
+export * from "./ListingsSection";
 export * from "./Notification";
 export * from "./OverlaySpinner";
 export * from "./Page";

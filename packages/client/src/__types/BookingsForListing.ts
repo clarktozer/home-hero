@@ -34,6 +34,6 @@ export interface BookingsForListing {
 
 export interface BookingsForListingVariables {
   listingId: string;
-  bookingsPage: number;
+  page: number;
   limit: number;
 }
