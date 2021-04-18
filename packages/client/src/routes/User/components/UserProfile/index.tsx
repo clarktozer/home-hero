@@ -1,9 +1,12 @@
 import { useMutation } from "@apollo/client";
 import {
     Avatar,
+    Button,
     Card,
     CardContent,
     CardHeader,
+    Chip,
+    Divider,
     Icon,
     Tooltip,
     Typography
@@ -11,15 +14,15 @@ import {
 import { useSnackbar } from "notistack";
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { Notification } from "../../../../components";
+import { Notification, OverlaySpinner } from "../../../../components";
+import { StripeAuthUrl } from "../../../../constants";
 import { DISCONNECT_STRIPE } from "../../../../graphql";
 import { getViewer, setViewerWallet } from "../../../../state/features";
 import { useAppDispatch } from "../../../../state/store";
+import { formatListingPrice, useUtilStyles } from "../../../../utils";
 import { DisconnectStripe as DisconnectStripeData } from "../../../../__types/DisconnectStripe";
 import { useStyles } from "./style";
 import { UserProfileProps } from "./types";
-
-const stripeAuthUrl = `https://dashboard.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&scope=read_write`;
 
 export const UserProfile: FC<UserProfileProps> = ({
     user,
@@ -27,6 +30,7 @@ export const UserProfile: FC<UserProfileProps> = ({
 }) => {
     const viewer = useSelector(getViewer);
     const classes = useStyles();
+    const utilClasses = useUtilStyles();
     const dispatch = useAppDispatch();
     const viewerIsUser = viewer && viewer.id === user?.id;
     const { enqueueSnackbar } = useSnackbar();
@@ -62,16 +66,65 @@ export const UserProfile: FC<UserProfileProps> = ({
     );
 
     const redirectToStripe = () => {
-        window.location.href = stripeAuthUrl;
+        window.location.href = StripeAuthUrl;
     };
 
+    const onDisconnectStripe = () => disconnectStripe();
+
+    const additionalDetails = user.hasWallet ? (
+        <>
+            <Typography>
+                Income Earned:{" "}
+                {user.income ? formatListingPrice(user.income) : `$0`}
+            </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                disableElevation
+                onClick={onDisconnectStripe}
+                className={utilClasses.spacingTop1}
+            >
+                Disconnect Stripe
+            </Button>
+            <Typography className={utilClasses.spacingTop1}>
+                By disconnecting, you won't be able to receive any further
+                payments. This will prevent users from booking listings that you
+                might have already created.
+            </Typography>
+        </>
+    ) : (
+        <>
+            <Typography>
+                Interested in becoming a host? Register with your Stripe
+                account!
+            </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                disableElevation
+                onClick={redirectToStripe}
+                className={utilClasses.spacingTop1}
+            >
+                Connect Stripe
+            </Button>
+        </>
+    );
+
+    const additionalDetailsSection = viewerIsUser ? (
+        <>
+            <Divider variant="middle" />
+            <CardContent>{additionalDetails}</CardContent>
+        </>
+    ) : null;
+
     return (
-        <div>
-            <Card variant="outlined" square>
+        <div className={classes.userProfileCard}>
+            <Card>
+                {loading && <OverlaySpinner />}
                 <CardHeader
                     avatar={
                         <Avatar
-                            className={classes.large}
+                            className={classes.avatar}
                             alt={user.name}
                             src={user.avatar}
                         />
@@ -92,9 +145,23 @@ export const UserProfile: FC<UserProfileProps> = ({
                             ) : null}
                         </Typography>
                     }
-                    subheader={user.email}
+                    subheader={
+                        <>
+                            <Typography variant="body2">
+                                {user.email}
+                            </Typography>
+                            {viewerIsUser && user.hasWallet ? (
+                                <Chip
+                                    size="small"
+                                    color="secondary"
+                                    label="Stripe Registered"
+                                    className={utilClasses.spacingTop1}
+                                />
+                            ) : null}
+                        </>
+                    }
                 />
-                <CardContent></CardContent>
+                {additionalDetailsSection}
             </Card>
         </div>
     );

@@ -7,6 +7,7 @@ export * from "./Header";
 export * from "./HeaderSkeleton";
 export * from "./ListingCardSkeleton";
 export * from "./Notification";
+export * from "./OverlaySpinner";
 export * from "./Page";
 export * from "./PlacesAutocomplete";
 export * from "./SnackbarProvider";

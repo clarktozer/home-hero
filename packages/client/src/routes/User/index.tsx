@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import { Grid, Typography } from "@material-ui/core";
 import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CenterSpinner, ErrorBanner, ErrorPage, Page } from "../../components";
@@ -77,6 +76,13 @@ export const User: FC = () => {
         }
     });
 
+    const stripeError = new URL(window.location.href).searchParams.get(
+        "stripe_error"
+    );
+    const stripeErrorBanner = stripeError ? (
+        <ErrorBanner description="We had an issue connecting with Stripe. Please try again soon." />
+    ) : null;
+
     if (loading) {
         return <CenterSpinner />;
     }
@@ -95,45 +101,14 @@ export const User: FC = () => {
     };
 
     return data?.user ? (
-        <Page>
-            <div className={classes.root}>
-                <Grid container spacing={4}>
-                    <Grid item xs={12} md={4}>
-                        <UserProfile
-                            user={data.user}
-                            handleUserRefetch={handleUserRefetch}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={8}>
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                            gutterBottom
-                        >
-                            Temporibus sint fugiat ipsum iusto dignissimos qui
-                            fuga molestiae. Maiores et cum numquam possimus
-                            occaecati est adipisci. Commodi quibusdam et
-                            molestiae rerum beatae nulla minima. Ducimus dolorum
-                            temporibus tenetur. Minima nemo fugit hic totam hic
-                            quos ut praesentium. Eos ea sit cum necessitatibus.
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                            gutterBottom
-                        >
-                            Temporibus sint fugiat ipsum iusto dignissimos qui
-                            fuga molestiae. Maiores et cum numquam possimus
-                            occaecati est adipisci. Commodi quibusdam et
-                            molestiae rerum beatae nulla minima. Ducimus dolorum
-                            temporibus tenetur. Minima nemo fugit hic totam hic
-                            quos ut praesentium. Eos ea sit cum necessitatibus.
-                        </Typography>
-                    </Grid>
-                </Grid>
-            </div>
-        </Page>
+        <>
+            {stripeErrorBanner}
+            <Page>
+                <UserProfile
+                    user={data.user}
+                    handleUserRefetch={handleUserRefetch}
+                />
+            </Page>
+        </>
     ) : null;
 };

@@ -1,10 +1,10 @@
 import { useLazyQuery } from "@apollo/client";
-import { Card, CardContent, CircularProgress, Icon } from "@material-ui/core";
+import { Card, CardContent, Icon } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import React, { FC, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useBoolean, useMount } from "react-use";
-import { ErrorBanner, Page } from "../../components";
+import { ErrorBanner, OverlaySpinner, Page } from "../../components";
 import { ME } from "../../graphql";
 import { setViewer } from "../../state/features";
 import { useAppDispatch } from "../../state/store";
@@ -59,11 +59,7 @@ export const Login: FC = () => {
             )}
             <div className={classes.loginPage}>
                 <Card className={classes.loginCard} elevation={0}>
-                    {loggingIn || loading ? (
-                        <div className={classes.overlaySpinner}>
-                            <CircularProgress />
-                        </div>
-                    ) : null}
+                    {loggingIn || loading ? <OverlaySpinner /> : null}
                     <CardContent>
                         <Icon color="inherit">hotel</Icon>
                         <SocialLogins onClick={onSocialClick} />

@@ -18,3 +18,5 @@ export const LightTheme = createMuiTheme({
         type: "light"
     }
 });
+
+export const StripeAuthUrl = `https://dashboard.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&scope=read_write`;
