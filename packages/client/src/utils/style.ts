@@ -17,6 +17,18 @@ export const useUtilStyles = makeStyles(theme => ({
     spacingTop1: {
         marginTop: theme.spacing(1)
     },
+    spacingBottom1: {
+        marginBottom: theme.spacing(1)
+    },
+    spacingBottom2: {
+        marginBottom: theme.spacing(2)
+    },
+    spacingBottom3: {
+        marginBottom: theme.spacing(3)
+    },
+    spacingBottom4: {
+        marginBottom: theme.spacing(4)
+    },
     flexCenter: {
         display: "flex",
         alignItems: "center"

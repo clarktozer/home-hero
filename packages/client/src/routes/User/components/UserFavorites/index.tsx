@@ -35,7 +35,7 @@ export const UserFavorites: FC = () => {
 
     return (
         <ListingsSection
-            title="My Favorites"
+            title="My Favourites"
             noResultText="You have no favourite listings!"
             page={page}
             onPageChange={onPageChange}

@@ -3,6 +3,7 @@ import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { CenterSpinner, ErrorBanner, ErrorPage, Page } from "../../components";
 import { USER } from "../../graphql";
+import { useUtilStyles } from "../../utils";
 import { User as UserData, UserVariables } from "../../__types/User";
 import { UserProfile } from "./components";
 import { UserBookings } from "./components/UserBookings";
@@ -13,6 +14,7 @@ import { MatchParams } from "./types";
 
 export const User: FC = () => {
     const classes = useStyles();
+    const utilClasses = useUtilStyles();
     const { id } = useParams<MatchParams>();
 
     const { data, loading, refetch, error } = useQuery<UserData, UserVariables>(
@@ -54,13 +56,21 @@ export const User: FC = () => {
         <>
             {stripeErrorBanner}
             <Page>
-                <UserProfile
-                    user={data.user}
-                    handleUserRefetch={handleUserRefetch}
-                />
-                <UserListings />
-                <UserBookings />
-                <UserFavorites />
+                <div className={utilClasses.spacingBottom4}>
+                    <UserProfile
+                        user={data.user}
+                        handleUserRefetch={handleUserRefetch}
+                    />
+                </div>
+                <div className={utilClasses.spacingBottom4}>
+                    <UserListings />
+                </div>
+                <div className={utilClasses.spacingBottom4}>
+                    <UserBookings />
+                </div>
+                <div className={utilClasses.spacingBottom4}>
+                    <UserFavorites />
+                </div>
             </Page>
         </>
     ) : null;

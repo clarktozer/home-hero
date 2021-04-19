@@ -35,8 +35,8 @@ export const UserListings: FC = () => {
 
     return (
         <ListingsSection
-            title="My Listings"
-            noResultText="You have no listings!"
+            title="Listings"
+            noResultText="There are no listings!"
             page={page}
             onPageChange={onPageChange}
             loading={loading}
