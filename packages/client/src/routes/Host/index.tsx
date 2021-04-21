@@ -25,6 +25,7 @@ import { CenterSpinner, ConfirmDialog, Page } from "../../components";
 import { HOST_LISTING } from "../../graphql";
 import { useFocusError } from "../../hooks";
 import { getViewer } from "../../state/features";
+import { useUtilStyles } from "../../utils";
 import { HostListingArgs, ListingType } from "../../__types/global";
 import {
     HostListing as HostListingData,
@@ -37,6 +38,7 @@ import { validationSchema } from "./validation";
 
 export const Host: FC = () => {
     const classes = useStyles();
+    const utilStyles = useUtilStyles();
     const theme = useTheme();
     const viewer = useSelector(getViewer);
     const [isOpen, setOpen] = useBoolean(false);
@@ -146,10 +148,7 @@ export const Host: FC = () => {
         submitForm();
     };
 
-    if (
-        process.env.NODE_ENV === "production" &&
-        (!viewer || !viewer.id || !viewer.hasWallet)
-    ) {
+    if (!viewer || !viewer.id || !viewer.hasWallet) {
         return (
             <Container className={classes.emptyHostContainer}>
                 <div className={classes.hostHeader}>

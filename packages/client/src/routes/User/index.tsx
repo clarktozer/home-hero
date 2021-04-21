@@ -1,20 +1,22 @@
 import { useQuery } from "@apollo/client";
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { CenterSpinner, ErrorBanner, ErrorPage, Page } from "../../components";
+import { ErrorBanner, ErrorPage, Page } from "../../components";
 import { USER } from "../../graphql";
+import { getViewer } from "../../state/features";
 import { useUtilStyles } from "../../utils";
 import { User as UserData, UserVariables } from "../../__types/User";
 import { UserProfile } from "./components";
 import { UserBookings } from "./components/UserBookings";
 import { UserFavorites } from "./components/UserFavorites";
 import { UserListings } from "./components/UserListings";
-import { useStyles } from "./style";
+import { UserProfileSkeleton } from "./components/UserProfile/components";
 import { MatchParams } from "./types";
 
 export const User: FC = () => {
-    const classes = useStyles();
     const utilClasses = useUtilStyles();
+    const viewer = useSelector(getViewer);
     const { id } = useParams<MatchParams>();
 
     const { data, loading, refetch, error } = useQuery<UserData, UserVariables>(
@@ -35,10 +37,6 @@ export const User: FC = () => {
         <ErrorBanner description="We had an issue connecting with Stripe. Please try again soon." />
     ) : null;
 
-    if (loading) {
-        return <CenterSpinner />;
-    }
-
     if (error) {
         return (
             <>
@@ -52,26 +50,41 @@ export const User: FC = () => {
         await refetch();
     };
 
-    return data?.user ? (
+    const user = data ? data.user : null;
+    const viewerIsUser = viewer?.id === id;
+
+    return (
         <>
             {stripeErrorBanner}
             <Page>
                 <div className={utilClasses.spacingBottom4}>
-                    <UserProfile
-                        user={data.user}
-                        handleUserRefetch={handleUserRefetch}
-                    />
+                    {loading ? (
+                        <UserProfileSkeleton />
+                    ) : user ? (
+                        <UserProfile
+                            user={user}
+                            handleUserRefetch={handleUserRefetch}
+                        />
+                    ) : null}
                 </div>
-                <div className={utilClasses.spacingBottom4}>
-                    <UserListings />
-                </div>
-                <div className={utilClasses.spacingBottom4}>
-                    <UserBookings />
-                </div>
-                <div className={utilClasses.spacingBottom4}>
-                    <UserFavorites />
-                </div>
+                {user && (
+                    <>
+                        <div className={utilClasses.spacingBottom4}>
+                            <UserListings />
+                        </div>
+                        {viewerIsUser && (
+                            <>
+                                <div className={utilClasses.spacingBottom4}>
+                                    <UserBookings />
+                                </div>
+                                <div className={utilClasses.spacingBottom4}>
+                                    <UserFavorites />
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
             </Page>
         </>
-    ) : null;
+    );
 };

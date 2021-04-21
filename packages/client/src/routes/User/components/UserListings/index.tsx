@@ -1,11 +1,17 @@
 import { useQuery } from "@apollo/client";
+import { Grid } from "@material-ui/core";
 import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ListingsSection } from "../../../../components";
+import {
+    GridListingCardSkeletons,
+    HorizontalList
+} from "../../../../components";
+import { ListingCard } from "../../../../components/ListingCard";
 import { LISTINGS_FOR_USER } from "../../../../graphql";
 import {
     ListingsForUser as ListingsForUserData,
-    ListingsForUserVariables
+    ListingsForUserVariables,
+    ListingsForUser_listingsForUser_result
 } from "../../../../__types/ListingsForUser";
 import { MatchParams } from "../../types";
 
@@ -30,11 +36,19 @@ export const UserListings: FC = () => {
         setPage(newPage);
     };
 
+    const onRenderLoader = () => <GridListingCardSkeletons />;
+
+    const onRenderItem = (item: ListingsForUser_listingsForUser_result) => (
+        <Grid item key={item.id} xs={12} sm={6} md={3}>
+            <ListingCard data={item} />
+        </Grid>
+    );
+
     const total = data?.listingsForUser?.total || 0;
     const result = data?.listingsForUser?.result || [];
 
     return (
-        <ListingsSection
+        <HorizontalList
             title="Listings"
             noResultText="There are no listings!"
             page={page}
@@ -43,6 +57,8 @@ export const UserListings: FC = () => {
             total={total}
             limit={PAGE_LIMIT}
             data={result}
+            onRenderLoader={onRenderLoader}
+            onRenderItem={onRenderItem}
         />
     );
 };
