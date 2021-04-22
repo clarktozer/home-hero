@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import React, { FC } from "react";
-import { useStyles } from "../../style";
+import { useStyles } from "../UserProfile/style";
 
 export const UserProfileSkeleton: FC = () => {
     const classes = useStyles();

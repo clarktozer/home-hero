@@ -18,6 +18,8 @@ export const LISTING = gql`
             city
             price
             guests
+            lat
+            lng
         }
     }
 `;

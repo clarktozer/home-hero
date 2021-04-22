@@ -4,13 +4,21 @@ import {
     Divider,
     Icon,
     Link,
-    Typography
+    Typography,
+    useTheme
 } from "@material-ui/core";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 import React, { FC } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { MapDarkMode, ThemeType } from "../../../../constants";
 import { ListingDetailsProps } from "./types";
 
 export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
+    const theme = useTheme();
+    const mapOptions =
+        theme.palette.type === ThemeType.Dark
+            ? { styles: MapDarkMode }
+            : { styles: [] };
     const {
         title,
         description,
@@ -19,7 +27,9 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
         address,
         city,
         guests,
-        host
+        host,
+        lat,
+        lng
     } = data;
 
     return (
@@ -51,7 +61,11 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
             </div>
             <Divider />
             <div>
-                <Link component={RouterLink} to={`/user/${host.id}`}>
+                <Link
+                    color="secondary"
+                    component={RouterLink}
+                    to={`/user/${host.id}`}
+                >
                     <Avatar src={host.avatar} />
                     <Typography>{host.name}</Typography>
                 </Link>
@@ -65,7 +79,28 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
                 </div>
                 <Typography>{description}</Typography>
             </div>
-            <div>map</div>
+            <div>
+                <GoogleMap
+                    id={theme.palette.type}
+                    mapContainerStyle={{
+                        width: "100%",
+                        height: "300px"
+                    }}
+                    center={{
+                        lat,
+                        lng
+                    }}
+                    zoom={15}
+                    options={mapOptions}
+                >
+                    <Marker
+                        position={{
+                            lat,
+                            lng
+                        }}
+                    />
+                </GoogleMap>
+            </div>
         </div>
     );
 };

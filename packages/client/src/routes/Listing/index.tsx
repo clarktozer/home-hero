@@ -1,18 +1,27 @@
 import { useQuery } from "@apollo/client";
 import { Grid } from "@material-ui/core";
+import { useJsApiLoader } from "@react-google-maps/api";
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
-import { ErrorBanner, ErrorPage, Page } from "../../components";
+import { CenterSpinner, ErrorBanner, ErrorPage, Page } from "../../components";
 import { LISTING } from "../../graphql";
 import {
     Listing as ListingData,
     ListingVariables
 } from "../../__types/Listing";
-import { ListingCreateBooking, ListingDetails } from "./components";
+import {
+    ListingBookings,
+    ListingCreateBooking,
+    ListingDetails
+} from "./components";
 import { MatchParams } from "./types";
 
 export const Listing: FC = () => {
     const { id } = useParams<MatchParams>();
+    const { isLoaded, loadError } = useJsApiLoader({
+        id: "google-map-script",
+        googleMapsApiKey: `${process.env.REACT_APP_GOOGLE_API_KEY}`
+    });
 
     const { loading, data, error, refetch } = useQuery<
         ListingData,
@@ -23,7 +32,11 @@ export const Listing: FC = () => {
         }
     });
 
-    if (error) {
+    if (loading || !isLoaded) {
+        return <CenterSpinner />;
+    }
+
+    if (error || loadError) {
         return (
             <>
                 <ErrorBanner description="This listing may not exist or we've encountered an error. Please try again soon!" />
@@ -52,6 +65,9 @@ export const Listing: FC = () => {
                 </Grid>
                 <Grid item xs={12} lg={5}>
                     {listingCreateBookingElement}
+                </Grid>
+                <Grid item xs={12}>
+                    <ListingBookings />
                 </Grid>
             </Grid>
         </Page>

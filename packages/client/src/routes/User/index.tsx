@@ -7,11 +7,13 @@ import { USER } from "../../graphql";
 import { getViewer } from "../../state/features";
 import { useUtilStyles } from "../../utils";
 import { User as UserData, UserVariables } from "../../__types/User";
-import { UserProfile } from "./components";
-import { UserBookings } from "./components/UserBookings";
-import { UserFavorites } from "./components/UserFavorites";
-import { UserListings } from "./components/UserListings";
-import { UserProfileSkeleton } from "./components/UserProfile/components";
+import {
+    UserBookings,
+    UserFavorites,
+    UserListings,
+    UserProfile,
+    UserProfileSkeleton
+} from "./components";
 import { MatchParams } from "./types";
 
 export const User: FC = () => {

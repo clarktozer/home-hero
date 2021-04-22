@@ -29,6 +29,8 @@ export interface Listing_listing {
   city: string;
   price: number;
   guests: number;
+  lat: number;
+  lng: number;
 }
 
 export interface Listing {

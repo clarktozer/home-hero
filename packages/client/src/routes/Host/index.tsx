@@ -25,7 +25,6 @@ import { CenterSpinner, ConfirmDialog, Page } from "../../components";
 import { HOST_LISTING } from "../../graphql";
 import { useFocusError } from "../../hooks";
 import { getViewer } from "../../state/features";
-import { useUtilStyles } from "../../utils";
 import { HostListingArgs, ListingType } from "../../__types/global";
 import {
     HostListing as HostListingData,
@@ -38,7 +37,6 @@ import { validationSchema } from "./validation";
 
 export const Host: FC = () => {
     const classes = useStyles();
-    const utilStyles = useUtilStyles();
     const theme = useTheme();
     const viewer = useSelector(getViewer);
     const [isOpen, setOpen] = useBoolean(false);
