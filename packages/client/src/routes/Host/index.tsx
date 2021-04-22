@@ -113,7 +113,7 @@ export const Host: FC = () => {
         },
         validationSchema,
         onSubmit,
-        isInitialValid: false
+        validateOnMount: true
     });
 
     useFocusError(errors, isSubmitting, isValidating);

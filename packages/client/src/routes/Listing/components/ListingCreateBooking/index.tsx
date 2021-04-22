@@ -6,21 +6,30 @@ import {
     Divider,
     Icon,
     InputAdornment,
-    Typography
+    Typography,
+    useMediaQuery,
+    useTheme
 } from "@material-ui/core";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import classnames from "classnames";
 import dayjs from "dayjs";
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
+import { ThemeType } from "../../../../constants";
 import { getViewer } from "../../../../state/features";
-import { formatListingPrice } from "../../../../utils";
+import { formatListingPrice, useUtilStyles } from "../../../../utils";
 import { ListingCreateBookingModal } from "./components";
+import { useStyles } from "./style";
 import { ListingCreateBookingProps } from "./types";
 
 export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     data
 }) => {
+    const utilStyles = useUtilStyles();
+    const classes = useStyles();
+    const theme = useTheme();
+    const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
     const { price, host } = data;
     const viewer = useSelector(getViewer);
     const [isOpen, setOpen] = useState(false);
@@ -46,7 +55,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const viewerIsHost = viewer?.id === host.id;
     const checkInInputDisabled = !viewer?.id || viewerIsHost || !host.hasWallet;
     const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
-    const buttonDisabled =
+    const disableBooking =
         checkOutInputDisabled || !checkInDate || !checkOutDate;
     let buttonMessage = "You won't be charged yet";
 
@@ -61,19 +70,37 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
 
     return (
         <MuiPickersUtilsProvider utils={DayJSUtils} libInstance={dayjs}>
-            <div>
-                <Card elevation={0}>
+            <div className={classes.createBooking}>
+                <Card
+                    elevation={0}
+                    variant={
+                        theme.palette.type === ThemeType.Dark
+                            ? "elevation"
+                            : "outlined"
+                    }
+                >
                     <CardContent>
-                        <Typography>
+                        <Typography
+                            className={classnames(
+                                utilStyles.textCenter,
+                                utilStyles.spacingBottom2
+                            )}
+                            variant="h5"
+                        >
                             {formatListingPrice(price)}
                             <span>/day</span>
                         </Typography>
-                        <Divider />
-                        <div>
+                        <Divider className={utilStyles.spacingBottom2} />
+                        <div
+                            className={classnames(
+                                utilStyles.textCenter,
+                                utilStyles.spacingBottom2
+                            )}
+                        >
                             <Typography>Check In</Typography>
                             <DatePicker
                                 disableToolbar
-                                variant="inline"
+                                variant={isMdUp ? "inline" : "dialog"}
                                 format="DD/MM/YYYY"
                                 margin="normal"
                                 value={checkInDate}
@@ -89,11 +116,16 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 autoOk
                             />
                         </div>
-                        <div>
+                        <div
+                            className={classnames(
+                                utilStyles.textCenter,
+                                utilStyles.spacingBottom2
+                            )}
+                        >
                             <Typography>Check Out</Typography>
                             <DatePicker
                                 disableToolbar
-                                variant="inline"
+                                variant={isMdUp ? "inline" : "dialog"}
                                 format="DD/MM/YYYY"
                                 margin="normal"
                                 value={checkOutDate}
@@ -109,17 +141,23 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 autoOk
                             />
                         </div>
-                        <Divider />
-                        <Button
-                            size="large"
-                            variant="contained"
-                            color="primary"
-                            disableElevation
-                            onClick={onRequestToBook}
-                        >
-                            Request to book!
-                        </Button>
-                        <Typography>{buttonMessage}</Typography>
+                        <Divider className={utilStyles.spacingBottom2} />
+                        <div className={classnames(utilStyles.textCenter)}>
+                            <Button
+                                className={utilStyles.spacingBottom2}
+                                size="large"
+                                variant="contained"
+                                color="primary"
+                                disableElevation
+                                onClick={onRequestToBook}
+                                disabled={disableBooking}
+                            >
+                                Request to book!
+                            </Button>
+                            <Typography color="error">
+                                {buttonMessage}
+                            </Typography>
+                        </div>
                     </CardContent>
                 </Card>
                 {checkInDate && checkOutDate ? (

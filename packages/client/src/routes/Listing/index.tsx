@@ -60,10 +60,10 @@ export const Listing: FC = () => {
     return (
         <Page>
             <Grid container spacing={4}>
-                <Grid item xs={12} lg={7}>
+                <Grid item xs={12} md={8}>
                     {listingDetailsElement}
                 </Grid>
-                <Grid item xs={12} lg={5}>
+                <Grid item xs={12} md={4}>
                     {listingCreateBookingElement}
                 </Grid>
                 <Grid item xs={12}>
