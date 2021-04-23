@@ -12,7 +12,8 @@ export const useStyles = makeStyles(theme => ({
         backgroundPosition: "50%",
         [theme.breakpoints.up("lg")]: {
             height: "570px"
-        }
+        },
+        position: "relative"
     },
     basic: {
         display: "block",
@@ -25,5 +26,13 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up("sm")]: {
             marginBottom: 0
         }
+    },
+    favorite: {
+        position: "absolute",
+        top: theme.spacing(1),
+        right: theme.spacing(1),
+        borderRadius: "50%",
+        background: theme.palette.primary.main,
+        color: theme.palette.common.white
     }
 }));

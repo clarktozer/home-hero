@@ -6,6 +6,7 @@ import {
     Divider,
     Icon,
     InputAdornment,
+    Tooltip,
     Typography,
     useMediaQuery,
     useTheme
@@ -30,7 +31,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const classes = useStyles();
     const theme = useTheme();
     const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
-    const { price, host } = data;
+    const { price, host, maxStay, minStay } = data;
     const viewer = useSelector(getViewer);
     const [isOpen, setOpen] = useState(false);
     const [checkInDate, setCheckInDate] = useState<dayjs.Dayjs | null>(null);
@@ -68,6 +69,56 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
             "The host has disconnected from Stripe and thus won't be able to receive payments!";
     }
 
+    const shouldDisableDate = (day: MaterialUiPickersDate) => {
+        if (day) {
+            const dateIsBeforeEndOfDay = day.isBefore(dayjs().endOf("day"));
+            const dateIsMoreThanThreeMonthsAhead = day.isAfter(
+                dayjs().endOf("day").add(90, "days")
+            );
+            const dateBooked = false;
+
+            return (
+                dateIsBeforeEndOfDay ||
+                dateIsMoreThanThreeMonthsAhead ||
+                dateBooked
+            );
+        }
+
+        return false;
+    };
+
+    const shouldDisableCheckoutDate = (day: MaterialUiPickersDate) => {
+        if (day && checkInDate) {
+            const isBeforeCheckinDate = day.isBefore(
+                checkInDate.add(minStay, "days")
+            );
+            const isAfterMaxStay = day.isAfter(
+                checkInDate.add(maxStay, "days")
+            );
+
+            return isBeforeCheckinDate || isAfterMaxStay;
+        }
+
+        return shouldDisableDate(day);
+    };
+
+    const onRenderDay = (
+        day: MaterialUiPickersDate,
+        _selectedDate: MaterialUiPickersDate,
+        _dayInCurrentMonth: boolean,
+        dayComponent: JSX.Element
+    ) => {
+        if (day && checkInDate && day.isSame(checkInDate, "day")) {
+            return (
+                <Tooltip title="Check in date">
+                    <div>{day?.format("DD")}</div>
+                </Tooltip>
+            );
+        }
+
+        return dayComponent;
+    };
+
     return (
         <MuiPickersUtilsProvider utils={DayJSUtils} libInstance={dayjs}>
             <div className={classes.createBooking}>
@@ -102,7 +153,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 disableToolbar
                                 variant={isMdUp ? "inline" : "dialog"}
                                 format="DD/MM/YYYY"
-                                margin="normal"
+                                margin="dense"
                                 value={checkInDate}
                                 inputVariant="outlined"
                                 InputProps={{
@@ -113,7 +164,11 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                     )
                                 }}
                                 onChange={onCheckInDateChange}
+                                shouldDisableDate={shouldDisableDate}
                                 autoOk
+                                disablePast
+                                // disabled={checkInInputDisabled}
+                                placeholder="Select Date"
                             />
                         </div>
                         <div
@@ -127,7 +182,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 disableToolbar
                                 variant={isMdUp ? "inline" : "dialog"}
                                 format="DD/MM/YYYY"
-                                margin="normal"
+                                margin="dense"
                                 value={checkOutDate}
                                 inputVariant="outlined"
                                 InputProps={{
@@ -139,6 +194,11 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 }}
                                 onChange={onCheckOutDateChange}
                                 autoOk
+                                shouldDisableDate={shouldDisableCheckoutDate}
+                                disablePast
+                                // disabled={checkOutInputDisabled}
+                                placeholder="Select Date"
+                                renderDay={onRenderDay}
                             />
                         </div>
                         <Divider className={utilStyles.spacingBottom2} />
@@ -150,7 +210,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 color="primary"
                                 disableElevation
                                 onClick={onRequestToBook}
-                                disabled={disableBooking}
+                                // disabled={disableBooking}
                             >
                                 Request to book!
                             </Button>

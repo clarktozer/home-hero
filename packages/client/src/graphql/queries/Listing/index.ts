@@ -20,6 +20,9 @@ export const LISTING = gql`
             guests
             lat
             lng
+            favourited
+            minStay
+            maxStay
         }
     }
 `;

@@ -44,7 +44,7 @@ export class BookingResolver {
             const today = dayjs();
             const checkInDate = dayjs(checkIn);
             const checkOutDate = dayjs(checkOut);
-            const maxStayDate = dayjs(today.add(listing.maxStay, "day"));
+            const maxStayDate = dayjs(checkInDate.add(listing.maxStay, "day"));
             const minStayDate = checkInDate.add(listing.minStay, "day");
 
             if (checkInDate.isAfter(today.add(90, "day"))) {

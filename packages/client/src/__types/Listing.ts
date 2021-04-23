@@ -31,6 +31,9 @@ export interface Listing_listing {
   guests: number;
   lat: number;
   lng: number;
+  favourited: boolean | null;
+  minStay: number;
+  maxStay: number;
 }
 
 export interface Listing {

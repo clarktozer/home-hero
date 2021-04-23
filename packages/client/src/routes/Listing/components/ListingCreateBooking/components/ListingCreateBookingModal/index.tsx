@@ -5,7 +5,9 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Typography
+    Divider,
+    Typography,
+    useTheme
 } from "@material-ui/core";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import dayjs from "dayjs";
@@ -13,10 +15,12 @@ import { useSnackbar } from "notistack";
 import React, { FC } from "react";
 import { Notification } from "../../../../../../components";
 import { CREATE_BOOKING } from "../../../../../../graphql";
+import { formatListingPrice, useUtilStyles } from "../../../../../../utils";
 import {
     CreateBooking as CreateBookingData,
     CreateBookingVariables
 } from "../../../../../../__types/CreateBooking";
+import { useStyles } from "./style";
 import { ListingCreateBookingModalProps } from "./types";
 
 export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
@@ -26,10 +30,15 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
     checkInDate,
     checkOutDate
 }) => {
-    const { id } = listing;
+    const { id, price } = listing;
+    const classes = useStyles();
+    const utilStyles = useUtilStyles();
+    const theme = useTheme();
     const stripe = useStripe();
     const elements = useElements();
     const { enqueueSnackbar } = useSnackbar();
+    const daysBooked = checkOutDate.diff(checkInDate, "days") + 1;
+    const listingPrice = price * daysBooked;
 
     const [createBooking, { loading }] = useMutation<
         CreateBookingData,
@@ -93,17 +102,58 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
         <Dialog onClose={onClose} open={isOpen}>
             <DialogTitle>Book</DialogTitle>
             <DialogContent>
-                <Typography>
-                    Enter your payment information to book the listing from the
-                    dates between{" "}
-                    <b>{dayjs(checkInDate).format("MMMM Do YYYY")}</b> and{" "}
-                    <b>{dayjs(checkOutDate).format("MMMM Do YYYY")}</b>,
-                    inclusive.
-                </Typography>
+                <div className={utilStyles.spacingBottom2}>
+                    <Typography>
+                        Enter your payment information to book the listing from
+                        the dates (inclusive) between:{" "}
+                    </Typography>
+                    <div>
+                        <Typography>Check In</Typography>
+                        <b>{dayjs(checkInDate).format("MMMM Do YYYY")}</b>
+                    </div>
+                    <div>
+                        <Typography>Check Out</Typography>
+                        <b>{dayjs(checkOutDate).format("MMMM Do YYYY")}</b>
+                    </div>
+                </div>
+                <Divider className={utilStyles.spacingBottom2} />
+                <div className={utilStyles.spacingBottom2}>
+                    <Typography>
+                        {formatListingPrice(price, false)} * {daysBooked} days ={" "}
+                        <b>{formatListingPrice(listingPrice, false)}</b>
+                    </Typography>
+                    <Typography className="listing-booking-modal__charge-summary-total">
+                        Total = <b>{formatListingPrice(listingPrice, false)}</b>
+                    </Typography>
+                </div>
+                <Divider className={utilStyles.spacingBottom2} />
                 <CardElement
                     options={{
-                        hidePostalCode: true
+                        hidePostalCode: true,
+                        iconStyle: "solid",
+                        style: {
+                            base: {
+                                iconColor: theme.palette.primary.main,
+                                color: "#fff",
+                                fontWeight: "500",
+                                fontFamily:
+                                    "Roboto, Open Sans, Segoe UI, sans-serif",
+                                fontSize: "16px",
+                                fontSmoothing: "antialiased",
+                                ":-webkit-autofill": {
+                                    color: "#fce883"
+                                },
+                                "::placeholder": {
+                                    color: "#87bbfd"
+                                }
+                            },
+                            invalid: {
+                                iconColor: theme.palette.error.main,
+                                color: theme.palette.error.main
+                            }
+                        }
                     }}
+                    className={classes.card}
                 />
             </DialogContent>
             <DialogActions>

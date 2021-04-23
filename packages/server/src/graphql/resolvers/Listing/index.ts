@@ -183,14 +183,14 @@ export class ListingResolver {
         }
     }
 
-    @Mutation(() => Listing)
+    @Mutation(() => Boolean)
     @Authorized()
     @UseMiddleware(ValidAntiForgeryToken)
     async favoriteListing(
         @Ctx() ctx: AppContext,
         @Arg("id") id: string,
         @Arg("favorite") favorite: boolean
-    ): Promise<Listing | null> {
+    ): Promise<Boolean | null> {
         try {
             const listing = await Listing.findOne(id);
 
@@ -218,7 +218,7 @@ export class ListingResolver {
 
             await listing.save();
 
-            return listing;
+            return favorite;
         } catch (error) {
             throw new Error(`Failed to favorite listing: ${error}`);
         }

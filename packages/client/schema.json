@@ -1484,8 +1484,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "Listing",
+                "kind": "SCALAR",
+                "name": "Boolean",
                 "ofType": null
               }
             },

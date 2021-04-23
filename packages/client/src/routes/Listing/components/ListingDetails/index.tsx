@@ -1,31 +1,53 @@
+import { useMutation } from "@apollo/client";
 import {
     Avatar,
     Chip,
+    CircularProgress,
     Divider,
     Icon,
+    IconButton,
     Link,
+    Tooltip,
     Typography,
-    useTheme
+    useTheme,
+    withStyles
 } from "@material-ui/core";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import classnames from "classnames";
+import { useSnackbar } from "notistack";
 import React, { FC } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import { MapDarkMode, ThemeType } from "../../../../constants";
+import { FAVOURITE_LISTING } from "../../../../graphql/mutations/FavoriteListing";
 import { useUtilStyles } from "../../../../utils";
+import {
+    FavoriteListing as FavoriteListingData,
+    FavoriteListingVariables
+} from "../../../../__types/FavoriteListing";
 import { useStyles } from "./style";
 import { ListingDetailsProps } from "./types";
+
+const ColorButton = withStyles(theme => ({
+    root: {
+        backgroundColor: theme.palette.primary.main,
+        "&:hover": {
+            backgroundColor: theme.palette.primary.light
+        }
+    }
+}))(IconButton);
 
 export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
     const utilStyles = useUtilStyles();
     const classes = useStyles();
     const theme = useTheme();
     const history = useHistory();
+    const { enqueueSnackbar } = useSnackbar();
     const mapOptions =
         theme.palette.type === ThemeType.Dark
             ? { styles: MapDarkMode }
             : { styles: [] };
     const {
+        id,
         title,
         description,
         image,
@@ -35,11 +57,37 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
         guests,
         host,
         lat,
-        lng
+        lng,
+        favourited
     } = data;
+
+    const [favoriteListing, { loading, data: favData }] = useMutation<
+        FavoriteListingData,
+        FavoriteListingVariables
+    >(FAVOURITE_LISTING, {
+        onError: () => {
+            enqueueSnackbar(
+                "Sorry! We weren't able to favorite this listing. Please try again later!",
+                {
+                    variant: "error"
+                }
+            );
+        }
+    });
+
+    const isFavorited = favData ? favData.favoriteListing : favourited;
 
     const onGoToListings = () => {
         history.push(`/listings/${city}`);
+    };
+
+    const onFavoriteListing = () => {
+        favoriteListing({
+            variables: {
+                id,
+                favorite: !isFavorited
+            }
+        });
     };
 
     return (
@@ -49,7 +97,33 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
                 style={{
                     backgroundImage: `url(${image})`
                 }}
-            />
+            >
+                <div className={classes.favorite}>
+                    <Tooltip
+                        title={
+                            isFavorited
+                                ? "Unfavorite this listing"
+                                : "Favorite this listing"
+                        }
+                    >
+                        <IconButton
+                            color="inherit"
+                            onClick={!loading ? onFavoriteListing : undefined}
+                        >
+                            {loading ? (
+                                <CircularProgress
+                                    size="24px"
+                                    color="secondary"
+                                />
+                            ) : isFavorited ? (
+                                <Icon>favorite</Icon>
+                            ) : (
+                                <Icon>favorite_border</Icon>
+                            )}
+                        </IconButton>
+                    </Tooltip>
+                </div>
+            </div>
             <div className={utilStyles.spacingBottom3}>
                 <div
                     className={classnames(utilStyles.flexCenter, classes.basic)}
