@@ -1,6 +1,6 @@
 # home-hero
 
-An example home booking app
+An example home booking app inspired by https://www.tinyhouse.app/
 
 Stack:
 
