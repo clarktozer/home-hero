@@ -27,6 +27,8 @@ export interface Listing_listing {
   type: ListingType;
   address: string;
   city: string;
+  admin: string;
+  country: string;
   price: number;
   guests: number;
   lat: number;

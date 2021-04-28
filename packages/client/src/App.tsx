@@ -7,7 +7,8 @@ import {
     CenterSpinner,
     ErrorBanner,
     Header,
-    HeaderSkeleton
+    HeaderSkeleton,
+    ScrollToTop
 } from "./components";
 import { DarkTheme, LightTheme, ThemeCookie, ThemeType } from "./constants";
 import { ME } from "./graphql/queries";
@@ -53,7 +54,9 @@ export const App: FC = () => {
                         isDarkTheme={isDarkTheme}
                         onToggleTheme={onToggleTheme}
                     />
-                    <Routes />
+                    <ScrollToTop>
+                        <Routes />
+                    </ScrollToTop>
                 </div>
             )}
         </ThemeProvider>

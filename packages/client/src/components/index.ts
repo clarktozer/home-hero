@@ -11,4 +11,5 @@ export * from "./Notification";
 export * from "./OverlaySpinner";
 export * from "./Page";
 export * from "./PlacesAutocomplete";
+export * from "./ScollToTop";
 export * from "./SnackbarProvider";

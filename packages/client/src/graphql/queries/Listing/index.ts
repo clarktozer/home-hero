@@ -16,6 +16,8 @@ export const LISTING = gql`
             type
             address
             city
+            admin
+            country
             price
             guests
             lat

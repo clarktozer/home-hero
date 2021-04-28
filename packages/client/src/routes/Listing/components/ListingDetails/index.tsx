@@ -58,7 +58,9 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
         host,
         lat,
         lng,
-        favourited
+        favourited,
+        admin,
+        country
     } = data;
 
     const [favoriteListing, { loading, data: favData }] = useMutation<
@@ -78,7 +80,7 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
     const isFavorited = favData ? favData.favoriteListing : favourited;
 
     const onGoToListings = () => {
-        history.push(`/listings/${city}`);
+        history.push(`/listings/${city},${admin},${country}`);
     };
 
     const onFavoriteListing = () => {

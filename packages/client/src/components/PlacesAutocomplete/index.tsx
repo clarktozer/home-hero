@@ -81,7 +81,13 @@ export const PlacesAutocomplete: FC = () => {
         const pathnameSubStrings = pathname.split("/");
 
         if (pathname.includes("/listings") && pathnameSubStrings.length === 3) {
-            setInputValue(pathnameSubStrings[2]);
+            const locationSplit = pathnameSubStrings[2].split(",");
+
+            if (locationSplit.length > 0) {
+                setInputValue(locationSplit[0]);
+            } else {
+                setInputValue(pathnameSubStrings[2]);
+            }
 
             return;
         }
