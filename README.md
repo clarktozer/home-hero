@@ -14,8 +14,3 @@ Stack:
 -   TypeORM
 -   PostgreSQL
 -   Redis
-
-Ideas:
-
--   Add ability to see listings on a Google Map in main search page
--   Add ability to see listing on a Google Map in listing view
