@@ -14,3 +14,4 @@ Stack:
 -   TypeORM
 -   PostgreSQL
 -   Redis
+-   Material UI
