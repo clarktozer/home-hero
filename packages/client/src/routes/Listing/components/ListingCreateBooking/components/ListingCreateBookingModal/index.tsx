@@ -6,6 +6,8 @@ import {
     DialogContent,
     DialogTitle,
     Divider,
+    Icon,
+    Tooltip,
     Typography,
     useTheme
 } from "@material-ui/core";
@@ -39,6 +41,10 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
     const { enqueueSnackbar } = useSnackbar();
     const daysBooked = checkOutDate.diff(checkInDate, "days") + 1;
     const listingPrice = price * daysBooked;
+    const fee = listingPrice * 0.05;
+    const total = listingPrice + fee;
+
+    console.log(theme);
 
     const [createBooking, { loading }] = useMutation<
         CreateBookingData,
@@ -122,39 +128,51 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
                         {formatListingPrice(price, false)} * {daysBooked} days ={" "}
                         <b>{formatListingPrice(listingPrice, false)}</b>
                     </Typography>
+                    <Typography>
+                        Our fee
+                        <Tooltip title="5% of the total amount">
+                            <Icon>help</Icon>
+                        </Tooltip>{" "}
+                        = {formatListingPrice(fee, false)}
+                    </Typography>
                     <Typography className="listing-booking-modal__charge-summary-total">
-                        Total = <b>{formatListingPrice(listingPrice, false)}</b>
+                        Total = <b>{formatListingPrice(total, false)}</b>
                     </Typography>
                 </div>
                 <Divider className={utilStyles.spacingBottom2} />
-                <CardElement
-                    options={{
-                        hidePostalCode: true,
-                        iconStyle: "solid",
-                        style: {
-                            base: {
-                                iconColor: theme.palette.primary.main,
-                                color: "#fff",
-                                fontWeight: "500",
-                                fontFamily:
-                                    "Roboto, Open Sans, Segoe UI, sans-serif",
-                                fontSize: "16px",
-                                fontSmoothing: "antialiased",
-                                ":-webkit-autofill": {
-                                    color: "#fce883"
-                                },
-                                "::placeholder": {
-                                    color: "#87bbfd"
-                                }
-                            },
-                            invalid: {
-                                iconColor: theme.palette.error.main,
-                                color: theme.palette.error.main
-                            }
-                        }
+                <div
+                    style={{
+                        background: theme.palette.background.default
                     }}
-                    className={classes.card}
-                />
+                >
+                    <CardElement
+                        options={{
+                            hidePostalCode: true,
+                            iconStyle: "solid",
+                            style: {
+                                base: {
+                                    iconColor: theme.palette.text.primary,
+                                    color: theme.palette.text.primary,
+                                    fontWeight: "500",
+                                    fontFamily: theme.typography.fontFamily,
+                                    fontSize: "16px",
+                                    fontSmoothing: "antialiased",
+                                    ":-webkit-autofill": {
+                                        color: theme.palette.text.primary
+                                    },
+                                    "::placeholder": {
+                                        color: theme.palette.text.primary
+                                    }
+                                },
+                                invalid: {
+                                    iconColor: theme.palette.error.main,
+                                    color: theme.palette.error.main
+                                }
+                            }
+                        }}
+                        className={classes.card}
+                    />
+                </div>
             </DialogContent>
             <DialogActions>
                 <Button

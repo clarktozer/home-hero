@@ -8,7 +8,6 @@ import {
     InputAdornment,
     Tooltip,
     Typography,
-    useMediaQuery,
     useTheme
 } from "@material-ui/core";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -30,7 +29,6 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const utilStyles = useUtilStyles();
     const classes = useStyles();
     const theme = useTheme();
-    const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
     const { price, host, maxStay, minStay } = data;
     const viewer = useSelector(getViewer);
     const [isOpen, setOpen] = useState(false);
@@ -151,7 +149,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                             <Typography>Check In</Typography>
                             <DatePicker
                                 disableToolbar
-                                variant={isMdUp ? "inline" : "dialog"}
+                                variant="dialog"
                                 format="DD/MM/YYYY"
                                 margin="dense"
                                 value={checkInDate}
@@ -180,7 +178,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                             <Typography>Check Out</Typography>
                             <DatePicker
                                 disableToolbar
-                                variant={isMdUp ? "inline" : "dialog"}
+                                variant="dialog"
                                 format="DD/MM/YYYY"
                                 margin="dense"
                                 value={checkOutDate}
@@ -202,7 +200,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                             />
                         </div>
                         <Divider className={utilStyles.spacingBottom2} />
-                        <div className={classnames(utilStyles.textCenter)}>
+                        <div className={utilStyles.textCenter}>
                             <Button
                                 className={utilStyles.spacingBottom2}
                                 size="large"
