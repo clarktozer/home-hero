@@ -9,5 +9,8 @@ export const useStyles = makeStyles(theme => ({
             position: "sticky",
             top: `${theme.spacing(4) + 64}px`
         }
+    },
+    checkInDate: {
+        backgroundColor: theme.palette.secondary.main
     }
 }));

@@ -5,6 +5,7 @@ import {
     CardContent,
     Divider,
     Icon,
+    IconButton,
     InputAdornment,
     Tooltip,
     Typography,
@@ -22,6 +23,14 @@ import { formatListingPrice, useUtilStyles } from "../../../../utils";
 import { ListingCreateBookingModal } from "./components";
 import { useStyles } from "./style";
 import { ListingCreateBookingProps } from "./types";
+
+/**
+ * TODO:
+ *
+ * Indicate current date better
+ * Sort out next day being disabled in checkout datepicker
+ * Disable booked dates
+ */
 
 export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     data,
@@ -117,7 +126,16 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
         if (day && checkInDate && day.isSame(checkInDate, "day")) {
             return (
                 <Tooltip title="Check in date">
-                    <div>{day?.format("DD")}</div>
+                    <IconButton
+                        className={classnames(
+                            classes.checkInDate,
+                            "MuiPickersDay-day"
+                        )}
+                    >
+                        <Typography variant="body2">
+                            {day?.format("D")}
+                        </Typography>
+                    </IconButton>
                 </Tooltip>
             );
         }
@@ -175,6 +193,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 disablePast
                                 // disabled={checkInInputDisabled}
                                 placeholder="Select Date"
+                                // initialFocusedDate={dayjs("05/07/2021")}
                             />
                         </div>
                         <div
