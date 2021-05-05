@@ -7,4 +7,5 @@ export interface ListingCreateBookingModalProps {
     onClose: () => void;
     checkInDate: dayjs.Dayjs;
     checkOutDate: dayjs.Dayjs;
+    onBookingCompleted: () => void;
 }

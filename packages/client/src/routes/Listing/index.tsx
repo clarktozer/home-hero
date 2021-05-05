@@ -54,7 +54,10 @@ export const Listing: FC = () => {
     );
 
     const listingCreateBookingElement = data?.listing ? (
-        <ListingCreateBooking data={data.listing} />
+        <ListingCreateBooking
+            data={data.listing}
+            handleListingRefetch={handleListingRefetch}
+        />
     ) : null;
 
     return (

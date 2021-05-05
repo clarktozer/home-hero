@@ -24,7 +24,8 @@ import { useStyles } from "./style";
 import { ListingCreateBookingProps } from "./types";
 
 export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
-    data
+    data,
+    handleListingRefetch
 }) => {
     const utilStyles = useUtilStyles();
     const classes = useStyles();
@@ -49,6 +50,13 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
 
     const onClose = () => {
         setOpen(false);
+    };
+
+    const clearBookingData = () => {
+        setOpen(false);
+        setCheckInDate(null);
+        setCheckOutDate(null);
+        handleListingRefetch();
     };
 
     const viewerIsHost = viewer?.id === host.id;
@@ -225,6 +233,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                         listing={data}
                         checkInDate={checkInDate}
                         checkOutDate={checkOutDate}
+                        onBookingCompleted={clearBookingData}
                     />
                 ) : null}
             </div>

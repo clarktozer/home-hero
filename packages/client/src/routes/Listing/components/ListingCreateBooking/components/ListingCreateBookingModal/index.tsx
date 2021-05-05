@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import {
     Button,
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -12,10 +13,11 @@ import {
     useTheme
 } from "@material-ui/core";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import classnames from "classnames";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import React, { FC } from "react";
-import { Notification } from "../../../../../../components";
+import { Notification, OverlaySpinner } from "../../../../../../components";
 import { CREATE_BOOKING } from "../../../../../../graphql";
 import { formatListingPrice, useUtilStyles } from "../../../../../../utils";
 import {
@@ -30,7 +32,8 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
     isOpen,
     onClose,
     checkInDate,
-    checkOutDate
+    checkOutDate,
+    onBookingCompleted
 }) => {
     const { id, price } = listing;
     const classes = useStyles();
@@ -44,13 +47,12 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
     const fee = listingPrice * 0.05;
     const total = listingPrice + fee;
 
-    console.log(theme);
-
     const [createBooking, { loading }] = useMutation<
         CreateBookingData,
         CreateBookingVariables
     >(CREATE_BOOKING, {
         onCompleted: () => {
+            onBookingCompleted();
             enqueueSnackbar(
                 <Notification
                     title="You've successfully booked the listing!"
@@ -106,38 +108,41 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
 
     return (
         <Dialog onClose={onClose} open={isOpen}>
+            {loading && <OverlaySpinner />}
             <DialogTitle>Book</DialogTitle>
             <DialogContent>
                 <div className={utilStyles.spacingBottom2}>
                     <Typography>
                         Enter your payment information to book the listing from
-                        the dates (inclusive) between:{" "}
+                        the dates (inclusive) between{" "}
+                        <b>{dayjs(checkInDate).format("MMMM Do YYYY")}</b> to{" "}
+                        <b>{dayjs(checkOutDate).format("MMMM Do YYYY")}</b>,
+                        inclusive.
                     </Typography>
-                    <div>
-                        <Typography>Check In</Typography>
-                        <b>{dayjs(checkInDate).format("MMMM Do YYYY")}</b>
-                    </div>
-                    <div>
-                        <Typography>Check Out</Typography>
-                        <b>{dayjs(checkOutDate).format("MMMM Do YYYY")}</b>
-                    </div>
                 </div>
                 <Divider className={utilStyles.spacingBottom2} />
-                <div className={utilStyles.spacingBottom2}>
-                    <Typography>
+                <div
+                    className={classnames(
+                        utilStyles.spacingBottom2,
+                        utilStyles.textCenter
+                    )}
+                >
+                    <Typography gutterBottom>
                         {formatListingPrice(price, false)} * {daysBooked} days ={" "}
-                        <b>{formatListingPrice(listingPrice, false)}</b>
+                        {formatListingPrice(listingPrice, false)}
                     </Typography>
-                    <Typography>
+                    <Typography gutterBottom>
                         Our fee
                         <Tooltip title="5% of the total amount">
-                            <Icon>help</Icon>
+                            <Icon className={classes.help}>help</Icon>
                         </Tooltip>{" "}
                         = {formatListingPrice(fee, false)}
                     </Typography>
-                    <Typography className="listing-booking-modal__charge-summary-total">
-                        Total = <b>{formatListingPrice(total, false)}</b>
-                    </Typography>
+                    <Chip
+                        color="secondary"
+                        label={`Total = ${formatListingPrice(total, false)}`}
+                        className={classes.total}
+                    ></Chip>
                 </div>
                 <Divider className={utilStyles.spacingBottom2} />
                 <div
@@ -170,7 +175,7 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
                                 }
                             }
                         }}
-                        className={classes.card}
+                        className={classes.stripe}
                     />
                 </div>
             </DialogContent>
