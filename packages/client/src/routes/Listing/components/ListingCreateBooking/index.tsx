@@ -45,6 +45,8 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const [checkInDate, setCheckInDate] = useState<dayjs.Dayjs | null>(null);
     const [checkOutDate, setCheckOutDate] = useState<dayjs.Dayjs | null>(null);
 
+    console.log(data);
+
     const onCheckInDateChange = (date: MaterialUiPickersDate) => {
         setCheckInDate(date);
     };
@@ -86,6 +88,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
 
     const shouldDisableDate = (day: MaterialUiPickersDate) => {
         if (day) {
+            const isToday = day.isToday();
             const dateIsBeforeEndOfDay = day.isBefore(dayjs().endOf("day"));
             const dateIsMoreThanThreeMonthsAhead = day.isAfter(
                 dayjs().endOf("day").add(90, "days")
@@ -93,6 +96,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
             const dateBooked = false;
 
             return (
+                isToday ||
                 dateIsBeforeEndOfDay ||
                 dateIsMoreThanThreeMonthsAhead ||
                 dateBooked
@@ -105,10 +109,10 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const shouldDisableCheckoutDate = (day: MaterialUiPickersDate) => {
         if (day && checkInDate) {
             const isBeforeCheckinDate = day.isBefore(
-                checkInDate.add(minStay, "days")
+                checkInDate.startOf("day").add(minStay, "days")
             );
             const isAfterMaxStay = day.isAfter(
-                checkInDate.add(maxStay, "days")
+                checkInDate.startOf("day").add(maxStay, "days")
             );
 
             return isBeforeCheckinDate || isAfterMaxStay;
@@ -224,6 +228,9 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 // disabled={checkOutInputDisabled}
                                 placeholder="Select Date"
                                 renderDay={onRenderDay}
+                                initialFocusedDate={
+                                    checkInDate?.add(minStay, "days") || null
+                                }
                             />
                         </div>
                         <Divider className={utilStyles.spacingBottom2} />

@@ -2,6 +2,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isToday from "dayjs/plugin/isToday";
 import express from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
@@ -14,6 +15,7 @@ import {
 } from "./middlewares";
 
 dayjs.extend(isSameOrAfter);
+dayjs.extend(isToday);
 
 const run = async () => {
     await createConnection();

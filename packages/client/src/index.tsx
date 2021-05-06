@@ -4,6 +4,9 @@ import {
     createHttpLink,
     InMemoryCache
 } from "@apollo/client";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isToday from "dayjs/plugin/isToday";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -12,6 +15,9 @@ import { App } from "./App";
 import { SnackbarProvider } from "./components";
 import reportWebVitals from "./reportWebVitals";
 import { Store } from "./state/store";
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isToday);
 
 const httpLink = createHttpLink({
     uri: "/api"
