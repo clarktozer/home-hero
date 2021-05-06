@@ -28,7 +28,6 @@ import { ListingCreateBookingProps } from "./types";
  * TODO:
  *
  * Indicate current date better
- * Sort out next day being disabled in checkout datepicker
  * Disable booked dates
  */
 
@@ -39,7 +38,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const utilStyles = useUtilStyles();
     const classes = useStyles();
     const theme = useTheme();
-    const { price, host, maxStay, minStay } = data;
+    const { price, host, minStay, maxStay } = data;
     const viewer = useSelector(getViewer);
     const [isOpen, setOpen] = useState(false);
     const [checkInDate, setCheckInDate] = useState<dayjs.Dayjs | null>(null);
@@ -121,19 +120,52 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
         return shouldDisableDate(day);
     };
 
-    const onRenderDay = (
+    const onRenderCheckoutDay = (
         day: MaterialUiPickersDate,
-        _selectedDate: MaterialUiPickersDate,
-        _dayInCurrentMonth: boolean,
+        selectedDate: MaterialUiPickersDate,
+        dayInCurrentMonth: boolean,
         dayComponent: JSX.Element
     ) => {
         if (day && checkInDate && day.isSame(checkInDate, "day")) {
             return (
                 <Tooltip title="Check in date">
                     <IconButton
+                        disableFocusRipple
+                        disableRipple
+                        disableTouchRipple
                         className={classnames(
                             classes.checkInDate,
                             "MuiPickersDay-day"
+                        )}
+                    >
+                        <Typography variant="body2">
+                            {day?.format("D")}
+                        </Typography>
+                    </IconButton>
+                </Tooltip>
+            );
+        }
+
+        return onRenderDay(day, selectedDate, dayInCurrentMonth, dayComponent);
+    };
+
+    const onRenderDay = (
+        day: MaterialUiPickersDate,
+        _selectedDate: MaterialUiPickersDate,
+        _dayInCurrentMonth: boolean,
+        dayComponent: JSX.Element
+    ) => {
+        if (day?.isToday()) {
+            return (
+                <Tooltip title="Today">
+                    <IconButton
+                        disableFocusRipple
+                        disableRipple
+                        disableTouchRipple
+                        className={classnames(
+                            classes.today,
+                            "MuiPickersDay-day",
+                            "MuiPickersDay-dayDisabled"
                         )}
                     >
                         <Typography variant="body2">
@@ -195,6 +227,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 shouldDisableDate={shouldDisableDate}
                                 autoOk
                                 disablePast
+                                renderDay={onRenderDay}
                                 // disabled={checkInInputDisabled}
                                 placeholder="Select Date"
                                 // initialFocusedDate={dayjs("05/07/2021")}
@@ -227,7 +260,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 disablePast
                                 // disabled={checkOutInputDisabled}
                                 placeholder="Select Date"
-                                renderDay={onRenderDay}
+                                renderDay={onRenderCheckoutDay}
                                 initialFocusedDate={
                                     checkInDate?.add(minStay, "days") || null
                                 }

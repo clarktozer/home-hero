@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { fade, makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles(theme => ({
     createBooking: {
@@ -11,6 +11,17 @@ export const useStyles = makeStyles(theme => ({
         }
     },
     checkInDate: {
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: theme.palette.secondary.main,
+        cursor: "default",
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.main
+        }
+    },
+    today: {
+        backgroundColor: fade(theme.palette.common.white, 0.05),
+        cursor: "default",
+        "&:hover": {
+            backgroundColor: fade(theme.palette.common.white, 0.05)
+        }
     }
 }));
