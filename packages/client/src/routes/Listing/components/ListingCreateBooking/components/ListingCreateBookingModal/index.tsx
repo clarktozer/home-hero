@@ -52,7 +52,6 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
         CreateBookingVariables
     >(CREATE_BOOKING, {
         onCompleted: () => {
-            onBookingCompleted();
             enqueueSnackbar(
                 <Notification
                     title="You've successfully booked the listing!"
@@ -62,6 +61,7 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
                     variant: "success"
                 }
             );
+            onBookingCompleted();
         },
         onError: () => {
             enqueueSnackbar(

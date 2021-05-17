@@ -20,6 +20,7 @@ export const useStyles = makeStyles(theme => ({
     today: {
         backgroundColor: fade(theme.palette.common.white, 0.05),
         cursor: "default",
+        pointerEvents: "all",
         "&:hover": {
             backgroundColor: fade(theme.palette.common.white, 0.05)
         }

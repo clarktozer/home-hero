@@ -24,13 +24,6 @@ import { ListingCreateBookingModal } from "./components";
 import { useStyles } from "./style";
 import { ListingCreateBookingProps } from "./types";
 
-/**
- * TODO:
- *
- * Indicate current date better
- * Disable booked dates
- */
-
 export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     data,
     handleListingRefetch
@@ -43,8 +36,6 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const [isOpen, setOpen] = useState(false);
     const [checkInDate, setCheckInDate] = useState<dayjs.Dayjs | null>(null);
     const [checkOutDate, setCheckOutDate] = useState<dayjs.Dayjs | null>(null);
-
-    console.log(data);
 
     const onCheckInDateChange = (date: MaterialUiPickersDate) => {
         setCheckInDate(date);
@@ -169,7 +160,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                         )}
                     >
                         <Typography variant="body2">
-                            {day?.format("D")}
+                            {day.format("D")}
                         </Typography>
                     </IconButton>
                 </Tooltip>
