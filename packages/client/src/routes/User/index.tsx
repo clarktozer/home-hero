@@ -59,7 +59,7 @@ export const User: FC = () => {
         <>
             {stripeErrorBanner}
             <Page>
-                <div className={utilClasses.spacingBottom4}>
+                <div className={utilClasses.marginBottom4}>
                     {loading ? (
                         <UserProfileSkeleton />
                     ) : user ? (
@@ -71,15 +71,15 @@ export const User: FC = () => {
                 </div>
                 {user && (
                     <>
-                        <div className={utilClasses.spacingBottom4}>
+                        <div className={utilClasses.marginBottom4}>
                             <UserListings />
                         </div>
                         {viewerIsUser && (
                             <>
-                                <div className={utilClasses.spacingBottom4}>
+                                <div className={utilClasses.marginBottom4}>
                                     <UserBookings />
                                 </div>
-                                <div className={utilClasses.spacingBottom4}>
+                                <div className={utilClasses.marginBottom4}>
                                     <UserFavorites />
                                 </div>
                             </>

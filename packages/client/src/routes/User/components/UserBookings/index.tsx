@@ -40,7 +40,7 @@ export const UserBookings: FC = () => {
         <Grid container spacing={4}>
             {Array.from({ length: PAGE_LIMIT }).map((_, i) => (
                 <Grid key={i} item xs={12} sm={6} md={3}>
-                    <div className={utilClasses.spacingBottom2}>
+                    <div className={utilClasses.marginBottom2}>
                         <Typography gutterBottom variant="body2">
                             <Skeleton animation="wave" width="50%" />
                         </Typography>
@@ -56,7 +56,7 @@ export const UserBookings: FC = () => {
 
     const onRenderItem = (item: BookingsForUser_bookingsForUser_result) => (
         <Grid item key={item.id} xs={12} sm={6} md={3}>
-            <div className={utilClasses.spacingBottom2}>
+            <div className={utilClasses.marginBottom2}>
                 <Typography gutterBottom variant="body2">
                     Check in: <b>{item.checkIn}</b>
                 </Typography>

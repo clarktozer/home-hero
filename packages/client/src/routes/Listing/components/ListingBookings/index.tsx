@@ -41,7 +41,7 @@ export const ListingBookings: FC = () => {
         <Grid container spacing={4}>
             {Array.from({ length: PAGE_LIMIT }).map((_, i) => (
                 <Grid key={i} item xs={12} sm={4} md={2}>
-                    <div className={utilClasses.spacingBottom2}>
+                    <div className={utilClasses.marginBottom2}>
                         <Typography gutterBottom variant="body2">
                             <Skeleton animation="wave" width="100%" />
                         </Typography>
@@ -73,7 +73,7 @@ export const ListingBookings: FC = () => {
         item: BookingsForListing_bookingsForListing_result
     ) => (
         <Grid item key={item.id} xs={12} sm={4} md={2}>
-            <div className={utilClasses.spacingBottom2}>
+            <div className={utilClasses.marginBottom2}>
                 <Typography gutterBottom variant="body2">
                     Check in: <b>{item.checkIn}</b>
                 </Typography>
@@ -88,7 +88,7 @@ export const ListingBookings: FC = () => {
             >
                 <div className={utilClasses.flexCenter}>
                     <Avatar
-                        className={utilClasses.spacingRight1}
+                        className={utilClasses.marginRight1}
                         src={item.tenant.avatar}
                     />
                     {item.tenant.name}

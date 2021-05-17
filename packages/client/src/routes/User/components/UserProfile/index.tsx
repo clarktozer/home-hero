@@ -99,11 +99,11 @@ export const UserProfile: FC<UserProfileProps> = ({
                 color="primary"
                 disableElevation
                 onClick={onOpen}
-                className={utilClasses.spacingTop1}
+                className={utilClasses.marginTop1}
             >
                 Disconnect Stripe
             </Button>
-            <Typography className={utilClasses.spacingTop1}>
+            <Typography className={utilClasses.marginTop1}>
                 By disconnecting, you won't be able to receive any further
                 payments. This will prevent users from booking listings that you
                 might have already created.
@@ -120,7 +120,7 @@ export const UserProfile: FC<UserProfileProps> = ({
                 color="primary"
                 disableElevation
                 onClick={redirectToStripe}
-                className={utilClasses.spacingTop1}
+                className={utilClasses.marginTop1}
             >
                 Connect Stripe
             </Button>
@@ -172,7 +172,7 @@ export const UserProfile: FC<UserProfileProps> = ({
                                     size="small"
                                     color="secondary"
                                     label="Stripe Registered"
-                                    className={utilClasses.spacingTop1}
+                                    className={utilClasses.marginTop1}
                                 />
                             ) : null}
                         </>

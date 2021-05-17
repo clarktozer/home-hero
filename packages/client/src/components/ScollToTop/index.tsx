@@ -12,7 +12,7 @@ export const ScrollToTop: FC = ({ children }) => {
         return () => {
             unlisten();
         };
-    }, []);
+    }, [history]);
 
     return <>{children}</>;
 };

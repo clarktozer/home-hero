@@ -111,7 +111,7 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
             {loading && <OverlaySpinner />}
             <DialogTitle>Book</DialogTitle>
             <DialogContent>
-                <div className={utilStyles.spacingBottom2}>
+                <div className={utilStyles.marginBottom2}>
                     <Typography>
                         Enter your payment information to book the listing from
                         the dates (inclusive) between{" "}
@@ -120,10 +120,10 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
                         inclusive.
                     </Typography>
                 </div>
-                <Divider className={utilStyles.spacingBottom2} />
+                <Divider className={utilStyles.marginBottom2} />
                 <div
                     className={classnames(
-                        utilStyles.spacingBottom2,
+                        utilStyles.marginBottom2,
                         utilStyles.textCenter
                     )}
                 >
@@ -144,7 +144,7 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
                         className={classes.total}
                     ></Chip>
                 </div>
-                <Divider className={utilStyles.spacingBottom2} />
+                <Divider className={utilStyles.marginBottom2} />
                 <div
                     style={{
                         background: theme.palette.background.default

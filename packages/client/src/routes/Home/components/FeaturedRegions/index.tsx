@@ -37,9 +37,7 @@ export const FeaturedRegions: FC = () => {
                                         className={utilClasses.flexCenter}
                                     >
                                         <Icon
-                                            className={
-                                                utilClasses.spacingRight1
-                                            }
+                                            className={utilClasses.marginRight1}
                                         >
                                             location_on
                                         </Icon>
@@ -61,9 +59,7 @@ export const FeaturedRegions: FC = () => {
                                         className={utilClasses.flexCenter}
                                     >
                                         <Icon
-                                            className={
-                                                utilClasses.spacingRight1
-                                            }
+                                            className={utilClasses.marginRight1}
                                         >
                                             location_on
                                         </Icon>
@@ -88,9 +84,7 @@ export const FeaturedRegions: FC = () => {
                                         className={utilClasses.flexCenter}
                                     >
                                         <Icon
-                                            className={
-                                                utilClasses.spacingRight1
-                                            }
+                                            className={utilClasses.marginRight1}
                                         >
                                             location_on
                                         </Icon>
@@ -118,9 +112,7 @@ export const FeaturedRegions: FC = () => {
                                         className={utilClasses.flexCenter}
                                     >
                                         <Icon
-                                            className={
-                                                utilClasses.spacingRight1
-                                            }
+                                            className={utilClasses.marginRight1}
                                         >
                                             location_on
                                         </Icon>

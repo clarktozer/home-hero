@@ -13,7 +13,7 @@ export const ErrorPage: FC<ErrorPageProps> = ({
         <div className={utilStyles.centerPage}>
             <div className={utilStyles.textCenter}>
                 <Icon color="inherit">{icon}</Icon>
-                <Typography className={utilStyles.spacingTop2}>
+                <Typography className={utilStyles.marginTop2}>
                     {message}
                 </Typography>
             </div>

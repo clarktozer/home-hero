@@ -185,18 +185,18 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                         <Typography
                             className={classnames(
                                 utilStyles.textCenter,
-                                utilStyles.spacingBottom2
+                                utilStyles.marginBottom2
                             )}
                             variant="h5"
                         >
                             {formatListingPrice(price)}
                             <span>/day</span>
                         </Typography>
-                        <Divider className={utilStyles.spacingBottom2} />
+                        <Divider className={utilStyles.marginBottom2} />
                         <div
                             className={classnames(
                                 utilStyles.textCenter,
-                                utilStyles.spacingBottom2
+                                utilStyles.marginBottom2
                             )}
                         >
                             <Typography>Check In</Typography>
@@ -227,7 +227,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                         <div
                             className={classnames(
                                 utilStyles.textCenter,
-                                utilStyles.spacingBottom2
+                                utilStyles.marginBottom2
                             )}
                         >
                             <Typography>Check Out</Typography>
@@ -257,10 +257,10 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 }
                             />
                         </div>
-                        <Divider className={utilStyles.spacingBottom2} />
+                        <Divider className={utilStyles.marginBottom2} />
                         <div className={utilStyles.textCenter}>
                             <Button
-                                className={utilStyles.spacingBottom2}
+                                className={utilStyles.marginBottom2}
                                 size="large"
                                 variant="contained"
                                 color="primary"

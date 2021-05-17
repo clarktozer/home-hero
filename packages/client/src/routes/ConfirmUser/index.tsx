@@ -82,7 +82,7 @@ export const ConfirmUser: FC = () => {
             <Card className={utilStyles.textCenter} elevation={0}>
                 <CardContent>
                     <Icon color="inherit">error</Icon>
-                    <Typography className={utilStyles.spacingTop2}>
+                    <Typography className={utilStyles.marginTop2}>
                         Unable to confirm your user
                     </Typography>
                 </CardContent>

@@ -11,29 +11,29 @@ export const useUtilStyles = makeStyles(theme => ({
     textCenter: {
         textAlign: "center"
     },
-    spacingTop2: {
+    marginTop2: {
         marginTop: theme.spacing(2)
     },
-    spacingTop1: {
+    marginTop1: {
         marginTop: theme.spacing(1)
     },
-    spacingBottom1: {
+    marginBottom1: {
         marginBottom: theme.spacing(1)
     },
-    spacingBottom2: {
+    marginBottom2: {
         marginBottom: theme.spacing(2)
     },
-    spacingBottom3: {
+    marginBottom3: {
         marginBottom: theme.spacing(3)
     },
-    spacingBottom4: {
+    marginBottom4: {
         marginBottom: theme.spacing(4)
     },
     flexCenter: {
         display: "flex",
         alignItems: "center"
     },
-    spacingRight1: {
+    marginRight1: {
         marginRight: theme.spacing(1)
     }
 }));

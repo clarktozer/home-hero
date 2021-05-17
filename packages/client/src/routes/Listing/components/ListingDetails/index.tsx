@@ -9,8 +9,7 @@ import {
     Link,
     Tooltip,
     Typography,
-    useTheme,
-    withStyles
+    useTheme
 } from "@material-ui/core";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import classnames from "classnames";
@@ -26,15 +25,6 @@ import {
 } from "../../../../__types/FavoriteListing";
 import { useStyles } from "./style";
 import { ListingDetailsProps } from "./types";
-
-const ColorButton = withStyles(theme => ({
-    root: {
-        backgroundColor: theme.palette.primary.main,
-        "&:hover": {
-            backgroundColor: theme.palette.primary.light
-        }
-    }
-}))(IconButton);
 
 export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
     const utilStyles = useUtilStyles();
@@ -95,7 +85,7 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
     return (
         <div>
             <div
-                className={classnames(utilStyles.spacingBottom3, classes.image)}
+                className={classnames(utilStyles.marginBottom3, classes.image)}
                 style={{
                     backgroundImage: `url(${image})`
                 }}
@@ -126,13 +116,13 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
                     </Tooltip>
                 </div>
             </div>
-            <div className={utilStyles.spacingBottom3}>
+            <div className={utilStyles.marginBottom3}>
                 <div
                     className={classnames(utilStyles.flexCenter, classes.basic)}
                 >
                     <Chip
                         className={classnames(
-                            utilStyles.spacingRight1,
+                            utilStyles.marginRight1,
                             classes.location
                         )}
                         icon={<Icon>location_on</Icon>}
@@ -145,12 +135,12 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
                         {address}
                     </Typography>
                 </div>
-                <Typography className={utilStyles.spacingTop2} variant="h5">
+                <Typography className={utilStyles.marginTop2} variant="h5">
                     {title}
                 </Typography>
             </div>
-            <Divider className={utilStyles.spacingBottom3} />
-            <div className={utilStyles.spacingBottom3}>
+            <Divider className={utilStyles.marginBottom3} />
+            <div className={utilStyles.marginBottom3}>
                 <Link
                     color="inherit"
                     component={RouterLink}
@@ -159,7 +149,7 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
                     <div className={utilStyles.flexCenter}>
                         <Avatar
                             className={classnames(
-                                utilStyles.spacingRight1,
+                                utilStyles.marginRight1,
                                 classes.avatar
                             )}
                             src={host.avatar}
@@ -168,15 +158,15 @@ export const ListingDetails: FC<ListingDetailsProps> = ({ data }) => {
                     </div>
                 </Link>
             </div>
-            <Divider className={utilStyles.spacingBottom3} />
-            <div className={utilStyles.spacingBottom3}>
+            <Divider className={utilStyles.marginBottom3} />
+            <div className={utilStyles.marginBottom3}>
                 <Typography gutterBottom variant="h6">
                     About this space
                 </Typography>
-                <div className={utilStyles.spacingBottom2}>
+                <div className={utilStyles.marginBottom2}>
                     <Chip
                         size="small"
-                        className={utilStyles.spacingRight1}
+                        className={utilStyles.marginRight1}
                         color="secondary"
                         label={type.toLowerCase()}
                     />
