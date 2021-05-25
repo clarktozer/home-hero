@@ -219,9 +219,8 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 autoOk
                                 disablePast
                                 renderDay={onRenderDay}
-                                // disabled={checkInInputDisabled}
-                                placeholder="Select Date"
-                                // initialFocusedDate={dayjs("05/07/2021")}
+                                disabled={checkInInputDisabled}
+                                placeholder="Select date"
                             />
                         </div>
                         <div
@@ -249,8 +248,8 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 autoOk
                                 shouldDisableDate={shouldDisableCheckoutDate}
                                 disablePast
-                                // disabled={checkOutInputDisabled}
-                                placeholder="Select Date"
+                                disabled={checkOutInputDisabled}
+                                placeholder="Select date"
                                 renderDay={onRenderCheckoutDay}
                                 initialFocusedDate={
                                     checkInDate?.add(minStay, "days") || null
@@ -266,7 +265,7 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
                                 color="primary"
                                 disableElevation
                                 onClick={onRequestToBook}
-                                // disabled={disableBooking}
+                                disabled={disableBooking}
                             >
                                 Request to book!
                             </Button>

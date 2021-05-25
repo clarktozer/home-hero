@@ -89,8 +89,8 @@ export const ListingCreateBookingModal: FC<ListingCreateBookingModalProps> = ({
                         input: {
                             id,
                             source: token.id,
-                            checkIn: checkInDate.format("YYYY-MM-DD"),
-                            checkOut: checkOutDate.format("YYYY-MM-DD")
+                            checkIn: checkInDate.startOf("day").toISOString(),
+                            checkOut: checkOutDate.endOf("day").toISOString()
                         }
                     }
                 });

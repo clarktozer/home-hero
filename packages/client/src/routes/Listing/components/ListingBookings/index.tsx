@@ -100,7 +100,7 @@ export const ListingBookings: FC = () => {
     const total = data?.bookingsForListing?.total || 0;
     const result = data?.bookingsForListing?.result || [];
 
-    return (
+    return data?.bookingsForListing ? (
         <HorizontalList
             title="Bookings"
             noResultText="There are no bookings!"
@@ -113,5 +113,5 @@ export const ListingBookings: FC = () => {
             onRenderLoader={onRenderLoader}
             onRenderItem={onRenderItem}
         />
-    );
+    ) : null;
 };

@@ -36,7 +36,7 @@ export const Stripe = {
                 application_fee_amount: Math.round(amount * APPLICATION_FEE)
             },
             {
-                stripe_account: stripeAccount
+                stripeAccount
             }
         );
 

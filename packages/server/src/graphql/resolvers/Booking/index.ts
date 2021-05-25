@@ -53,9 +53,9 @@ export class BookingResolver {
                 );
             }
 
-            if (checkOutDate.isSameOrAfter(minStayDate)) {
+            if (checkOutDate.isBefore(minStayDate)) {
                 throw new Error(
-                    `check out date must be after a minimum stay of ${listing.minStay}`
+                    `check out date must be after a minimum stay of ${listing.minStay} days`
                 );
             }
 
@@ -79,8 +79,8 @@ export class BookingResolver {
             await Stripe.charge(totalPrice, source, host.walletId);
 
             const booking = Booking.create({
-                checkIn,
-                checkOut,
+                checkIn: new Date(checkIn),
+                checkOut: new Date(checkOut),
                 tenantId: host.id,
                 listingId: listing.id
             });

@@ -40,10 +40,10 @@ export class Booking extends BaseEntity {
     tenant: Promise<User>;
 
     @Field()
-    @Column("date")
+    @Column({ type: "timestamptz" })
     checkIn: Date;
 
     @Field()
-    @Column("date")
+    @Column({ type: "timestamptz" })
     checkOut: Date;
 }
