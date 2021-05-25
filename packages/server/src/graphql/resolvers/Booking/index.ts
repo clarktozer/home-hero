@@ -81,7 +81,7 @@ export class BookingResolver {
             const booking = Booking.create({
                 checkIn: new Date(checkIn),
                 checkOut: new Date(checkOut),
-                tenantId: host.id,
+                tenantId: ctx.req.user!.id,
                 listingId: listing.id
             });
 

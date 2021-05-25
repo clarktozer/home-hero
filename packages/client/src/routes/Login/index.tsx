@@ -53,19 +53,21 @@ export const Login: FC = () => {
     }
 
     return (
-        <Page>
+        <>
             {error && (
                 <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later!" />
             )}
-            <div className={classes.loginPage}>
-                <Card className={classes.loginCard} elevation={0}>
-                    {loggingIn || loading ? <OverlaySpinner /> : null}
-                    <CardContent>
-                        <Icon color="inherit">hotel</Icon>
-                        <SocialLogins onClick={onSocialClick} />
-                    </CardContent>
-                </Card>
-            </div>
-        </Page>
+            <Page>
+                <div className={classes.loginPage}>
+                    <Card className={classes.loginCard} elevation={0}>
+                        {loggingIn || loading ? <OverlaySpinner /> : null}
+                        <CardContent>
+                            <Icon color="inherit">hotel</Icon>
+                            <SocialLogins onClick={onSocialClick} />
+                        </CardContent>
+                    </Card>
+                </div>
+            </Page>
+        </>
     );
 };

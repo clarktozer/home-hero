@@ -165,7 +165,21 @@ export const Host: FC = () => {
                         >
                             login
                         </Link>{" "}
-                        page and connect with Stripe shortly after.
+                        page
+                        {viewer && !viewer?.confirmed && !viewer.hasWallet ? (
+                            <>
+                                {" "}
+                                or visit your{" "}
+                                <Link
+                                    color="secondary"
+                                    component={RouterLink}
+                                    to={`/user/${viewer.id}`}
+                                >
+                                    profile
+                                </Link>
+                            </>
+                        ) : null}{" "}
+                        and connect with Stripe shortly after.
                     </Typography>
                 </div>
             </Container>

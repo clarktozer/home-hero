@@ -26,7 +26,21 @@ import { ValidAntiForgeryToken } from "../../middlewares";
 export class UserResolver {
     @Query(() => User, { nullable: true })
     async me(@Ctx() ctx: AppContext): Promise<User | undefined> {
-        return ctx.req.user?.id ? User.findOne(ctx.req.user.id) : undefined;
+        if (!ctx.req.user?.id) {
+            return undefined;
+        }
+
+        const user = await User.findOne(ctx.req.user.id);
+
+        if (!user) {
+            throw new Error("User can't be found");
+        }
+
+        if (isAuthorized(ctx.req)) {
+            user.authorized = true;
+        }
+
+        return user;
     }
 
     @Query(() => User)
