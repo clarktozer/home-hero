@@ -11,6 +11,7 @@ import {
     Tooltip,
     Typography
 } from "@material-ui/core";
+import classnames from "classnames";
 import { useSnackbar } from "notistack";
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
@@ -21,11 +22,12 @@ import {
     OverlaySpinner
 } from "../../../../components";
 import { StripeAuthUrl } from "../../../../constants";
-import { DISCONNECT_STRIPE } from "../../../../graphql";
+import { DISCONNECT_STRIPE, RESEND_CONFIRMATION } from "../../../../graphql";
 import { getViewer, setViewerWallet } from "../../../../state/features";
 import { useAppDispatch } from "../../../../state/store";
 import { formatListingPrice, useUtilStyles } from "../../../../utils";
 import { DisconnectStripe as DisconnectStripeData } from "../../../../__types/DisconnectStripe";
+import { ResendConfirmation } from "../../../../__types/ResendConfirmation";
 import { useStyles } from "./style";
 import { UserProfileProps } from "./types";
 
@@ -40,6 +42,26 @@ export const UserProfile: FC<UserProfileProps> = ({
     const viewerIsUser = viewer && viewer.id === user?.id;
     const { enqueueSnackbar } = useSnackbar();
     const [isOpen, setOpen] = useBoolean(false);
+
+    const [resendConfirmation, { loading: resending }] =
+        useMutation<ResendConfirmation>(RESEND_CONFIRMATION, {
+            onCompleted: () => {
+                enqueueSnackbar(
+                    "Please check your email for your confirmation message!",
+                    {
+                        variant: "success"
+                    }
+                );
+            },
+            onError: () => {
+                enqueueSnackbar(
+                    "Sorry! We weren't able to resend your confirmation. Please try again later!",
+                    {
+                        variant: "error"
+                    }
+                );
+            }
+        });
 
     const [disconnectStripe, { loading }] = useMutation<DisconnectStripeData>(
         DISCONNECT_STRIPE,
@@ -86,6 +108,10 @@ export const UserProfile: FC<UserProfileProps> = ({
 
     const onClose = () => {
         setOpen(false);
+    };
+
+    const onResendConfirmation = () => {
+        resendConfirmation();
     };
 
     const additionalDetails = user.hasWallet ? (
@@ -137,7 +163,7 @@ export const UserProfile: FC<UserProfileProps> = ({
     return (
         <div className={classes.userProfileCard}>
             <Card>
-                {loading && <OverlaySpinner />}
+                {loading || resending ? <OverlaySpinner /> : null}
                 <CardHeader
                     avatar={
                         <Avatar
@@ -157,6 +183,21 @@ export const UserProfile: FC<UserProfileProps> = ({
                                         fontSize="small"
                                     >
                                         check_circle
+                                    </Icon>
+                                </Tooltip>
+                            ) : null}
+                            {viewerIsUser && !user.confirmed ? (
+                                <Tooltip title="Resend confirmation email">
+                                    <Icon
+                                        className={classnames(
+                                            classes.confirmed,
+                                            classes.resend
+                                        )}
+                                        color="inherit"
+                                        fontSize="small"
+                                        onClick={onResendConfirmation}
+                                    >
+                                        email
                                     </Icon>
                                 </Tooltip>
                             ) : null}

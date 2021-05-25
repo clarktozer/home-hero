@@ -173,7 +173,7 @@ export class UserResolver {
         try {
             const user = await User.findOne(ctx.req.user!.id);
 
-            if (!user) {
+            if (!user || user.confirmed) {
                 return false;
             }
 

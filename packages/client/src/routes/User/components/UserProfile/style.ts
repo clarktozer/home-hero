@@ -8,6 +8,9 @@ export const useStyles = makeStyles(theme => ({
     confirmed: {
         marginLeft: theme.spacing(1)
     },
+    resend: {
+        cursor: "pointer"
+    },
     userProfileCard: {
         margin: "0 auto",
         maxWidth: "400px",
