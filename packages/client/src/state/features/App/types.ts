@@ -1,11 +1,5 @@
-export interface AppState {
-    viewer: Viewer | null;
-}
+import { Me_me } from "../../../__types/Me";
 
-export interface Viewer {
-    id: string;
-    name: string;
-    avatar: string;
-    email: string;
-    hasWallet: boolean;
+export interface AppState {
+    viewer: Me_me | null;
 }

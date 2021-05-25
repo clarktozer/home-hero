@@ -64,7 +64,10 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     const checkInInputDisabled = !viewer?.id || viewerIsHost || !host.hasWallet;
     const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
     const disableBooking =
-        checkOutInputDisabled || !checkInDate || !checkOutDate;
+        checkOutInputDisabled ||
+        !checkInDate ||
+        !checkOutDate ||
+        !viewer?.confirmed;
     let buttonMessage = "You won't be charged yet";
 
     if (!viewer?.id) {
@@ -74,6 +77,8 @@ export const ListingCreateBooking: FC<ListingCreateBookingProps> = ({
     } else if (!host.hasWallet) {
         buttonMessage =
             "The host has disconnected from Stripe and thus won't be able to receive payments!";
+    } else if (!viewer?.confirmed) {
+        buttonMessage = "You must confirm your user!";
     }
 
     const shouldDisableDate = (day: MaterialUiPickersDate) => {

@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Avatar, Grid, Link, Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
+import dayjs from "dayjs";
 import React, { FC, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { HorizontalList } from "../../../../components";
@@ -75,10 +76,12 @@ export const ListingBookings: FC = () => {
         <Grid item key={item.id} xs={12} sm={4} md={2}>
             <div className={utilClasses.marginBottom2}>
                 <Typography gutterBottom variant="body2">
-                    Check in: <b>{item.checkIn}</b>
+                    Check in:{" "}
+                    <b>{dayjs(item.checkIn).format("MMMM Do YYYY")}</b>
                 </Typography>
                 <Typography variant="body2">
-                    Check out: <b>{item.checkOut}</b>
+                    Check out:{" "}
+                    <b>{dayjs(item.checkOut).format("MMMM Do YYYY")}</b>
                 </Typography>
             </div>
             <Link
