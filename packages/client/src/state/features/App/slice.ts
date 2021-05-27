@@ -20,10 +20,16 @@ const appSlice = createSlice({
             if (state.viewer) {
                 state.viewer.hasWallet = action.payload;
             }
+        },
+        setConfirmed(state, action: PayloadAction<boolean>) {
+            if (state.viewer) {
+                state.viewer.confirmed = action.payload;
+            }
         }
     }
 });
 
-export const { setViewer, clearViewer, setViewerWallet } = appSlice.actions;
+export const { setViewer, clearViewer, setViewerWallet, setConfirmed } =
+    appSlice.actions;
 
 export const AppReducer = appSlice.reducer;

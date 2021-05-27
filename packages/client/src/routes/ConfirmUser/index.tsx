@@ -7,7 +7,8 @@ import { useHistory, useParams } from "react-router-dom";
 import { useBoolean, useCounter, useInterval, useMount } from "react-use";
 import { CenterSpinner } from "../../components";
 import { CONFIRM_USER } from "../../graphql";
-import { getViewer } from "../../state/features";
+import { getViewer, setConfirmed } from "../../state/features";
+import { useAppDispatch } from "../../state/store";
 import { useUtilStyles } from "../../utils";
 import {
     ConfirmUser as ConfirmUserData,
@@ -16,6 +17,7 @@ import {
 import { MatchParams } from "./types";
 
 export const ConfirmUser: FC = () => {
+    const dispatch = useAppDispatch();
     const utilStyles = useUtilStyles();
     const viewer = useSelector(getViewer);
     const history = useHistory();
@@ -31,6 +33,7 @@ export const ConfirmUser: FC = () => {
     >(CONFIRM_USER, {
         onCompleted: data => {
             if (data?.confirmUser) {
+                dispatch(setConfirmed(true));
                 toggleIsRunning();
             } else {
                 history.push("/");

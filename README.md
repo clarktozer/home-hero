@@ -15,9 +15,3 @@ Stack:
 -   PostgreSQL
 -   Redis
 -   Material UI
-
-Bugs:
-
-Messages wrong for if user logged in but not confirmed, redirect to profile instead
-Can currently host without confirming user
-Confirm user not being picked up when trying to book first time

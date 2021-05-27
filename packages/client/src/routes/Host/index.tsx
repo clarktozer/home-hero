@@ -146,7 +146,34 @@ export const Host: FC = () => {
         submitForm();
     };
 
-    if (!viewer || !viewer.id || !viewer.hasWallet) {
+    if (viewer && (!viewer.confirmed || !viewer.hasWallet)) {
+        return (
+            <Container className={classes.emptyHostContainer}>
+                <div className={classes.hostHeader}>
+                    <Typography variant="h5" gutterBottom>
+                        You need to confirm your account and be connected with
+                        Stripe to host a listing!
+                    </Typography>
+                    <Typography variant="body2">
+                        We only allow users who've signed in to our application,
+                        confirmed their account, and have connected with Stripe
+                        to host new listings. Visit your{" "}
+                        <Link
+                            color="secondary"
+                            component={RouterLink}
+                            to={`/user/${viewer.id}`}
+                        >
+                            profile
+                        </Link>{" "}
+                        to either resend your confirmation email or connect with
+                        Stripe.
+                    </Typography>
+                </div>
+            </Container>
+        );
+    }
+
+    if (!viewer || !viewer.id) {
         return (
             <Container className={classes.emptyHostContainer}>
                 <div className={classes.hostHeader}>
@@ -165,21 +192,7 @@ export const Host: FC = () => {
                         >
                             login
                         </Link>{" "}
-                        page
-                        {viewer && !viewer?.confirmed && !viewer.hasWallet ? (
-                            <>
-                                {" "}
-                                or visit your{" "}
-                                <Link
-                                    color="secondary"
-                                    component={RouterLink}
-                                    to={`/user/${viewer.id}`}
-                                >
-                                    profile
-                                </Link>
-                            </>
-                        ) : null}{" "}
-                        and connect with Stripe shortly after.
+                        page and connect with Stripe shortly after.
                     </Typography>
                 </div>
             </Container>
